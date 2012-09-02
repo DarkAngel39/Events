@@ -1,5 +1,5 @@
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '110000' AND '111780';
-INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
+INSERT INTO `gameobject_spawns`(`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
 	('110000','178645','0','-9465.45','-8.79167','62.0397','-1.71042','0','0','0.75471','-0.656059','1','0','0','1','0','1','0'),
 	('110001','178438','0','-9457.21','-5.32091','62.0467','-0.05236','0','0','0.026177','-0.999657','1','0','0','1','0','1','0'),
 	('110002','178438','0','-9464.36','-9.85764','66.983','-1.72788','0','0','0.760406','-0.649448','1','0','0','1','0','1','0'),
