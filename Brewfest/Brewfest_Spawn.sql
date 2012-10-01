@@ -347,7 +347,9 @@ INSERT INTO `creature_waypoints` (`spawnid`,`waypointid`,`position_x`,`position_
  
 UPDATE `creature_proto` SET `auras`=' ' WHERE `entry`=24484;
 UPDATE `creature_proto` SET `invisibility_type`=0 WHERE `entry`=24108;
-DELETE FROM `creature_quest_starter` WHERE `id` IN(19169,19171,19148,19178,19172,20102,18927,19173,19175,19176,19177);
+UPDATE `creature_proto` SET `npcflags`=3 WHERE `entry`=23486;
+
+DELETE FROM `creature_quest_starter` WHERE `id` IN(19169,19171,19148,19178,19172,20102,18927,19173,19175,19176,19177,23486,24657);
 INSERT INTO `creature_quest_starter` (`id`,`quest`) VALUES
 	(18927,11441),
 	(19148,11441),
@@ -360,9 +362,22 @@ INSERT INTO `creature_quest_starter` (`id`,`quest`) VALUES
 	(19176,11446),
 	(19177,11446),
 	(19178,11446),
-	(20102,11446);
+	(20102,11446),
+	(23486,11117),
+	(23486,11118),
+	(24657,11431),
+	(24657,11120);
 
-DELETE FROM `npc_gossip_textid` WHERE `creatureid` IN(19169,19171,19148,19178,19172,20102,18927,19173,19175,19176,19177);
+DELETE FROM `creature_quest_finisher` WHERE `id` IN(23486,24657);
+INSERT INTO `creature_quest_finisher` (`id`,`quest`) VALUES
+	(23486,11117),
+	(23486,11118),
+	(24657,11431),
+	(24657,11120);
+	
+	
+
+DELETE FROM `npc_gossip_textid` WHERE `creatureid` IN (19169,19171,19148,19178,19172,20102,18927,19173,19175,19176,19177);
 INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 	(18927,12134),
 	(19148,12134),
