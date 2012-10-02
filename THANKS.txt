@@ -1,0 +1,6 @@
+Database projects, used to extract the required information:
+Trinity Database: - http://www.trinitycore.org/
+
+Project developer: Satanail - http://www.arcemu.org/, DarkAngel39 - https://github.com/
+Current project helpers:
+Magnifikator - https://github.com/
