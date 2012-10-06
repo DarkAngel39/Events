@@ -1,5 +1,6 @@
 Database projects, used to extract the required information:
 Trinity Database: - http://www.trinitycore.org/
+UDB database: - http://udb.no-ip.org/
 
 Project developer: Satanail - http://www.arcemu.org/, DarkAngel39 - https://github.com/
 Current project helpers:
