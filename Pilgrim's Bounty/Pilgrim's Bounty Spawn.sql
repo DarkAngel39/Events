@@ -4610,14 +4610,31 @@ UPDATE `creature_proto` SET `minlevel`=80, `maxlevel`=80, `minhealth`=5342, `max
 
 UPDATE `creature_proto` SET `vehicleid`=321, `rooted`=1 WHERE `entry` IN (34823,34822,34819,34812,34824);
 UPDATE `creature_proto` SET `vehicleid`=320, `rooted`=1 WHERE `entry`=32823;
+UPDATE `creature_proto` SET `vehicleid`=323, `rooted`=1 WHERE `entry`=32830;
+UPDATE `creature_proto` SET `vehicleid`=325, `rooted`=1 WHERE `entry`=32840;
 
-DELETE FROM `vehicle_accessories` WHERE `creature_entry`=32823;
+DELETE FROM `vehicle_accessories` WHERE `creature_entry` IN (32823,32830,32840);
 INSERT INTO `vehicle_accessories` (`creature_entry`,`accessory_entry`,`seat`) VALUES
+	-- Bountiful Table
 	(32823,34812,0), -- The Cranberry Chair
-	(32823,34819,1), -- The Stuffing Chair
-	(32823,34822,2), -- The Pie Chair (complete)
+	(32823,34823,1), -- The Stuffing Chair
+	(32823,34819,2), -- The Pie Chair (complete)
 	(32823,34824,3), -- The Sweet Potato Chair
-	(32823,34823,4); -- The Turkey Chair
+	(32823,34822,4), -- The Turkey Chair
+	(32823,32830,5), -- Food Holder
+	(32823,32840,6), -- Plate Holder
+	-- Food Holder
+	(32830,32824,0), -- [PH] Pilgrim's Bounty Table - Turkey
+	(32830,32827,1), -- [PH] Pilgrim's Bounty Table - Cranberry Sauce
+	(32830,32831,2), -- [PH] Pilgrim's Bounty Table - Stuffing
+	(32830,32825,3), -- [PH] Pilgrim's Bounty Table - Yams
+	(32830,32829,4), -- [PH] Pilgrim's Bounty Table - Pie
+	-- Plte Holder
+	(32840,32839,0), -- Plate Holder Plate
+	(32840,32839,1), -- Plate Holder Plate
+	(32840,32839,2), -- Plate Holder Plate
+	(32840,32839,3), -- Plate Holder Plate
+	(32840,32839,4); -- Plate Holder Plate
 	
 UPDATE `creature_proto` SET `auras` = '61793' WHERE `entry`=34823;
 UPDATE `creature_proto` SET `auras` = '61794' WHERE `entry`=34822;
