@@ -374,8 +374,6 @@ INSERT INTO `creature_quest_finisher` (`id`,`quest`) VALUES
 	(23486,11118),
 	(24657,11431),
 	(24657,11120);
-	
-	
 
 DELETE FROM `npc_gossip_textid` WHERE `creatureid` IN (19169,19171,19148,19178,19172,20102,18927,19173,19175,19176,19177);
 INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
