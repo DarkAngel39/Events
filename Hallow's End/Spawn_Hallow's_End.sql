@@ -5198,6 +5198,21 @@ INSERT INTO `creature_quest_starter` VALUES
 	('19172', '11356'),
 	('19173', '11356'),
 	('19176', '11357');
+
+UPDATE `creature_proto` SET `auras`=' ' WHERE `entry` IN (18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102);
+DELETE FROM `npc_gossip_textid` WHERE `creatureid` IN (18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102);
+INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
+	(18927,7805),
+	(19148,7805),
+	(19169,7805),
+	(19171,7805),
+	(19172,7805),
+	(19173,7805),
+	(19175,7805),
+	(19176,7805),
+	(19177,7805),
+	(19178,7805),
+	(20102,7805);
 	
 INSERT INTO `gameobject_quest_starter` (`id`,`quest`) VALUES
 	(186267,11401),
