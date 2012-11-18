@@ -584,7 +584,22 @@ INSERT INTO `creature_quest_finisher` (`id`, `quest`) VALUES
 	(35256,14166),
 	(35260,14172),
 	(35261,14173);
-	
+
+DELETE FROM `npc_gossip_textid` WHERE `creatureid` IN (18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102);
+INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
+	(18927,14544),
+	(19148,14544),
+	(19169,14544),
+	(19171,14544),
+	(19172,14544),
+	(19173,14544),
+	(19175,14544),
+	(19176,14544),
+	(19177,14544),
+	(19178,14544),
+	(20102,14544);
+
+UPDATE `creature_proto` SET `auras`='65529' WHERE `entry` IN (18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102); -- This aura is currently not changing any models in arcemu, but it should be there.
 UPDATE `creature_proto` SET `auras` = '55848' WHERE `entry` IN (35243,55848,35244,35246,35247,35248,35249,35250,35251,35252,35253,35254,35258,35259,34435,34476,34477,34478,34479,34480,34481,34482,34483,34484,35256,35260,35261);
 UPDATE `creature_proto` SET `auras` = '33209' WHERE `entry`=19178;
 UPDATE `creature_proto` SET `auras` = '43632' WHERE `entry`=18927;
