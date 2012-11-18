@@ -1970,7 +1970,7 @@ REPLACE INTO `creature_quest_finisher` (`id`,`quest`) VALUES
 	(3057,7061),
 	(2784,7063);
 
-DELETE FROM `gameobject_quest_finisher` WHERE `quest` IN ('32798', '32799');
+DELETE FROM `gameobject_quest_finisher` WHERE `quest` IN ('8763', '8799');
 INSERT INTO `gameobject_quest_finisher` (`id`,`quest`) VALUES
 	(180715,8763),
 	(180715,8799);
