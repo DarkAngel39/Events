@@ -3,3 +3,4 @@ DELETE FROM `creature_quest_starter` WHERE `id` IN(19169,19171,19148,19178,19172
 DELETE FROM `creature_waypoints` WHERE `spawnid` IN (420084,420027);
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '510000' AND '512010';
 DELETE FROM `creature_spawns` WHERE `id` BETWEEN '420000' AND '420336';
+UPDATE `creature_proto` SET `auras`=' ' WHERE `entry` IN (18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102);

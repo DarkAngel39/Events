@@ -389,6 +389,8 @@ INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 	(19178,12134),
 	(20102,12134);
 
+UPDATE `creature_proto` SET `auras`='44186' WHERE `entry` IN (18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102);
+
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '510000' AND '512010';
 INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
 	('510000','186709','0','-5612.9','-470.826','399.288','-1.53589','0','0','0.694658','-0.71934','1','0','0','1','0','1','0'),
