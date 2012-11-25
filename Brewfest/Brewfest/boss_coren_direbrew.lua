@@ -1,6 +1,7 @@
 BOSS_DIREBREW = 23872
 NPC_ILSA = 26764
 NPC_URSULA = 26822
+NPC_MINION = 26776
 SPELL_DISARM = 47310
 SPELL_SUMMON_MINION = 47375
 
@@ -19,18 +20,18 @@ if(intid == 1)then
 	pUnit:GossipMenuAddItem(0, "Sorry!", 3, 0)
 	pUnit:GossipSendMenu(pPlayer)
 elseif(intid == 2)then
-	pUnit:SendChatMessage(12, 0, "You'll pay for this insult, $C!")
+	pUnit:SendChatMessage(12, 0, "You'll pay for this insult, "..pPlayer:GetPlayerClass().."!")
 	local adds = pUnit:GetInRangeFriends()
 	for k,v in pairs(adds) do
 	if(v ~= nil and v:IsCreature() and v:IsAlive())then
 		if(v:GetEntry() == NPC_ILSA or v:GetEntry() == NPC_URSULA)then
-			v:SetFaction(14)
+			v:SetFaction(736)
 			v:SetMovementFlags(1)
 			v:MoveTo(pUnit:GetX() + 2, pUnit:GetY() + 2, pUnit:GetZ(), pUnit:GetO())
 		end
 	end
 	end
-	pUnit:SetFaction(14)
+	pUnit:SetFaction(736)
 	pPlayer:GossipComplete()
 elseif(intid == 3)then
 	pPlayer:GossipComplete()
@@ -72,6 +73,8 @@ for k,v in pairs(adds) do
 if(v ~= nil and v:IsCreature() and v:IsAlive())then
 	if(v:GetEntry() == NPC_ILSA or v:GetEntry() == NPC_URSULA)then
 		v:SetFaction(35)
+	elseif(v:GetEntry() == NPC_MINION)then
+		v:Despawn(1000,0)
 	end
 end
 end
