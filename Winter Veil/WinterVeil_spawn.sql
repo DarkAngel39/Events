@@ -1915,7 +1915,7 @@ INSERT INTO `creature_spawns` (`id`, `entry`, `map`, `position_x`, `position_y`,
 	('710128',20102,530,'-1884.63','5397.52','-12.4278','2.51637',0,19343,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
 	('710129',20102,530,'3038.56','3635.53','144.012','3.32713',0,19343,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1');
 
---DELETE FROM `creature_quest_starter` WHERE `quest` IN ('8746', '8799', '8762', '8763', '7063');
+-- DELETE FROM `creature_quest_starter` WHERE `quest` IN ('8746', '8799', '8762', '8763', '7063');
 REPLACE INTO `creature_quest_starter` (`id`,`quest`) VALUES
 	(13418,8746),
 	(13418,8799),
@@ -1944,7 +1944,7 @@ REPLACE INTO `creature_quest_starter` (`id`,`quest`) VALUES
 	(13433,8762),
 	(13433,8763);
 
---DELETE FROM `creature_quest_finisher` WHERE `quest` IN ('8746', '8799', '8762', '8763', '7063');
+-- DELETE FROM `creature_quest_finisher` WHERE `quest` IN ('8746', '8799', '8762', '8763', '7063');
 REPLACE INTO `creature_quest_finisher` (`id`,`quest`) VALUES
 	(13418,8746),
 	(13433,8762),
