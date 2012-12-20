@@ -17,7 +17,7 @@ NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
 NPC_GNOME_ENGINEER = 30499
 
-OBJECT_TITAN_RELIC = 192829 -- 5439.66, 2840.83, 420.427, 6.20393, 0, 0, 0.0396173, -0.999215
+OBJECT_TITAN_RELIC = 192829 -- 5439.66, 2840.83, 420.427, 6.20393, 0, 0, 0.0396173, -0.999215 should be spawned by the sript.
 
 MAP_NORTHREND = 571
 ZONE_WG = 4197
@@ -80,7 +80,7 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	battle = 0
 	if(controll == 1)then
 		controll = 2
-	elseif(controll == 2)then
+	elseif(controll == 2)then -- This section is used to change the controll when the "battle" ends. This is not how the battlefield works but it will be put in the right place later.
 		controll = 1
 	end
 end
@@ -120,7 +120,7 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3755, 7)
 			v:SetWorldStateForZone(3756, 7)
 			v:SetWorldStateForZone(3757, 7)
-			v:SetWorldStateForZone(3758, 7)
+			v:SetWorldStateForZone(3758, 7)  -- NEED TO DEFINE ALL OF THESE STATES AT THE TOP OF THE FILE.
 			v:SetWorldStateForZone(3759, 7)
 			v:SetWorldStateForZone(3760, 7)
 			v:SetWorldStateForZone(3761, 7)
@@ -167,7 +167,7 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3757, 4)
 			v:SetWorldStateForZone(3758, 4)
 			v:SetWorldStateForZone(3759, 4)
-			v:SetWorldStateForZone(3760, 4)
+			v:SetWorldStateForZone(3760, 4) -- NEED TO DEFINE ALL OF THESE STATES AT THE TOP OF THE FILE.
 			v:SetWorldStateForZone(3761, 4)
 			v:SetWorldStateForZone(3762, 4)
 			v:SetWorldStateForZone(3763, 4)
