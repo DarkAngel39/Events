@@ -5,19 +5,66 @@ battle = 0
 stateset = nil
 battlestates_set = nil
 
+ -- Factions
+FACTION_HORDE = 1735
+FACTION_ALLIANCE = 1732
+FACTION_NEUTRAL = 35
+
+ -- vehicle workshops capture bar controllers
+eastspark_progress = 50
+westspark_progress = 50
+sunkenring_progress = 50
+brokentemple_progres = 50
+ -- Max vehicle worldstate controllers (neutra, destroyed - 0, half destroyed (A/H) - 2, intact (A/H) - 4)
+A_V_EASTSPARK = 0
+H_V_EASTSPARK = 0
+A_V_WESTSPARK = 0
+H_V_WESTSPARK = 0
+A_V_SUNKENRING = 0
+H_V_SUNKENRING = 0
+A_V_BROKENTEMPLE = 0
+H_V_BROKENTEMPLE = 0
+A_V_FORTRESS_EAST = 0
+H_V_FORTRESS_EAST = 0
+A_V_FORTRESS_WEST = 0
+H_V_FORTRESS_WEST = 0
+ -- UI STATES
 WG_STATE_NEXT_BATTLE_TIME =	4354
-WG_STATE_END_BATTLE_TIME =	3781
-WG_HORDE_CONTROLLED =		3802
-WG_ALLIANCE_CONTROLLED =	3803
+WG_STATE_END_BATTLE_TIME = 3781
+WG_HORDE_CONTROLLED = 3802
+WG_ALLIANCE_CONTROLLED = 3803
 WG_STATE_BATTLE_UI = 3710
 WG_STATE_BATTLE_TIME = 3781
 WG_STATE_NEXT_BATTLE_TIMER = 3801
+WG_STATE_CURRENT_H_VEHICLES = 3490
+WG_STATE_MAX_H_VEHICLES = 3491
+WG_STATE_CURRENT_A_VEHICLES = 3680
+WG_STATE_MAX_A_VEHICLES = 3681
+ -- Map states:
+WG_STATE_W_FORTRESS_WORKSHOP = 3698
+WG_STATE_E_FORTRESS_WORKSHOP = 3699
+WG_STATE_BT_WORKSHOP = 3700
+WG_STATE_SR_WORKSHOP = 3701
+WG_STATE_WS_WORKSHOP = 3702
+WG_STATE_ES_WORKSHOP = 3703
 
 NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
 NPC_GNOME_ENGINEER = 30499
 
-OBJECT_TITAN_RELIC = 192829 -- 5439.66, 2840.83, 420.427, 6.20393, 0, 0, 0.0396173, -0.999215 should be spawned by the sript.
+GO_WINTERGRASP_TITAN_RELIC = 192829 -- 5439.66, 2840.83, 420.427, 6.20393, 0, 0, 0.0396173, -0.999215 should be spawned by the sript.
+GO_WINTERGRASP_FORTRESS_TOWER_1 = 190221
+GO_WINTERGRASP_FORTRESS_TOWER_2 = 190373
+GO_WINTERGRASP_FORTRESS_TOWER_3 = 190377
+GO_WINTERGRASP_FORTRESS_TOWER_4 = 190378
+GO_WINTERGRASP_SHADOWSIGHT_TOWER = 190356
+GO_WINTERGRASP_WINTER_S_EDGE_TOWER = 190357
+GO_WINTERGRASP_FLAMEWATCH_TOWER = 190358
+GO_WINTERGRASP_FORTRESS_GATE = 190375
+GO_WINTERGRASP_VAULT_GATE = 191810
+GO_WINTERGRASP_KEEP_COLLISION_WALL = 194323
+
+DESTRUCTABLE_OBJECT_IDS = {190356,190357,190358,190221,190373,190377,190378,190375,191810,190219,191796,191796,191796,191801,191802,191802,191804,191806,191808,191809,191809,190371,190371,190371,190371,190371,190371,190371}
 
 MAP_NORTHREND = 571
 ZONE_WG = 4197
@@ -32,7 +79,7 @@ AREA_SHADOWSIGHT_T = 4583
 AREA_C_BRIDGE = 4576
 AREA_E_BRIDGE = 4557
 AREA_W_BRIDGE = 4577
-
+ -- Spells
 SPELL_RECRUIT = 37795
 SPELL_CORPORAL = 33280
 SPELL_LIEUTENANT = 55629
@@ -102,8 +149,8 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
 			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-			v:SetWorldStateForZone(3698, 7)
-			v:SetWorldStateForZone(3699, 7)
+			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
+			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
 			v:SetWorldStateForZone(3704, 4)
 			v:SetWorldStateForZone(3705, 4)
 			v:SetWorldStateForZone(3706, 4)
@@ -147,8 +194,8 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
 			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
 			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-			v:SetWorldStateForZone(3698, 4)
-			v:SetWorldStateForZone(3699, 4)
+			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
+			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
 			v:SetWorldStateForZone(3704, 7)
 			v:SetWorldStateForZone(3705, 7)
 			v:SetWorldStateForZone(3706, 7)
@@ -194,5 +241,127 @@ end
 end
 end
 
+function DetectionUnitOnSpawn(pUnit, event)
+if(pUnit:HasTimedEvents() == false)then
+pUnit:RegisterAIUpdateEvent(1000)
+end
+end
+
+function DetectionUnitAIUpdate(pUnit)
+if(pUnit == nil)then
+	pUnit:RemoveAIUpdateEvent()
+end
+if(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 4)then
+	A_V_FORTRESS_WEST = 0
+	H_V_FORTRESS_WEST = 4
+elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 5)then
+	A_V_FORTRESS_WEST = 0
+	H_V_FORTRESS_WEST = 2
+elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 9)then
+	A_V_FORTRESS_WEST = 0
+	H_V_FORTRESS_WEST = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 7)then
+	A_V_FORTRESS_WEST = 4
+	H_V_FORTRESS_WEST = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 8)then
+	A_V_FORTRESS_WEST = 2
+	H_V_FORTRESS_WEST = 0
+end
+if(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 4)then
+	A_V_FORTRESS_EAST = 0
+	H_V_FORTRESS_EAST = 4
+elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 5)then
+	A_V_FORTRESS_EAST = 0
+	H_V_FORTRESS_EAST = 2
+elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 9)then
+	A_V_FORTRESS_EAST = 0
+	H_V_FORTRESS_EAST = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 7)then
+	A_V_FORTRESS_EAST = 4
+	H_V_FORTRESS_EAST = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 8)then
+	A_V_FORTRESS_EAST = 2
+	H_V_FORTRESS_EAST = 0
+end
+if(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 4)then
+	A_V_BROKENTEMPLE = 0
+	H_V_BROKENTEMPLE = 4
+elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 5)then
+	A_V_BROKENTEMPLE = 0
+	H_V_BROKENTEMPLE = 2
+elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 9)then
+	A_V_BROKENTEMPLE = 0
+	H_V_BROKENTEMPLE = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 7)then
+	A_V_BROKENTEMPLE = 4
+	H_V_BROKENTEMPLE = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 8)then
+	A_V_BROKENTEMPLE = 2
+	H_V_BROKENTEMPLE = 0
+end
+if(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 4)then
+	A_V_SUNKENRING = 0
+	H_V_SUNKENRING = 4
+elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 5)then
+	A_V_SUNKENRING = 0
+	H_V_SUNKENRING = 2
+elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 9)then
+	A_V_SUNKENRING = 0
+	H_V_SUNKENRING = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 7)then
+	A_V_SUNKENRING = 4
+	H_V_SUNKENRING = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 8)then
+	A_V_SUNKENRING = 2
+	H_V_SUNKENRING = 0
+end
+if(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 4)then
+	A_V_WESTSPARK = 0
+	H_V_WESTSPARK = 4
+elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 5)then
+	A_V_WESTSPARK = 0
+	H_V_WESTSPARK = 2
+elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 9)then
+	A_V_WESTSPARK = 0
+	H_V_WESTSPARK = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 7)then
+	A_V_WESTSPARK = 4
+	H_V_WESTSPARK = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 8)then
+	A_V_WESTSPARK = 2
+	H_V_WESTSPARK = 0
+end
+if(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 4)then
+	A_V_EASTSPARK = 0
+	H_V_EASTSPARK = 4
+elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 5)then
+	A_V_EASTSPARK = 0
+	H_V_EASTSPARK = 2
+elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 9)then
+	A_V_EASTSPARK = 0
+	H_V_EASTSPARK = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 7)then
+	A_V_EASTSPARK = 4
+	H_V_EASTSPARK = 0
+elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 8)then
+	A_V_EASTSPARK = 2
+	H_V_EASTSPARK = 0
+end
+local alliancevehicles = A_V_EASTSPARK + A_V_WESTSPARK + A_V_SUNKENRING + A_V_BROKENTEMPLE + A_V_FORTRESS_EAST + A_V_FORTRESS_WEST
+local hordevehicles = H_V_EASTSPARK + H_V_WESTSPARK + H_V_SUNKENRING + H_V_BROKENTEMPLE + H_V_FORTRESS_EAST + H_V_FORTRESS_WEST
+pUnit:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, alliancevehicles)
+pUnit:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, hordevehicles)
+for k,v in pairs(pUnit:GetInRangeObjects())do
+	if(v:GetEntry() ==(DESTRUCTABLE_OBJECT_IDS)then
+		if(v:GetWorldStateForZone(WG_STATE_BATTLE_UI) == 0 and v:GetHP() < 100)then -- rebuild all if there is no battle and anything is damaged.
+			v:Rebuild()
+		end
+	end
+	end
+end
+end
+
+RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
+RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("BattlefieldTick", 1000, 0)
 RegisterTimedEvent("WGUpdate", 1000, 0)
