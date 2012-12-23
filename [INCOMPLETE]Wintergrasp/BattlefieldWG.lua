@@ -352,13 +352,12 @@ local hordevehicles = H_V_EASTSPARK + H_V_WESTSPARK + H_V_SUNKENRING + H_V_BROKE
 pUnit:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, alliancevehicles)
 pUnit:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, hordevehicles)
 for k,v in pairs(pUnit:GetInRangeObjects())do
-	if(v:GetEntry() ==(DESTRUCTABLE_OBJECT_IDS)then
+	if(v:GetEntry() == (DESTRUCTABLE_OBJECT_IDS))then
 		if(v:GetWorldStateForZone(WG_STATE_BATTLE_UI) == 0 and v:GetHP() < 100)then -- rebuild all if there is no battle and anything is damaged.
 			v:Rebuild()
 		end
 	end
 	end
-end
 end
 
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
