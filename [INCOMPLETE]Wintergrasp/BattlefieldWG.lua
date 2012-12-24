@@ -242,9 +242,7 @@ end
 end
 
 function DetectionUnitOnSpawn(pUnit, event)
-if(pUnit:HasTimedEvents() == false)then
 pUnit:RegisterAIUpdateEvent(1000)
-end
 end
 
 function DetectionUnitAIUpdate(pUnit)
