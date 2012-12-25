@@ -1,4 +1,4 @@
-local timer_nextbattle = os.time() + 360
+local timer_nextbattle = os.time() + 36
 local timer_battle = 0
 local controll = math.random(1,2)
 battle = 0
@@ -47,6 +47,8 @@ WG_STATE_BT_WORKSHOP = 3700
 WG_STATE_SR_WORKSHOP = 3701
 WG_STATE_WS_WORKSHOP = 3702
 WG_STATE_ES_WORKSHOP = 3703
+WG_STATE_MAIN_GATE = 3763
+WG_STATE_KEEP_GATE_ANDGY = 3773
 
 NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
@@ -63,8 +65,6 @@ GO_WINTERGRASP_FLAMEWATCH_TOWER = 190358
 GO_WINTERGRASP_FORTRESS_GATE = 190375
 GO_WINTERGRASP_VAULT_GATE = 191810
 GO_WINTERGRASP_KEEP_COLLISION_WALL = 194323
-
-DESTRUCTABLE_OBJECT_IDS = {190356,190357,190358,190221,190373,190377,190378,190375,191810,190219,191796,191796,191796,191801,191802,191802,191804,191806,191808,191809,191809,190371,190371,190371,190371,190371,190371,190371}
 
 MAP_NORTHREND = 571
 ZONE_WG = 4197
@@ -115,7 +115,7 @@ SPELL_ALLIANCE_CONTROL_PHASE_SHIFT = 55774  -- phase 128
 
 function BattlefieldTick()
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
-	SendWorldMsg("Battlefield is starting!")
+	SendWorldMsg("Battlefield is starting!", 2)
 	timer_battle = os.time() + 180
 	timer_nextbattle = 0
 	battle = 1
@@ -123,7 +123,7 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + 36
-	SendWorldMsg("The battlefield is over!")
+	SendWorldMsg("The battlefield is over!", 2)
 	battle = 0
 	if(controll == 1)then
 		controll = 2
@@ -172,7 +172,7 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3760, 7)
 			v:SetWorldStateForZone(3761, 7)
 			v:SetWorldStateForZone(3762, 7)
-			v:SetWorldStateForZone(3763, 7)
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 7)
 			v:SetWorldStateForZone(3764, 7)
 			v:SetWorldStateForZone(3765, 7)
 			v:SetWorldStateForZone(3766, 7)
@@ -182,7 +182,7 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3770, 7)
 			v:SetWorldStateForZone(3771, 7)
 			v:SetWorldStateForZone(3772, 7)
-			v:SetWorldStateForZone(3773, 7)
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
 		end
 	elseif(controll == 2)then
 		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
@@ -217,7 +217,7 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3760, 4) -- NEED TO DEFINE ALL OF THESE STATES AT THE TOP OF THE FILE.
 			v:SetWorldStateForZone(3761, 4)
 			v:SetWorldStateForZone(3762, 4)
-			v:SetWorldStateForZone(3763, 4)
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 4)
 			v:SetWorldStateForZone(3764, 4)
 			v:SetWorldStateForZone(3765, 4)
 			v:SetWorldStateForZone(3766, 4)
@@ -227,7 +227,7 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3770, 4)
 			v:SetWorldStateForZone(3771, 4)
 			v:SetWorldStateForZone(3772, 4)
-			v:SetWorldStateForZone(3773, 4)
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
 		end
 	end
 elseif(v:GetAreaId() ~= ZONE_WG and v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE)then
@@ -350,12 +350,41 @@ local hordevehicles = H_V_EASTSPARK + H_V_WESTSPARK + H_V_SUNKENRING + H_V_BROKE
 pUnit:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, alliancevehicles)
 pUnit:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, hordevehicles)
 for k,v in pairs(pUnit:GetInRangeObjects())do
-	if(v:GetEntry() == (DESTRUCTABLE_OBJECT_IDS))then
-		if(v:GetWorldStateForZone(WG_STATE_BATTLE_UI) == 0 and v:GetHP() < 100)then -- rebuild all if there is no battle and anything is damaged.
-			v:Rebuild()
+if(v:GetHP() ~= nil)then -- filter all non destructable objects.
+	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
+		v:Rebuild()
+	end
+	if(v:GetEntry() == GO_WINTERGRASP_FORTRESS_GATE)then
+		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 5)then
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 5)
+		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 8)then
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 8)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 4)then
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 4)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 7)then
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 7)
+		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 6)then
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 6)
+		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 9)then
+			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 9)
+		end
+	elseif(v:GetEntry() == GO_WINTERGRASP_VAULT_GATE)then
+		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 5)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 5)
+		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 8)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 8)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 4)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 7)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
+		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 6)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 6)
+		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 9)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 9)
 		end
 	end
-	end
+end
+end
 end
 
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
