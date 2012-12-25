@@ -50,15 +50,20 @@ WG_STATE_ES_WORKSHOP = 3703
 WG_STATE_MAIN_GATE = 3763
 WG_STATE_KEEP_GATE_ANDGY = 3773
 
+WG_STATE_KEEP_SE_TOWER = 3714
+WG_STATE_KEEP_SW_TOWER = 3713
+WG_STATE_KEEP_NW_TOWER = 3711
+WG_STATE_KEEP_NE_TOWER = 3712
+
 NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
 NPC_GNOME_ENGINEER = 30499
 
 GO_WINTERGRASP_TITAN_RELIC = 192829 -- 5439.66, 2840.83, 420.427, 6.20393, 0, 0, 0.0396173, -0.999215 should be spawned by the sript.
-GO_WINTERGRASP_FORTRESS_TOWER_1 = 190221
-GO_WINTERGRASP_FORTRESS_TOWER_2 = 190373
-GO_WINTERGRASP_FORTRESS_TOWER_3 = 190377
-GO_WINTERGRASP_FORTRESS_TOWER_4 = 190378
+GO_WINTERGRASP_SE_TOWER = 190377
+GO_WINTERGRASP_NE_TOWER = 190378
+GO_WINTERGRASP_SW_TOWER = 190373
+GO_WINTERGRASP_NW_TOWER = 190221
 GO_WINTERGRASP_SHADOWSIGHT_TOWER = 190356
 GO_WINTERGRASP_WINTER_S_EDGE_TOWER = 190357
 GO_WINTERGRASP_FLAMEWATCH_TOWER = 190358
@@ -183,6 +188,12 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3771, 7)
 			v:SetWorldStateForZone(3772, 7)
 			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
+			v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 4)
+			v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
+			v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
+			v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+			eastspark_progress = 0
+			westspark_progress = 0
 		end
 	elseif(controll == 2)then
 		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
@@ -228,6 +239,12 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(3771, 4)
 			v:SetWorldStateForZone(3772, 4)
 			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
+			v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 7)
+			v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
+			v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
+			v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+			eastspark_progress = 0
+			westspark_progress = 0
 		end
 	end
 elseif(v:GetAreaId() ~= ZONE_WG and v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE)then
@@ -381,6 +398,62 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 6)
 		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 9)then
 			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 9)
+		end
+	elseif(v:GetEntry() == GO_WINTERGRASP_SE_TOWER)then
+		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 5)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 5)
+		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 8)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 8)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 4)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 4)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 7)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 7)
+		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 6)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 6)
+		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 9)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 9)
+		end
+	elseif(v:GetEntry() == GO_WINTERGRASP_SW_TOWER)then
+		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 5)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 5)
+		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 8)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 8)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 4)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 4)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 7)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 7)
+		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 6)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 6)
+		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 9)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 9)
+		end
+	elseif(v:GetEntry() == GO_WINTERGRASP_NW_TOWER)then
+		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 5)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 5)
+		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 8)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 8)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 4)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 4)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 7)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 7)
+		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 6)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 6)
+		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 9)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 9)
+		end
+	elseif(v:GetEntry() == GO_WINTERGRASP_NE_TOWER)then
+		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 5)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 5)
+		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 8)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 8)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 4)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 4)
+		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 7)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 7)
+		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 6)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 6)
+		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 9)then
+			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 9)
 		end
 	end
 end
