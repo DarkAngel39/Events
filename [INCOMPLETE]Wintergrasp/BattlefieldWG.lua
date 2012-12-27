@@ -5,6 +5,8 @@ battle = 0
 stateset = nil
 battlestates_set = nil
 
+GAMEOBJECT_FACTION = 0x0006 + 0x0009
+
  -- Factions
 FACTION_HORDE = 1735
 FACTION_ALLIANCE = 1732
@@ -180,16 +182,17 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	timer_nextbattle = 0
 	battle = 1
 	battlestates_set = 0
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,1,2100)
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + 36
 	SendWorldMsg("The battlefield is over!", 2)
 	battle = 0
-	if(controll == 1)then
+ --[[	if(controll == 1)then
 		controll = 2
 	elseif(controll == 2)then -- This section is used to change the controll when the "battle" ends. This is not how the battlefield works but it will be put in the right place later.
 		controll = 1
-	end
+	end ]]--
 end
 end
 
@@ -247,8 +250,8 @@ if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() =
 			v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
 			v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 			v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-			eastspark_progress = 0
-			westspark_progress = 0
+			eastspark_progress = 100
+			westspark_progress = 100
 		end
 	elseif(controll == 2)then
 		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
@@ -913,10 +916,49 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 9)
 		end
 	end
+	if(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE and battle == 1 and controll == 2 and v:GetAreaId() == AREA_FORTRESS)then -- this changes the faction of the objects but for some reason they can not be damaged as they should by the vehicles.
+		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_HORDE)
+	elseif(battle == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
+		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_NEUTRAL)
+	elseif(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE and battle == 1 and controll == 1 and v:GetAreaId() == AREA_FORTRESS)then
+		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_ALLIANCE)
+	end
 end
 end
 end
 
+function TitanRelickOnUse(pGO, event, pPlayer)
+if(battle == 1)then
+	if(controll == 1 and pPlayer:GetTeam() == 1)then
+		timer_battle = 0
+		timer_nextbattle = os.time() + 36
+		SendWorldMsg("The battlefield is over!", 2)
+		battle = 0
+		controll = 2
+		pGO:Despawn(1,0)
+	elseif(controll == 2 and pPlayer:GetTeam() == 2)then
+		timer_battle = 0
+		timer_nextbattle = os.time() + 36
+		SendWorldMsg("The battlefield is over!", 2)
+		battle = 0
+		controll = 1
+		pGO:Despawn(1,0)
+	end
+end
+end
+
+function TitanrelickOnLoad(pGO)
+pGO:RegisterAIUpdateEvent(1000)
+end
+
+function TitanrelickAIUpdate(pGO)
+if(pGO:Get)then
+end
+end
+
+RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,5,TitanrelickAIUpdate)
+RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,2,TitanrelickOnLoad)
+RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("BattlefieldTick", 1000, 0)
