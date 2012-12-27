@@ -96,7 +96,7 @@ GO_WINTERGRASP_WINTER_S_EDGE_TOWER = 190357
 GO_WINTERGRASP_FLAMEWATCH_TOWER = 190358
 GO_WINTERGRASP_FORTRESS_GATE = 190375
 GO_WINTERGRASP_VAULT_GATE = 191810
-GO_WINTERGRASP_KEEP_COLLISION_WALL = 194323
+GO_WINTERGRASP_KEEP_COLLISION_WALL = 194162
 GO_WINTERGRASP_KEEP_WALL_1 = 190219
 GO_WINTERGRASP_KEEP_WALL_2 = 190220
 GO_WINTERGRASP_KEEP_WALL_3 = 191802
@@ -182,7 +182,6 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	timer_nextbattle = 0
 	battle = 1
 	battlestates_set = 0
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,1,2100)
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + 36
@@ -952,12 +951,20 @@ pGO:RegisterAIUpdateEvent(1000)
 end
 
 function TitanrelickAIUpdate(pGO)
-if(pGO:Get)then
+if(pGO == nil)then
+	pGO:RemoveAIUpdateEvent()
+end
+local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,420.427,GO_WINTERGRASP_TITAN_RELIC)
+if(relick == nil and battle == 1)then
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,1,2100)
+elseif(relick ~= nil and battle ~= 1)then
+	relick:Despawn(1,0)
 end
 end
 
-RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,5,TitanrelickAIUpdate)
-RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,2,TitanrelickOnLoad)
+
+RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,5,TitanrelickAIUpdate)
+RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,2,TitanrelickOnLoad)
 RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
