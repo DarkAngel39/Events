@@ -1,9 +1,12 @@
-local timer_nextbattle = os.time() + 36
+TIME_TO_BATTLE = 36
+BATTLE_TIMER = 180
+local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
 battle = 0
 stateset = nil
 battlestates_set = nil
+stateuiset = 0
 
 GAMEOBJECT_FACTION = 0x0006 + 0x0009
 
@@ -17,7 +20,7 @@ eastspark_progress = 50
 westspark_progress = 50
 sunkenring_progress = 50
 brokentemple_progres = 50
- -- Max vehicle worldstate controllers (neutra, destroyed - 0, half destroyed (A/H) - 2, intact (A/H) - 4)
+ -- Max vehicle worldstate controllers (neutral, destroyed - 0, half destroyed (A/H) - 2, intact (A/H) - 4)
 A_V_EASTSPARK = 0
 H_V_EASTSPARK = 0
 A_V_WESTSPARK = 0
@@ -175,32 +178,63 @@ SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT = 56617 -- phase 32
 SPELL_HORDE_CONTROL_PHASE_SHIFT = 55773 -- phase 64
 SPELL_ALLIANCE_CONTROL_PHASE_SHIFT = 55774  -- phase 128
 
+ -- achievements
+ACHIEVEMENT_VICTORY = 1717
+
+ -- Quests
+QUEST_WG_VICTORY_A = 13181
+QUEST_WG_VICTORY_H = 13183
+QUEST_WG_TOPPING_TOWERS = 13539
+QUEST_WG_SOUTHEN_SABOTAGE = 13538
+
 function BattlefieldTick()
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
-	SendWorldMsg("Battlefield is starting!", 2)
-	timer_battle = os.time() + 180
+	SendWorldMsg("[PH MESSAGE]Battlefield is starting!", 1)
+	timer_battle = os.time() + BATTLE_TIMER
 	timer_nextbattle = 0
 	battle = 1
 	battlestates_set = 0
+	stateuiset = 0
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
-	timer_nextbattle = os.time() + 36
-	SendWorldMsg("The battlefield is over!", 2)
+	timer_nextbattle = os.time() + TIME_TO_BATTLE
+	SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 	battle = 0
- --[[	if(controll == 1)then
-		controll = 2
-	elseif(controll == 2)then -- This section is used to change the controll when the "battle" ends. This is not how the battlefield works but it will be put in the right place later.
-		controll = 1
-	end ]]--
+	stateuiset = 0
+	for k,s in pairs(GetPlayersInZone(ZONE_WG))do
+	if(controll == 1)then
+		if(s:GetTeam() == 0)then
+			s:CastSpell(SPELL_VICTORY_REWARD)
+			--[[if(s:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+				s:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
+			end]]--
+		elseif(s:GetTeam() == 1)then
+			s:CastSpell(SPELL_DEFEAT_REWARD)
+		end
+	end
+	if(controll == 2)then
+		if(s:GetTeam() == 1)then
+			s:CastSpell(SPELL_VICTORY_REWARD)
+			--[[if(s:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+				s:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
+			end]]--
+		elseif(s:GetTeam() == 0)then
+			s:CastSpell(SPELL_DEFEAT_REWARD)
+		end
+	end
+	end
 end
 end
 
 function WGUpdate()
-for k,v in pairs(GetPlayersInWorld())do
-if(v:GetAreaId() == ZONE_WG or v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE)then
+for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE)then
+if(stateuiset == 0)then
 	v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, timer_nextbattle)
 	v:SetWorldStateForZone(WG_STATE_BATTLE_UI, timer_battle)
 	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
+	stateuiset = 1
+end
 	if(controll == 1)then
 		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
@@ -930,18 +964,41 @@ function TitanRelickOnUse(pGO, event, pPlayer)
 if(battle == 1)then
 	if(controll == 1 and pPlayer:GetTeam() == 1)then
 		timer_battle = 0
-		timer_nextbattle = os.time() + 36
-		SendWorldMsg("The battlefield is over!", 2)
+		timer_nextbattle = os.time() + TIME_TO_BATTLE
+		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 		battle = 0
 		controll = 2
 		pGO:Despawn(1,0)
-	elseif(controll == 2 and pPlayer:GetTeam() == 2)then
+		stateuiset = 0
+		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+			if(v:GetTeam() == 1)then
+				v:CastSpell(SPELL_VICTORY_REWARD)
+				if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+					v:AddAchievement(ACHIEVEMENT_VICTORY)
+				end
+			elseif(v:GetTeam() == 0)then
+				v:CastSpell(SPELL_DEFEAT_REWARD)
+			end
+		end
+		end
+	if(controll == 2 and pPlayer:GetTeam() == 0)then
 		timer_battle = 0
-		timer_nextbattle = os.time() + 36
-		SendWorldMsg("The battlefield is over!", 2)
+		timer_nextbattle = os.time() + TIME_TO_BATTLE
+		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 		battle = 0
 		controll = 1
 		pGO:Despawn(1,0)
+		stateuiset = 0
+		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+			if(v:GetTeam() == 0)then
+				v:CastSpell(SPELL_VICTORY_REWARD)
+				if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+					v:AddAchievement(ACHIEVEMENT_VICTORY)
+				end
+			elseif(v:GetTeam() == 1)then
+				v:CastSpell(SPELL_DEFEAT_REWARD)
+			end
+		end
 	end
 end
 end
@@ -956,12 +1013,11 @@ if(pGO == nil)then
 end
 local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,420.427,GO_WINTERGRASP_TITAN_RELIC)
 if(relick == nil and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,1,2100)
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,1.1,2100)
 elseif(relick ~= nil and battle ~= 1)then
 	relick:Despawn(1,0)
 end
 end
-
 
 RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,5,TitanrelickAIUpdate)
 RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,2,TitanrelickOnLoad)
