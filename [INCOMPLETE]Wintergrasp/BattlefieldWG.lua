@@ -1,5 +1,5 @@
-TIME_TO_BATTLE = 36
-BATTLE_TIMER = 180
+TIME_TO_BATTLE = 9000
+BATTLE_TIMER = 2100
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
@@ -1102,7 +1102,7 @@ if(pGO == nil)then
 end
 local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,420.427,GO_WINTERGRASP_TITAN_RELIC)
 if(relick == nil and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,100.1,2100)
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,100.1,2300)
 elseif(relick ~= nil and battle ~= 1)then
 	relick:Despawn(1,0)
 end
