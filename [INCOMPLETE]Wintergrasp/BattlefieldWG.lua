@@ -4,7 +4,7 @@ local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
 battle = 0
-stateset = nil
+states = nil
 battlestates_set = nil
 stateuiset = 0
 add_tokens = 1
@@ -132,6 +132,8 @@ GO_WINTERGRASP_WORKSHOP_W = 192028
 GO_WINTERGRASP_FW_TOWER = 190358
 GO_WINTERGRASP_WE_TOWER = 190357
 GO_WINTERGRASP_SS_TOWER = 190356
+GO_WINTERGRASP_DEFENDER_P_H = 190763
+GO_WINTERGRASP_DEFENDER_P_A = 191575
  -- Eastspark
 GO_WINTERGRASP_WORKSHOP_ES = 192033
 GO_WINTERGRASP_CAPTUREPOINT_ES = 194959
@@ -243,6 +245,7 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	battle = 1
 	battlestates_set = 0
 	stateuiset = 0
+	states = 0
 	add_tokens = 0
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
@@ -337,7 +340,7 @@ if(stateuiset == 0)then
 	end
 end
 if(controll == 1)then
-	if(states == 2 or states == nil)then
+	if(states == 0 or states == nil)then
 		if(battle == 0)then
 			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
 			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
@@ -386,7 +389,7 @@ if(controll == 1)then
 		states = 1
 	end
 elseif(controll == 2)then
-	if(states == 1 or states == nil)then
+	if(states == 0 or states == nil)then
 		if(battle == 0)then
 			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
 			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
@@ -432,7 +435,7 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
 		eastspark_progress = 0
 		westspark_progress = 0
-		states = 2
+		states = 1
 	end
 end
 end
@@ -1057,6 +1060,7 @@ if(battle == 1)then
 		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 		battle = 0
 		controll = 2
+		states = 0
 		pGO:Despawn(1,0)
 		stateuiset = 0
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
