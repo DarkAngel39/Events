@@ -7,6 +7,7 @@ battle = 0
 stateset = nil
 battlestates_set = nil
 stateuiset = 0
+add_tokens = 1
 
 GAMEOBJECT_FACTION = 0x0006 + 0x0009
 
@@ -210,7 +211,7 @@ QUEST_WG_VICTORY_H = 13183
 QUEST_WG_TOPPING_TOWERS = 13539
 QUEST_WG_SOUTHEN_SABOTAGE = 13538
 
-function WGUpdate()
+function Aura()
 for k,l in pairs(GetPlayersInWorld())do
 if(l:GetMapId() == MAP_HOR or l:GetMapId() == MAP_NEXUS or l:GetMapId() == MAP_UP or l:GetMapId() == MAP_UK or l:GetMapId() == MAP_OCULUS or l:GetMapId() == MAP_POS or l:GetMapId() == MAP_TOC or l:GetMapId() == MAP_FOS or l:GetMapId() == MAP_AK or l:GetMapId() == MAP_VH or l:GetMapId() == MAP_GUND or l:GetMapId() == MAP_HOL or l:GetMapId() == MAP_AN or l:GetMapId() == MAP_HOS or l:GetMapId() == MAP_COS or l:GetMapId() == MAP_NORTHREND)then
 	if(battle == 0 and controll == 1 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
@@ -232,6 +233,9 @@ else
 	end
 end
 end
+end
+
+function WGUpdate()
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	SendWorldMsg("[PH MESSAGE]Battlefield is starting!", 1)
 	timer_battle = os.time() + BATTLE_TIMER
@@ -239,34 +243,13 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	battle = 1
 	battlestates_set = 0
 	stateuiset = 0
+	add_tokens = 0
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
 	SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 	battle = 0
 	stateuiset = 0
-	for k,s in pairs(GetPlayersInZone(ZONE_WG))do
-	if(controll == 1)then
-		if(s:GetTeam() == 0)then
-			s:CastSpell(SPELL_VICTORY_REWARD)
-			--[[if(s:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
-				s:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
-			end]]--
-		elseif(s:GetTeam() == 1)then
-			s:CastSpell(SPELL_DEFEAT_REWARD)
-		end
-	end
-	if(controll == 2)then
-		if(s:GetTeam() == 1)then
-			s:CastSpell(SPELL_VICTORY_REWARD)
-			--[[if(s:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
-				s:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
-			end]]--
-		elseif(s:GetTeam() == 0)then
-			s:CastSpell(SPELL_DEFEAT_REWARD)
-		end
-	end
-	end
 end
 for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 if(battle == 1)then
@@ -283,6 +266,30 @@ elseif(battle == 0)then
 	if(v:HasAura(SPELL_LIEUTENANT))then
 		v:RemoveAura(SPELL_LIEUTENANT)
 	end
+end
+if(controll == 1 and battle == 0 and add_tokens == 0)then
+		if(v:GetTeam() == 0)then
+			v:CastSpell(SPELL_VICTORY_REWARD)
+			--[[if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+				v:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
+			end]]--
+		elseif(v:GetTeam() == 1)then
+			v:CastSpell(SPELL_DEFEAT_REWARD)
+		end
+		add_tokens = 1
+end
+if(controll == 2 and battle == 0 and add_tokens == 0)then
+		if(v:GetTeam() == 1)then
+			v:CastSpell(SPELL_VICTORY_REWARD)
+			--[[if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+				v:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
+			end]]--
+		elseif(v:GetTeam() == 0)then
+			v:CastSpell(SPELL_DEFEAT_REWARD)
+		end
+		add_tokens = 1
+end
+if(battle == 0)then
 end
 if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE or v:GetAreaId() == ZONE_WG)then
 	if(controll == 1)then
@@ -1107,3 +1114,4 @@ RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("WGUpdate", 1000, 0)
+RegisterTimedEvent("Aura", 1000, 0)
