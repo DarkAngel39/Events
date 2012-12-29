@@ -7,3 +7,4 @@ Project developer: Satanail - http://www.arcemu.org/, DarkAngel39 - https://gith
 Current project helpers:
 Magnifikator - https://github.com/
 Lokenn - https://github.com/
+armm77 - https://github.com/
