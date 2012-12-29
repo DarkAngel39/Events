@@ -84,6 +84,9 @@ WG_STATE_KEEP_NE_TOWER = 3712
 WG_STATE_FW_TOWER = 3706
 WG_STATE_WE_TOWER = 3705
 WG_STATE_SS_TOWER = 3704
+ -- Dynamic capturebar states
+WG_STATE_SOUTH_SHOW = 3501
+WG_STATE_SOUTH_PROGRESS = 3502
 
 NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
@@ -128,10 +131,30 @@ GO_WINTERGRASP_WORKSHOP_W = 192028
 GO_WINTERGRASP_FW_TOWER = 190358
 GO_WINTERGRASP_WE_TOWER = 190357
 GO_WINTERGRASP_SS_TOWER = 190356
-
+ -- Eastspark
 GO_WINTERGRASP_WORKSHOP_ES = 192033
-
+GO_WINTERGRASP_CAPTUREPOINT_ES = 194959
+ -- Westspark
+GO_WINTERGRASP_WORKSHOP_ES = 192032
+GO_WINTERGRASP_CAPTUREPOINT_ES = 194962
+ -- Map info
+MAP_HOR = 668
+MAP_NEXUS = 576
+MAP_UP = 575
+MAP_UK = 574
+MAP_OCULUS = 578
+MAP_POS = 658
+MAP_TOC = 650
+MAP_FOS = 632
+MAP_AK = 619
+MAP_VH = 608
+MAP_GUND = 604
+MAP_HOL = 602
+MAP_AN = 601
+MAP_HOS = 599
+MAP_COS = 595
 MAP_NORTHREND = 571
+ -- Areass
 ZONE_WG = 4197
 AREA_FORTRESS = 4575
 AREA_EASTSPARK = 4612
@@ -188,6 +211,27 @@ QUEST_WG_TOPPING_TOWERS = 13539
 QUEST_WG_SOUTHEN_SABOTAGE = 13538
 
 function WGUpdate()
+for k,l in pairs(GetPlayersInWorld())do
+if(l:GetMapId() == MAP_HOR or l:GetMapId() == MAP_NEXUS or l:GetMapId() == MAP_UP or l:GetMapId() == MAP_UK or l:GetMapId() == MAP_OCULUS or l:GetMapId() == MAP_POS or l:GetMapId() == MAP_TOC or l:GetMapId() == MAP_FOS or l:GetMapId() == MAP_AK or l:GetMapId() == MAP_VH or l:GetMapId() == MAP_GUND or l:GetMapId() == MAP_HOL or l:GetMapId() == MAP_AN or l:GetMapId() == MAP_HOS or l:GetMapId() == MAP_COS or l:GetMapId() == MAP_NORTHREND)then
+	if(battle == 0 and controll == 1 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
+		l:CastSpell(SPELL_ESSENCE_OF_WINTERGRASP)
+	elseif(controll == 1 and l:GetTeam() == 1 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+	elseif(battle == 0 and controll == 2 and l:GetTeam() == 1 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
+		l:CastSpell(SPELL_ESSENCE_OF_WINTERGRASP)
+	elseif(controll == 2 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+	elseif(battle == 1)then
+		if(l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+			l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+		end
+	end
+else
+	if(l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+	end
+end
+end
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	SendWorldMsg("[PH MESSAGE]Battlefield is starting!", 1)
 	timer_battle = os.time() + BATTLE_TIMER
@@ -225,6 +269,21 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	end
 end
 for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+if(battle == 1)then
+	if(v:HasAura(SPELL_RECRUIT) == false and v:HasAura(SPELL_CORPORAL) == false and v:HasAura(SPELL_LIEUTENANT) == false)then
+		v:CastSpell(SPELL_RECRUIT)
+	end
+elseif(battle == 0)then
+	if(v:HasAura(SPELL_RECRUIT))then
+		v:RemoveAura(SPELL_RECRUIT)
+	end
+	if(v:HasAura(SPELL_CORPORAL))then
+		v:RemoveAura(SPELL_CORPORAL)
+	end
+	if(v:HasAura(SPELL_LIEUTENANT))then
+		v:RemoveAura(SPELL_LIEUTENANT)
+	end
+end
 if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE or v:GetAreaId() == ZONE_WG)then
 	if(controll == 1)then
 		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
@@ -245,7 +304,6 @@ elseif(v:GetAreaId() ~= ZONE_WG and v:GetAreaId() ~= AREA_FORTRESS and v:GetArea
 			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
 	end
 end
-	
 if(stateuiset == 0)then
 	if(battle == 1)then
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
@@ -273,10 +331,11 @@ if(stateuiset == 0)then
 end
 if(controll == 1)then
 	if(states == 2 or states == nil)then
-		states = 1
-		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
-		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
-		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		if(battle == 0)then
+			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
+			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
+			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		end
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
@@ -317,13 +376,15 @@ if(controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
 		eastspark_progress = 100
 		westspark_progress = 100
+		states = 1
 	end
 elseif(controll == 2)then
 	if(states == 1 or states == nil)then
-		states = 2
-		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
-		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
-		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		if(battle == 0)then
+			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
+			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
+			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		end
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
@@ -363,7 +424,8 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
 		eastspark_progress = 0
-	westspark_progress = 0
+		westspark_progress = 0
+		states = 2
 	end
 end
 end
@@ -1033,7 +1095,7 @@ if(pGO == nil)then
 end
 local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,420.427,GO_WINTERGRASP_TITAN_RELIC)
 if(relick == nil and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,1.1,2100)
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,100.1,2100)
 elseif(relick ~= nil and battle ~= 1)then
 	relick:Despawn(1,0)
 end
