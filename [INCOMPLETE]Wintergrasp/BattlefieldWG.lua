@@ -187,7 +187,7 @@ QUEST_WG_VICTORY_H = 13183
 QUEST_WG_TOPPING_TOWERS = 13539
 QUEST_WG_SOUTHEN_SABOTAGE = 13538
 
-function BattlefieldTick()
+function WGUpdate()
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	SendWorldMsg("[PH MESSAGE]Battlefield is starting!", 1)
 	timer_battle = os.time() + BATTLE_TIMER
@@ -224,126 +224,146 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	end
 	end
 end
-end
-
-function WGUpdate()
 for k,v in pairs(GetPlayersInZone(ZONE_WG))do
-if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE)then
-if(stateuiset == 0)then
-	v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, timer_nextbattle)
-	v:SetWorldStateForZone(WG_STATE_BATTLE_UI, timer_battle)
-	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
-	stateuiset = 1
-end
+if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE or v:GetAreaId() == ZONE_WG)then
 	if(controll == 1)then
 		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
 		end
 		v:CastSpell(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-		if(states == 2 or states == nil)then
-			states = 1
-			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
-			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
-			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 7)
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
-			v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 4)
-			v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
-			v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
-			v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-			eastspark_progress = 100
-			westspark_progress = 100
-		end
-	elseif(controll == 2)then
+		elseif(controll == 2)then
 		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
 		end
 		v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-		if(states == 1 or states == nil)then
-			states = 2
-			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
-			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
-			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 7)
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 4)
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 4)
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
-			v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 7)
-			v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
-			v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
-			v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-			eastspark_progress = 0
-			westspark_progress = 0
-		end
 	end
-elseif(v:GetAreaId() ~= ZONE_WG and v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE)then
+elseif(v:GetAreaId() ~= ZONE_WG and v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE and v:GetAreaId() ~= ZONE_WG)then
 	if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
 	end
 	if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+	end
+end
+	
+if(stateuiset == 0)then
+	if(battle == 1)then
+		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
+		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
+		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 1)
+		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 0)
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, 0)
+		stateuiset = 1
+	elseif(battle == 0 and controll == 1)then
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
+		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
+		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
+		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		stateuiset = 1
+	elseif(battle == 0 and controll == 2)then
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
+		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
+		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
+		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		stateuiset = 1
+	end
+end
+if(controll == 1)then
+	if(states == 2 or states == nil)then
+		states = 1
+		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
+		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
+		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
+		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_WE_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_FW_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 7)
+		v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
+		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 4)
+		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
+		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
+		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+		eastspark_progress = 100
+		westspark_progress = 100
+	end
+elseif(controll == 2)then
+	if(states == 1 or states == nil)then
+		states = 2
+		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
+		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
+		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
+		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
+		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_WE_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_FW_TOWER, 7)
+		v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 4)
+		v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 4)
+		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
+		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 7)
+		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
+		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
+		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+		eastspark_progress = 0
+	westspark_progress = 0
 	end
 end
 end
@@ -1024,5 +1044,4 @@ RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,2,TitanrelickOnLoad)
 RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
-RegisterTimedEvent("BattlefieldTick", 1000, 0)
 RegisterTimedEvent("WGUpdate", 1000, 0)
