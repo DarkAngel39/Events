@@ -4,8 +4,7 @@ local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
 battle = 0
-states = nil
-battlestates_set = nil
+states = 0
 stateuiset = 0
 add_tokens = 1
 
@@ -132,8 +131,8 @@ GO_WINTERGRASP_WORKSHOP_W = 192028
 GO_WINTERGRASP_FW_TOWER = 190358
 GO_WINTERGRASP_WE_TOWER = 190357
 GO_WINTERGRASP_SS_TOWER = 190356
-GO_WINTERGRASP_DEFENDER_P_H = 190763
-GO_WINTERGRASP_DEFENDER_P_A = 191575
+GO_WINTERGRASP_DEFENDER_H = 190763
+GO_WINTERGRASP_DEFENDER_A = 191575
  -- Eastspark
 GO_WINTERGRASP_WORKSHOP_ES = 192033
 GO_WINTERGRASP_CAPTUREPOINT_ES = 194959
@@ -196,7 +195,7 @@ SPELL_TELEPORT_FORTRESS = 60035
 SPELL_TELEPORT_DALARAN = 53360
 SPELL_VICTORY_AURA = 60044
 SPELL_WINTERGRASP_WATER = 36444
-SPELL_ESSENCE_OF_WINTERGRASP = 58045
+SPELL_ESSENCE_OF_WINTERGRASP = 57940
 SPELL_WINTERGRASP_RESTRICTED_FLIGHT_AREA = 58730
  -- Phasing spells
 SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT = 56618 -- phase 16
@@ -243,10 +242,10 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	timer_battle = os.time() + BATTLE_TIMER
 	timer_nextbattle = 0
 	battle = 1
-	battlestates_set = 0
 	stateuiset = 0
 	states = 0
 	add_tokens = 0
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100.1,2300)
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
@@ -255,6 +254,12 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	stateuiset = 0
 end
 for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+if(v == nil)then
+	if(stateuiset ~= 0 or states ~= 0)then -- If there is noone in Wintergrasp, then reset the states of the battlefield. Needed to update the states when a player enters the zone and the cells where unloaded.
+		stateuiset = 0
+		states = 0
+	end
+end
 if(battle == 1)then
 	if(v:HasAura(SPELL_RECRUIT) == false and v:HasAura(SPELL_CORPORAL) == false and v:HasAura(SPELL_LIEUTENANT) == false)then
 		v:CastSpell(SPELL_RECRUIT)
@@ -273,6 +278,7 @@ end
 if(controll == 1 and battle == 0 and add_tokens == 0)then
 		if(v:GetTeam() == 0)then
 			v:CastSpell(SPELL_VICTORY_REWARD)
+			v:CastSpell(SPELL_VICTORY_AURA)
 			--[[if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
 				v:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
 			end]]--
@@ -284,6 +290,7 @@ end
 if(controll == 2 and battle == 0 and add_tokens == 0)then
 		if(v:GetTeam() == 1)then
 			v:CastSpell(SPELL_VICTORY_REWARD)
+			v:CastSpell(SPELL_VICTORY_AURA)
 			--[[if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
 				v:AddAchievement(ACHIEVEMENT_VICTORY)  -- For some reason this causes crashes.
 			end]]--
@@ -341,11 +348,11 @@ if(stateuiset == 0)then
 end
 if(controll == 1)then
 	if(states == 0 or states == nil)then
-		if(battle == 0)then
+		--[[if(battle == 0)then
 			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
 			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-		end
+		end]]--
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
@@ -390,11 +397,11 @@ if(controll == 1)then
 	end
 elseif(controll == 2)then
 	if(states == 0 or states == nil)then
-		if(battle == 0)then
+		--[[if(battle == 0)then
 			v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
 			v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
 			v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-		end
+		end]]--
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
@@ -1047,6 +1054,14 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_NEUTRAL)
 	elseif(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE and battle == 1 and controll == 1 and v:GetAreaId() == AREA_FORTRESS)then
 		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_ALLIANCE)
+	elseif((v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T))then
+		if(battle == 1 and controll == 2 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE)then
+			v:SetByte(GAMEOBJECT_FACTION,0,FACTION_ALLIANCE)
+		elseif(battle == 1 and controll == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE)then
+			v:SetByte(GAMEOBJECT_FACTION,0,FACTION_HORDE)
+		elseif(battle == 0 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
+			v:SetByte(GAMEOBJECT_FACTION,0,FACTION_NEUTRAL)
+		end
 	end
 end
 end
@@ -1066,9 +1081,11 @@ if(battle == 1)then
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 			if(v:GetTeam() == 1)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
-				if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+				v:CastSpell(SPELL_VICTORY_AURA)
+				--[[if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
 					v:AddAchievement(ACHIEVEMENT_VICTORY)
-				end
+					v:CastSpell(SPELL_VICTORY_AURA)
+				end]]--
 			elseif(v:GetTeam() == 0)then
 				v:CastSpell(SPELL_DEFEAT_REWARD)
 			end
@@ -1085,9 +1102,10 @@ if(battle == 1)then
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 			if(v:GetTeam() == 0)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
-				if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+				v:CastSpell(SPELL_VICTORY_AURA)
+				--[[if(v:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
 					v:AddAchievement(ACHIEVEMENT_VICTORY)
-				end
+				end]]--
 			elseif(v:GetTeam() == 1)then
 				v:CastSpell(SPELL_DEFEAT_REWARD)
 			end
@@ -1104,14 +1122,37 @@ function TitanrelickAIUpdate(pGO)
 if(pGO == nil)then
 	pGO:RemoveAIUpdateEvent()
 end
-local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,420.427,GO_WINTERGRASP_TITAN_RELIC)
+local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,430.282,GO_WINTERGRASP_TITAN_RELIC)
 if(relick == nil and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,420.427,6.20393,100.1,2300)
+	-- PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100.1,2300)
 elseif(relick ~= nil and battle ~= 1)then
 	relick:Despawn(1,0)
 end
 end
 
+function DebugWG(event, pPlayer, message, type, language)
+if(pPlayer:IsGm() and pPlayer:GetZoneId() == ZONE_WG and battle == 0)then
+	if(message == "#debug WG")then
+		timer_nextbattle = os.time() + 10
+		SendWorldMsg("Wintergrasp starts after 10s. Battlefield started by GM "..pPlayer:GetName()..".|r", 1)
+		pPlayer:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+	elseif(message == "#st")then
+		SendWorldMsg("The states is "..states..".|r")
+	end
+end
+end
+
+function VictoryAura(pSpellIndex, Spell)
+local spcaster = Spell:GetCaster()
+if(spcaster~= nil and spcaster:IsPlayer() and spcaster:HasAchievement(ACHIEVEMENT_VICTORY) == false)then
+	spcaster:AddAchievement(ACHIEVEMENT_VICTORY)
+	if(spcaster:HasAura(SPELL_VICTORY_AURA))then
+		spcaster:RemoveAura(SPELL_VICTORY_AURA)
+	end
+end
+end
+
+RegisterDummySpell(SPELL_VICTORY_AURA, VictoryAura)
 RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,5,TitanrelickAIUpdate)
 RegisterGameObjectEvent(GO_WINTERGRASP_KEEP_COLLISION_WALL,2,TitanrelickOnLoad)
 RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
@@ -1119,3 +1160,4 @@ RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("WGUpdate", 1000, 0)
 RegisterTimedEvent("Aura", 1000, 0)
+RegisterServerHook(16, "DebugWG")
