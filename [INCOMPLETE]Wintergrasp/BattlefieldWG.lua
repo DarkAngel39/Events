@@ -94,9 +94,9 @@ NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
 NPC_GNOME_ENGINEER = 30499
 NPC_NOT_IMMUNE_PC_NPC = 23472
+NPC_INVISIBLE_STALKER = 15214
 
-
-GO_WINTERGRASP_TITAN_RELIC = 192829 -- 5439.66, 2840.83, 420.427, 6.20393, 0, 0, 0.0396173, -0.999215 should be spawned by the sript.
+GO_WINTERGRASP_TITAN_RELIC = 192829
 GO_WINTERGRASP_SE_TOWER = 190377
 GO_WINTERGRASP_NE_TOWER = 190378
 GO_WINTERGRASP_SW_TOWER = 190373
@@ -138,6 +138,7 @@ GO_WINTERGRASP_SS_TOWER = 190356
 GO_WINTERGRASP_DEFENDER_H = 190763
 GO_WINTERGRASP_DEFENDER_A = 191575
 GO_WINTERGRASP_DEFENDER_N = 192819
+GO_WINTERGRASP_VEHICLE_TELEPORTER = 192951
  -- Eastspark
 GO_WINTERGRASP_WORKSHOP_ES = 192033
 GO_WINTERGRASP_CAPTUREPOINT_ES = 194959
@@ -189,7 +190,7 @@ SPELL_ALLIANCE_FLAG = 14268
 SPELL_HORDE_FLAG = 14267
 SPELL_GRAB_PASSENGER = 61178
 SPELL_TELEPORT_DEFENDER = 54643
-SPELL_TELEPORT_DEFENDER = 49759
+SPELL_TELEPORT_VEHICLE = 49759
  -- Reward spells
 SPELL_VICTORY_REWARD = 56902
 SPELL_DEFEAT_REWARD = 58494
@@ -474,18 +475,18 @@ end
 end
 
 function DetectionUnitOnSpawn(pUnit, event)
-pUnit:RegisterAIUpdateEvent(1000)
+if(pUnit:GetMapId() == MAP_NORTHREND)then
+	pUnit:RegisterAIUpdateEvent(1000)
+end
 end
 
 function DetectionUnitAIUpdate(pUnit)
 if(pUnit == nil)then
 	pUnit:RemoveAIUpdateEvent()
 end
-if(states == 1 and battle == 1 and pUnit:GetWorldStateForZone(WG_STATE_BATTLE_UI) ~= 1)then
-	if(states == 1 and battle == 0 and pUnit:GetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER) ~= 1)then
-		stateuiset = 0
-		states = 0
-	end
+if(pUnit:GetWorldStateForZone(WG_STATE_BATTLE_UI) == 0 and pUnit:GetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER) == 0)then
+	stateuiset = 0
+	states = 0
 end
 for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 	if(m:HasAura(SPELL_VICTORY_AURA))then
@@ -493,6 +494,23 @@ for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 			m:AddAchievement(ACHIEVEMENT_VICTORY)
 		end
 		m:RemoveAura(SPELL_VICTORY_AURA)
+	end
+end
+if(spawnobjects == 0 and battle == 1)then
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100,2300000)
+	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
+	spawnobjects = 1
+end
+if(battle == 0 and spawnobjects == 1)then
+	SendWorldMsg("Wintergrasp condition: Battle = "..battle.." and objstate = "..spawnobjects..".|r", 1)
+	spawnobjects = 0
+	local relick = pUnit:GetGameObjectNearestCoords(5439.66,2840.83,430.282,GO_WINTERGRASP_TITAN_RELIC)
+	local collision = pUnit:GetGameObjectNearestCoords(5397.11,2841.54,425.901,GO_WINTERGRASP_KEEP_COLLISION_WALL)
+	if(relick ~= nil)then
+		relick:Despawn(1,0)
+	end
+	if(collision ~= nil)then
+		collision:Despawn(1,0)
 	end
 end
 if(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 4)then
@@ -1165,33 +1183,6 @@ local timebattle = os.time() - starttimer
 end
 end
 
-function TitanrelickOnLoad(pGO)
-pGO:RegisterAIUpdateEvent(1000)
-end
-
-function TitanrelickAIUpdate(pGO)
-if(pGO == nil)then
-	pGO:RemoveAIUpdateEvent()
-end
-if(spawnobjects == 0 and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100.1,2300000)
-	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100.1,2300000)
-	spawnobjects = 1
-end
-if(battle == 0 and spawnobjects == 1)then
-	SendWorldMsg("Wintergrasp condition: Battle = "..battle.." and objstate = "..spawnobjects..".|r", 1)
-	local relick = pGO:GetGameObjectNearestCoords(5439.66,2840.83,430.282,GO_WINTERGRASP_TITAN_RELIC)
-	local collision = pGO:GetGameObjectNearestCoords(5397.11,2841.54,425.901,GO_WINTERGRASP_KEEP_COLLISION_WALL)
-	if(relick ~= nil)then
-		relick:Despawn(1,0)
-	end
-	if(collision ~= nil)then
-		collision:Despawn(1,0)
-	end
-	spawnobjects = 0
-end
-end
-
 function DebugWG(event, pPlayer, message, type, language)
 if(pPlayer:IsGm() and pPlayer:GetZoneId() == ZONE_WG and battle == 0)then
 	if(message == "#debug WG")then
@@ -1216,17 +1207,47 @@ if(pGO:GetMapId() == MAP_NORTHREND)then
 	else
 		pPlayer:SendAreaTriggerMessage("You can't do that yet!")
 	end
+else
+	pPlayer:CastSpell(54640)
 end
 end
 
-RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_N,5,TitanrelickAIUpdate)
-RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_N,2,TitanrelickOnLoad)
+function OnLoadVehicleTeleporter(pGO)
+pGO:RegisterAIUpdateEvent(1000)
+end
+
+function OnAIUpdateVehicleTeleporter(pGO)
+if(pGO == nil)then
+	pGO:RemoveAIUpdateEvent()
+end
+for k,v in pairs(pGO:GetInRangeUnits()) do
+if(v:IsCreature())then
+	if(pGO:GetDistance(v) < 10 and battle == 1)then
+		if((v:GetFaction() == FACTION_ALLIANCE and controll == 1) or (v:GetFaction() == FACTION_HORDE and controll == 2))then
+			if(v:HasAura(SPELL_TELEPORT_VEHICLE) == false)then
+				local teleportunit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
+				if(teleportunit ~= nil)then
+					local xu,yu,zu = teleportunit:GetSpawnLocation()
+					v:TeleportCreature(xu,yu,zu)
+					v:CastSpell(SPELL_TELEPORT_VEHICLE)
+				end
+			end
+		end
+	end
+end
+end
+end
+
+RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,5,OnAIUpdateVehicleTeleporter)
+RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,2,OnLoadVehicleTeleporter)
 RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_A,4,PortalOnUse)
 RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_H,4,PortalOnUse)
 RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_N,4,PortalOnUse)
 RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
+RegisterUnitEvent(NPC_NOT_IMMUNE_PC_NPC,18,DetectionUnitOnSpawn)
+RegisterUnitEvent(NPC_NOT_IMMUNE_PC_NPC,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("WGUpdate", 1000, 0)
 RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
