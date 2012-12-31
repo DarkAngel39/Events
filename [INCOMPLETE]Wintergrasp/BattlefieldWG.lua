@@ -1212,7 +1212,6 @@ if(pGO:GetMapId() == MAP_NORTHREND)then
 			local xu,yu,zu,ou = teleportunit:GetSpawnLocation()
 			pPlayer:Teleport(MAP_NORTHREND,xu,yu,zu,ou)
 			pPlayer:CastSpell(SPELL_TELEPORT_DEFENDER)
-			pPlayer:CastSpell(SPELL_TELEPORT_DEFENDER)
 		end
 	else
 		pPlayer:SendAreaTriggerMessage("You can't do that yet!")
