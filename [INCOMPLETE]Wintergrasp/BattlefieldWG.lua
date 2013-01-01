@@ -95,6 +95,10 @@ NPC_GOBLIN_ENGINEER = 30400
 NPC_GNOME_ENGINEER = 30499
 NPC_NOT_IMMUNE_PC_NPC = 23472
 NPC_INVISIBLE_STALKER = 15214
+NPC_VEHICLE_CATAPULT = 27881
+NPC_VEHICLE_DEMOLISHER = 28094
+NPC_VEHICLE_SIEGE_ENGINE_H = 32627
+NPC_VEHICLE_SIEGE_ENGINE_A = 28312
 
 GO_WINTERGRASP_TITAN_RELIC = 192829
 GO_WINTERGRASP_SE_TOWER = 190377
@@ -290,6 +294,9 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	starttimer = 0
 end
 for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+if(v:IsPvPFlagged() ~= true)then
+	v:FlagPvP()
+end
 if(v == nil)then
 	if(stateuiset ~= 0 or states ~= 0)then -- If there is noone in Wintergrasp, then reset the states of the battlefield. Needed to update the states when a player enters the zone and the cells where unloaded.
 		stateuiset = 0
@@ -1122,6 +1129,19 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	end
 end
 end
+if(pUnit:GetEntry() == NPC_NOT_IMMUNE_PC_NPC)then
+local XT = pUnit:GetX()
+local YT = pUnit:GetY()
+	if(XT >= 5245.92 and XT <= 5247.92 and YT >= 2977.32 and YT <= 2979.32)then
+		pUnit:TeleportCreature(5316.25,2977.04,409.274)
+	elseif(XT >= 5248.89 and XT <= 5250.89 and YT >= 2702.11 and YT <= 2704.11)then
+		pUnit:TeleportCreature(5314.51,2703.11,409.275)
+	elseif(XT >= 5400.92 and XT <= 5402.92 and YT >= 2828.91 and YT <= 2830.91)then
+		pUnit:TeleportCreature(5391.28,2828.09,418.675)
+	elseif(XT >= 5391.81 and XT <= 5393.81 and YT >= 2853.02 and YT <= 2855.02)then
+		pUnit:TeleportCreature(5401.63,2853.67,418.675)
+	end
+end
 end
 
 function TitanRelickOnUse(pGO, event, pPlayer)
@@ -1225,11 +1245,13 @@ if(v:IsCreature())then
 	if(pGO:GetDistance(v) < 10 and battle == 1)then
 		if((v:GetFaction() == FACTION_ALLIANCE and controll == 1) or (v:GetFaction() == FACTION_HORDE and controll == 2))then
 			if(v:HasAura(SPELL_TELEPORT_VEHICLE) == false)then
-				local teleportunit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
-				if(teleportunit ~= nil)then
-					local xu,yu,zu = teleportunit:GetSpawnLocation()
-					v:TeleportCreature(xu,yu,zu)
-					v:CastSpell(SPELL_TELEPORT_VEHICLE)
+				if(v:GetEntry() == NPC_VEHICLE_CATAPULT or v:GetEntry() == NPC_VEHICLE_DEMOLISHER or v:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_H or v:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_A)then
+					local teleportunit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
+					if(teleportunit ~= nil)then
+						local xu,yu,zu = teleportunit:GetSpawnLocation()
+						v:TeleportCreature(xu,yu,zu)
+						v:CastSpell(SPELL_TELEPORT_VEHICLE)
+					end
 				end
 			end
 		end
