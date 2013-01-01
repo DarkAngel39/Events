@@ -89,6 +89,11 @@ WG_STATE_SS_TOWER = 3704
  -- Dynamic capturebar states
 WG_STATE_SOUTH_SHOW = 3501
 WG_STATE_SOUTH_PROGRESS = 3502
+WG_STATE_SOUTH_NEUTRAL = 3508
+
+WG_STATE_NORTH_SHOW = 3466
+WG_STATE_NORTH_PROGRESS = 3467
+WG_STATE_NORTH_NEUTRAL = 3468
 
 NPC_DETECTION_UNIT = 27869
 NPC_GOBLIN_ENGINEER = 30400
@@ -146,9 +151,6 @@ GO_WINTERGRASP_VEHICLE_TELEPORTER = 192951
  -- Eastspark
 GO_WINTERGRASP_WORKSHOP_ES = 192033
 GO_WINTERGRASP_CAPTUREPOINT_ES = 194959
- -- Westspark
-GO_WINTERGRASP_WORKSHOP_ES = 192032
-GO_WINTERGRASP_CAPTUREPOINT_ES = 194962
  -- Map info
 MAP_HOR = 668
 MAP_NEXUS = 576
@@ -429,8 +431,8 @@ if(controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-		eastspark_progress = 100
-		westspark_progress = 100
+		eastspark_progress = 0
+		westspark_progress = 0
 		states = 1
 	end
 elseif(controll == 2)then
@@ -473,8 +475,8 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-		eastspark_progress = 0
-		westspark_progress = 0
+		eastspark_progress = 100
+		westspark_progress = 100
 		states = 1
 	end
 end
@@ -501,6 +503,41 @@ for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 			m:AddAchievement(ACHIEVEMENT_VICTORY)
 		end
 		m:RemoveAura(SPELL_VICTORY_AURA)
+	end
+	if(battle == 1 and m:IsPvPFlagged())then
+		if(m:GetAreaId() == AREA_EASTSPARK and m:IsPvPFlagged() and m:IsAlive())then
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,eastspark_progress)
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+		elseif(m:GetAreaId() == AREA_WESTSPARK and m:IsPvPFlagged() and m:IsAlive())then
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,westspark_progress)
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+		else
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
+			m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
+		end
+		if(m:GetAreaId() == AREA_SUNKENRING and m:IsPvPFlagged() and m:IsAlive())then
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,sunkenring_progress)
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
+		elseif(m:GetAreaId() == AREA_BROKENTEMPLE and m:IsPvPFlagged() and m:IsAlive())then
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,brokentemple_progres)
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
+		else
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
+			m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
+		end
+	else
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
 	end
 end
 if(spawnobjects == 0 and battle == 1)then
