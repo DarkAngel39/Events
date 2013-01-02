@@ -150,7 +150,20 @@ GO_WINTERGRASP_DEFENDER_N = 192819
 GO_WINTERGRASP_VEHICLE_TELEPORTER = 192951
  -- Eastspark
 GO_WINTERGRASP_WORKSHOP_ES = 192033
-GO_WINTERGRASP_CAPTUREPOINT_ES = 194959
+GO_WINTERGRASP_CAPTUREPOINT_ES_100 = 194959
+GO_WINTERGRASP_CAPTUREPOINT_ES_0 = 194960
+
+GO_WINTERGRASP_WORKSHOP_WS = 192033
+GO_WINTERGRASP_CAPTUREPOINT_WS_100 = 194962
+GO_WINTERGRASP_CAPTUREPOINT_WS_0 = 194963
+
+GO_WINTERGRASP_WORKSHOP_BT = 192033
+GO_WINTERGRASP_CAPTUREPOINT_SR_100 = 190475
+GO_WINTERGRASP_CAPTUREPOINT_SR_0 = 192626
+
+GO_WINTERGRASP_WORKSHOP_BT = 192033
+GO_WINTERGRASP_CAPTUREPOINT_BT_100 = 190487
+GO_WINTERGRASP_CAPTUREPOINT_BT_0 = 192627
  -- Map info
 MAP_HOR = 668
 MAP_NEXUS = 576
@@ -503,41 +516,6 @@ for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 			m:AddAchievement(ACHIEVEMENT_VICTORY)
 		end
 		m:RemoveAura(SPELL_VICTORY_AURA)
-	end
-	if(battle == 1 and m:IsPvPFlagged())then
-		if(m:GetAreaId() == AREA_EASTSPARK and m:IsPvPFlagged() and m:IsAlive())then
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,eastspark_progress)
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
-		elseif(m:GetAreaId() == AREA_WESTSPARK and m:IsPvPFlagged() and m:IsAlive())then
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,westspark_progress)
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
-		else
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
-			m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
-		end
-		if(m:GetAreaId() == AREA_SUNKENRING and m:IsPvPFlagged() and m:IsAlive())then
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,sunkenring_progress)
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
-		elseif(m:GetAreaId() == AREA_BROKENTEMPLE and m:IsPvPFlagged() and m:IsAlive())then
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,brokentemple_progres)
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
-		else
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
-			m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
-		end
-	else
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
 	end
 end
 if(spawnobjects == 0 and battle == 1)then
@@ -1296,6 +1274,164 @@ if(v:IsCreature())then
 end
 end
 end
+
+function OnSP_Cpoint(pGO)
+pGO:RegisterAIUpdateEvent(2000)
+end
+
+function AIUpdate_Cpoint(pGO)
+ES_P = 0
+
+WS_P = 0
+
+SR_P = 0
+
+BT_P = 0
+if(pGO == nil)then
+	pGO:RemoveAIUpdateEvent()
+end
+for k,m in pairs(pGO:GetInRangePlayers())do
+if(battle == 1 and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive())then
+	if(m:GetAreaId() == AREA_EASTSPARK and pGO:GetDistance(m) <= 5500)then
+		ES_A = 0
+		ES_H = 0
+		if(m:GetTeam() == 0)then
+			ES_A = ES_A + 1
+		elseif(m:GetTeam() == 1)then
+			ES_H = ES_H + 1
+		end
+		ES_P = ES_A - ES_H
+		if(eastspark_progress < 100 and eastspark_progress > 0)then
+			if(ES_P < 0)then
+				eastspark_progress = eastspark_progress - 1
+			elseif(ES_P > 0)then
+				eastspark_progress = eastspark_progress + 1
+			end
+		elseif(eastspark_progress == 0)then
+			if(ES_P > 0)then
+				eastspark_progress = eastspark_progress + 1
+			end
+		elseif(eastspark_progress == 100)then
+			if(ES_P < 0)then
+				eastspark_progress = eastspark_progress - 1
+			end
+		end
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,eastspark_progress)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+	elseif(m:GetAreaId() == AREA_WESTSPARK and pGO:GetDistance(m) <= 5500)then
+		WS_A = 0
+		WS_H = 0
+		if(m:GetTeam() == 0)then
+			WS_A = WS_A + 1
+		elseif(m:GetTeam() == 1)then
+			WS_H = WS_H + 1
+		end
+		WS_P = WS_A - WS_H
+		if(westspark_progress < 100 and westspark_progress > 0)then
+			if(WS_P < 0)then
+				westspark_progress = westspark_progress - 1
+			elseif(WS_P > 0)then
+				westspark_progress = westspark_progress + 1
+			end
+		elseif(westspark_progress == 0)then
+			if(WS_P > 0)then
+				westspark_progress = westspark_progress + 1
+			end
+		elseif(westspark_progress == 100)then
+			if(WS_P < 0)then
+				westspark_progress = westspark_progress - 1
+			end
+		end
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,westspark_progress)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+	else
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
+	end
+	if(m:GetAreaId() == AREA_SUNKENRING and pGO:GetDistance(m) <= 5500)then
+		SR_A = 0
+		SR_H = 0
+		if(m:GetTeam() == 0)then
+			SR_A = SR_A + 1
+		elseif(m:GetTeam() == 1)then
+			SR_H = SR_H + 1
+		end
+		SR_P = SR_A - SR_H
+		if(sunkenring_progress < 100 and sunkenring_progress > 0)then
+			if(SR_P < 0)then
+				sunkenring_progress = sunkenring_progress - 1
+			elseif(SR_P > 0)then
+				sunkenring_progress = sunkenring_progress + 1
+			end
+		elseif(sunkenring_progress == 0)then
+			if(SR_P > 0)then
+				sunkenring_progress = sunkenring_progress + 1
+			end
+		elseif(sunkenring_progress == 100)then
+			if(SR_P < 0)then
+				sunkenring_progress = sunkenring_progress - 1
+			end
+		end
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,sunkenring_progress)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
+	elseif(m:GetAreaId() == AREA_BROKENTEMPLE and pGO:GetDistance(m) <= 5500)then
+		BT_A = 0
+		BT_H = 0
+		if(m:GetTeam() == 0)then
+			BT_A = BT_A + 1
+		elseif(m:GetTeam() == 1)then
+			BT_H = BT_H + 1
+		end
+		BT_P = BT_A - BT_H
+		if(brokentemple_progres < 100 and brokentemple_progres > 0)then
+			if(BT_P < 0)then
+				brokentemple_progres = brokentemple_progres - 1
+			elseif(BT_P > 0)then
+				brokentemple_progres = brokentemple_progres + 1
+			end
+		elseif(brokentemple_progres == 0)then
+			if(BT_P > 0)then
+				brokentemple_progres = brokentemple_progres + 1
+			end
+		elseif(brokentemple_progres == 100)then
+			if(BT_P < 0)then
+				brokentemple_progres = brokentemple_progres - 1
+			end
+		end
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,brokentemple_progres)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
+	else
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
+	end
+else
+	m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
+	m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
+	m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
+	m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
+	m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
+	m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
+end
+end
+end
+
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,5,AIUpdate_Cpoint)
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,2,OnSP_Cpoint)
+
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,5,AIUpdate_Cpoint)
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,2,OnSP_Cpoint)
+
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_BT_100,5,AIUpdate_Cpoint)
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_BT_100,2,OnSP_Cpoint)
+
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_SR_100,5,AIUpdate_Cpoint)
+RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_SR_100,2,OnSP_Cpoint)
 
 RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,5,OnAIUpdateVehicleTeleporter)
 RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,2,OnLoadVehicleTeleporter)
