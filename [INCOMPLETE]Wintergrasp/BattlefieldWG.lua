@@ -9,6 +9,10 @@ stateuiset = 0
 add_tokens = 1
 starttimer = 0
 spawnobjects = 0
+npcstarted = false
+
+C_BAR_NEUTRAL = 80 -- the neutral vallue of the capture bar. MUST BE UNDER 100.
+C_BAR_CAPTURE = (100 - C_BAR_NEUTRAL)/2
 
 GAMEOBJECT_FACTION = 0x0006 + 0x0009
 
@@ -153,15 +157,15 @@ GO_WINTERGRASP_WORKSHOP_ES = 192033
 GO_WINTERGRASP_CAPTUREPOINT_ES_100 = 194959
 GO_WINTERGRASP_CAPTUREPOINT_ES_0 = 194960
 
-GO_WINTERGRASP_WORKSHOP_WS = 192033
+GO_WINTERGRASP_WORKSHOP_WS = 192032
 GO_WINTERGRASP_CAPTUREPOINT_WS_100 = 194962
 GO_WINTERGRASP_CAPTUREPOINT_WS_0 = 194963
 
-GO_WINTERGRASP_WORKSHOP_BT = 192033
+GO_WINTERGRASP_WORKSHOP_SR = 192031
 GO_WINTERGRASP_CAPTUREPOINT_SR_100 = 190475
 GO_WINTERGRASP_CAPTUREPOINT_SR_0 = 192626
 
-GO_WINTERGRASP_WORKSHOP_BT = 192033
+GO_WINTERGRASP_WORKSHOP_BT = 192030
 GO_WINTERGRASP_CAPTUREPOINT_BT_100 = 190487
 GO_WINTERGRASP_CAPTUREPOINT_BT_0 = 192627
  -- Map info
@@ -244,11 +248,11 @@ function Aura()
 for k,l in pairs(GetPlayersInWorld())do
 if(l:GetMapId() == MAP_HOR or l:GetMapId() == MAP_NEXUS or l:GetMapId() == MAP_UP or l:GetMapId() == MAP_UK or l:GetMapId() == MAP_OCULUS or l:GetMapId() == MAP_POS or l:GetMapId() == MAP_TOC or l:GetMapId() == MAP_FOS or l:GetMapId() == MAP_AK or l:GetMapId() == MAP_VH or l:GetMapId() == MAP_GUND or l:GetMapId() == MAP_HOL or l:GetMapId() == MAP_AN or l:GetMapId() == MAP_HOS or l:GetMapId() == MAP_COS or l:GetMapId() == MAP_NORTHREND)then
 	if(battle == 0 and controll == 1 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
-		l:CastSpell(SPELL_ESSENCE_OF_WINTERGRASP)
+		l:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
 	elseif(controll == 1 and l:GetTeam() == 1 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
 		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
 	elseif(battle == 0 and controll == 2 and l:GetTeam() == 1 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
-		l:CastSpell(SPELL_ESSENCE_OF_WINTERGRASP)
+		l:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
 	elseif(controll == 2 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
 		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
 	elseif(battle == 1)then
@@ -300,6 +304,13 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	states = 0
 	add_tokens = 0
 	starttimer = os.time()
+	if(controll == 1)then
+		eastspark_progress = 0
+		westspark_progress = 0
+	elseif(controll == 2)then
+		eastspark_progress = 100
+		westspark_progress = 100
+	end
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
@@ -312,15 +323,9 @@ for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 if(v:IsPvPFlagged() ~= true)then
 	v:FlagPvP()
 end
-if(v == nil)then
-	if(stateuiset ~= 0 or states ~= 0)then -- If there is noone in Wintergrasp, then reset the states of the battlefield. Needed to update the states when a player enters the zone and the cells where unloaded.
-		stateuiset = 0
-		states = 0
-	end
-end
 if(battle == 1)then
 	if(v:HasAura(SPELL_RECRUIT) == false and v:HasAura(SPELL_CORPORAL) == false and v:HasAura(SPELL_LIEUTENANT) == false)then
-		v:CastSpell(SPELL_RECRUIT)
+		v:AddAura(SPELL_RECRUIT,0)
 	end
 elseif(battle == 0)then
 	if(v:HasAura(SPELL_RECRUIT))then
@@ -405,7 +410,7 @@ if(stateuiset == 0)then
 	end
 end
 if(controll == 1)then
-	if(states == 0 or states == nil)then
+	if(states == 0)then
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
@@ -444,12 +449,10 @@ if(controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-		eastspark_progress = 0
-		westspark_progress = 0
 		states = 1
 	end
 elseif(controll == 2)then
-	if(states == 0 or states == nil)then
+	if(states == 0)then
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
@@ -488,8 +491,6 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
-		eastspark_progress = 100
-		westspark_progress = 100
 		states = 1
 	end
 end
@@ -506,9 +507,15 @@ function DetectionUnitAIUpdate(pUnit)
 if(pUnit == nil)then
 	pUnit:RemoveAIUpdateEvent()
 end
-if(pUnit:GetWorldStateForZone(WG_STATE_BATTLE_UI) == 0 and pUnit:GetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER) == 0)then
-	stateuiset = 0
-	states = 0
+if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
+	if(npcstarted == false)then
+		SendWorldMsg("Reset states. "..pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY).."|r", 1)
+		stateuiset = 0
+		states = 0
+		npcstarted = true
+	end
+else
+	npcstarted = true
 end
 for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 	if(m:HasAura(SPELL_VICTORY_AURA))then
@@ -1157,6 +1164,133 @@ local YT = pUnit:GetY()
 		pUnit:TeleportCreature(5401.63,2853.67,418.675)
 	end
 end
+if(C_BAR_CAPTURE >= 1 and battle == 1)then
+	if(pUnit:GetAreaId() == AREA_EASTSPARK)then
+	local esshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_ES)
+	if(esshop ~= nil)then
+		if(esshop:GetHP() ~= nil)then
+			if(esshop:GetHP() > esshop:GetMaxHP()/2)then
+				if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 7)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,7)
+				elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 1)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,1)
+				elseif(eastspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 4)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,4)
+				end
+			elseif(esshop:GetHP() < esshop:GetMaxHP()/2 and esshop:GetHP() > 0)then
+				if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL  and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 8)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,8)
+				elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE  and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 2)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,2)
+				elseif(eastspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 5)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,5)
+				end
+			elseif(esshop:GetHP() == 0)then
+				if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 9)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,9)
+				elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 3)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,3)
+				elseif(eastspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 6)then
+					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,6)
+				end
+			end
+		end
+	end
+	elseif(pUnit:GetAreaId() == AREA_WESTSPARK)then
+	local wsshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_WS)
+	if(wsshop ~= nil)then
+		if(wsshop:GetHP() ~= nil)then
+			if(wsshop:GetHP() > wsshop:GetMaxHP()/2)then
+				if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 7)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,7)
+				elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 1)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,1)
+				elseif(westspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 4)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,4)
+				end
+			elseif(wsshop:GetHP() < wsshop:GetMaxHP()/2 and wsshop:GetHP() > 0)then
+				if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 8)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,8)
+				elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 2)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,2)
+				elseif(westspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 5)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,5)
+				end
+			elseif(wsshop:GetHP() == 0)then
+				if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 9)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,9)
+				elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 3)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,3)
+				elseif(westspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 6)then
+					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,6)
+				end
+			end
+		end
+	end
+	elseif(pUnit:GetAreaId() == AREA_SUNKENRING)then
+	local srshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_SR)
+	if(srshop ~= nil)then
+		if(srshop:GetHP() ~= nil)then
+			if(srshop:GetHP() > srshop:GetMaxHP()/2)then
+				if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 7)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,7)
+				elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 1)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,1)
+				elseif(sunkenring_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 4)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,4)
+				end
+			elseif(srshop:GetHP() < srshop:GetMaxHP()/2 and srshop:GetHP() > 0)then
+				if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 8)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,8)
+				elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 2)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,2)
+				elseif(sunkenring_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 5)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,5)
+				end
+			elseif(srshop:GetHP() == 0)then
+				if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 9)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,9)
+				elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 3)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,3)
+				elseif(sunkenring_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 6)then
+					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,6)
+				end
+			end
+		end
+	end
+	elseif(pUnit:GetAreaId() == AREA_BROKENTEMPLE)then
+	local srshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_BT)
+	if(srshop ~= nil)then
+		if(srshop:GetHP() ~= nil)then
+			if(srshop:GetHP() > srshop:GetMaxHP()/2)then
+				if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 7)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,7)
+				elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 1)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,1)
+				elseif(brokentemple_progres < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 4)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,4)
+				end
+			elseif(srshop:GetHP() < srshop:GetMaxHP()/2 and srshop:GetHP() > 0)then
+				if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 8)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,8)
+				elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 2)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,2)
+				elseif(brokentemple_progres < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 5)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,5)
+				end
+			elseif(srshop:GetHP() == 0)then
+				if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 9)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,9)
+				elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 3)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,3)
+				elseif(brokentemple_progres < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 6)then
+					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,6)
+				end
+			end
+		end
+	end
+	end
+end
 end
 
 function TitanRelickOnUse(pGO, event, pPlayer)
@@ -1276,16 +1410,14 @@ end
 end
 
 function OnSP_Cpoint(pGO)
-pGO:RegisterAIUpdateEvent(2000)
+pGO:RegisterAIUpdateEvent(1500)
 end
 
 function AIUpdate_Cpoint(pGO)
+if(battle == 1)then
 ES_P = 0
-
 WS_P = 0
-
 SR_P = 0
-
 BT_P = 0
 if(pGO == nil)then
 	pGO:RemoveAIUpdateEvent()
@@ -1318,7 +1450,7 @@ if(battle == 1 and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive()
 		end
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,eastspark_progress)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,C_BAR_NEUTRAL)
 	elseif(m:GetAreaId() == AREA_WESTSPARK and pGO:GetDistance(m) <= 5500)then
 		WS_A = 0
 		WS_H = 0
@@ -1345,7 +1477,7 @@ if(battle == 1 and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive()
 		end
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,westspark_progress)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,C_BAR_NEUTRAL)
 	else
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
@@ -1377,7 +1509,7 @@ if(battle == 1 and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive()
 		end
 		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
 		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,sunkenring_progress)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,C_BAR_NEUTRAL)
 	elseif(m:GetAreaId() == AREA_BROKENTEMPLE and pGO:GetDistance(m) <= 5500)then
 		BT_A = 0
 		BT_H = 0
@@ -1404,7 +1536,7 @@ if(battle == 1 and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive()
 		end
 		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
 		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,brokentemple_progres)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,80)
+		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,C_BAR_NEUTRAL)
 	else
 		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
 		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
@@ -1417,6 +1549,7 @@ else
 	m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
 	m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
 	m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
+end
 end
 end
 end
