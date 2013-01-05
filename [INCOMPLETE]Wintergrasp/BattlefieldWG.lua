@@ -197,7 +197,7 @@ AREA_WINTERSEDGE_T = 4582
 AREA_SHADOWSIGHT_T = 4583
 AREA_C_BRIDGE = 4576
 AREA_E_BRIDGE = 4557
-AREA_W_BRIDGE = 4577
+AREA_W_BRIDGE = 4578
  -- Spells
 SPELL_RECRUIT = 37795
 SPELL_CORPORAL = 33280
@@ -291,6 +291,106 @@ if(l:GetZoneId() ~= ZONE_WG)then
 		l:RemoveAura(SPELL_VICTORY_AURA)
 	end
 end
+if(l:GetAreaId() == AREA_EASTSPARK)then
+	if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(eastspark_progress < C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	end
+elseif(l:GetAreaId() == AREA_WESTSPARK)then
+	if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(westspark_progress < C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	end
+elseif(l:GetAreaId() == AREA_SUNKENRING)then
+	if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(sunkenring_progress < C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	end
+elseif(l:GetAreaId() == AREA_BROKENTEMPLE)then
+	if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	elseif(brokentemple_progres < C_BAR_CAPTURE)then
+		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
+			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	end
+else
+	if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		end
+	if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+	end
+end
 end
 end
 
@@ -319,69 +419,72 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	stateuiset = 0
 	starttimer = 0
 end
-for k,v in pairs(GetPlayersInZone(ZONE_WG))do
-if(v:IsPvPFlagged() ~= true)then
-	v:FlagPvP()
-end
-if(battle == 1)then
-	if(v:HasAura(SPELL_RECRUIT) == false and v:HasAura(SPELL_CORPORAL) == false and v:HasAura(SPELL_LIEUTENANT) == false)then
-		v:AddAura(SPELL_RECRUIT,0)
+for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
+if(v:GetZoneId() == ZONE_WG)then
+	if(v:IsPvPFlagged() ~= true)then
+		v:FlagPvP()
 	end
-elseif(battle == 0)then
-	if(v:HasAura(SPELL_RECRUIT))then
-		v:RemoveAura(SPELL_RECRUIT)
-	end
-	if(v:HasAura(SPELL_CORPORAL))then
-		v:RemoveAura(SPELL_CORPORAL)
-	end
-	if(v:HasAura(SPELL_LIEUTENANT))then
-		v:RemoveAura(SPELL_LIEUTENANT)
-	end
-end
-if(controll == 1 and battle == 0 and add_tokens == 0)then
-		if(v:GetTeam() == 0)then
-			v:CastSpell(SPELL_VICTORY_REWARD)
-			v:CastSpell(SPELL_VICTORY_AURA)
-			if(v:HasQuest(QUEST_WG_VICTORY_A) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_A, 0) == 0)then
-				v:AdvanceQuestObjective(QUEST_WG_VICTORY_A, 0)
+	if(battle == 1)then
+		if(v:HasAura(SPELL_RECRUIT) == false)then
+			if(v:HasAura(SPELL_CORPORAL) == false)then
+				if(v:HasAura(SPELL_LIEUTENANT) == false)then
+					v:AddAura(SPELL_RECRUIT,0)
+				end
 			end
-		elseif(v:GetTeam() == 1)then
-			v:CastSpell(SPELL_DEFEAT_REWARD)
 		end
-		add_tokens = 1
-end
-if(controll == 2 and battle == 0 and add_tokens == 0)then
-		if(v:GetTeam() == 1)then
-			v:CastSpell(SPELL_VICTORY_REWARD)
-			v:CastSpell(SPELL_VICTORY_AURA)
-			if(v:HasQuest(QUEST_WG_VICTORY_H) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_H, 0) == 0)then
-				v:AdvanceQuestObjective(QUEST_WG_VICTORY_H, 0)
+	elseif(battle == 0)then
+		if(v:HasAura(SPELL_RECRUIT))then
+			v:RemoveAura(SPELL_RECRUIT)
+		end
+		if(v:HasAura(SPELL_CORPORAL))then
+			v:RemoveAura(SPELL_CORPORAL)
+		end
+		if(v:HasAura(SPELL_LIEUTENANT))then
+			v:RemoveAura(SPELL_LIEUTENANT)
+		end
+	end
+	if(controll == 1 and battle == 0 and add_tokens == 0)then
+			if(v:GetTeam() == 0)then
+				v:CastSpell(SPELL_VICTORY_REWARD)
+				v:CastSpell(SPELL_VICTORY_AURA)
+				if(v:HasQuest(QUEST_WG_VICTORY_A) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_A, 0) == 0)then
+					v:AdvanceQuestObjective(QUEST_WG_VICTORY_A, 0)
+				end
+			elseif(v:GetTeam() == 1)then
+				v:CastSpell(SPELL_DEFEAT_REWARD)
 			end
-		elseif(v:GetTeam() == 0)then
-			v:CastSpell(SPELL_DEFEAT_REWARD)
-		end
-		add_tokens = 1
-end
-if(battle == 0)then
-end
+			add_tokens = 1
+	end
+	if(controll == 2 and battle == 0 and add_tokens == 0)then
+			if(v:GetTeam() == 1)then
+				v:CastSpell(SPELL_VICTORY_REWARD)
+				v:CastSpell(SPELL_VICTORY_AURA)
+				if(v:HasQuest(QUEST_WG_VICTORY_H) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_H, 0) == 0)then
+					v:AdvanceQuestObjective(QUEST_WG_VICTORY_H, 0)
+				end
+			elseif(v:GetTeam() == 0)then
+				v:CastSpell(SPELL_DEFEAT_REWARD)
+			end
+			add_tokens = 1
+	end
 if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE or v:GetAreaId() == ZONE_WG)then
 	if(controll == 1)then
 		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
 		end
 		v:CastSpell(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-		elseif(controll == 2)then
+	elseif(controll == 2)then
 		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
 			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
 		end
 		v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
 	end
-elseif(v:GetAreaId() ~= ZONE_WG and v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE and v:GetAreaId() ~= ZONE_WG)then
+elseif(v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE and v:GetAreaId() ~= ZONE_WG)then
 	if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
-			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+		v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
 	end
 	if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
-			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+		v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
 	end
 end
 if(stateuiset == 0)then
@@ -496,6 +599,7 @@ elseif(controll == 2)then
 end
 end
 end
+end
 
 function DetectionUnitOnSpawn(pUnit, event)
 if(pUnit:GetMapId() == MAP_NORTHREND)then
@@ -509,7 +613,6 @@ if(pUnit == nil)then
 end
 if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
 	if(npcstarted == false)then
-		SendWorldMsg("Reset states. "..pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY).."|r", 1)
 		stateuiset = 0
 		states = 0
 		npcstarted = true
@@ -1554,18 +1657,86 @@ end
 end
 end
 
+function KillCreature(pUnit, event, pLastTarget)
+	if(battle == 1)then
+		for k,v in pairs(pUnit:GetInRangePlayers())do
+			if(v:IsPlayer())then
+				if(v:HasAura(SPELL_RECRUIT))then
+					if(v:GetAuraStackCount(SPELL_RECRUIT) < 5)then
+						v:CastSpell(SPELL_RECRUIT)
+					else
+						pUnit:SendChatMessageToPlayer(42, 0, "You have reached Rank 1: Corporal", v)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:CastSpell(SPELL_CORPORAL)
+					end
+				elseif(v:HasAura(SPELL_CORPORAL))then
+					if(v:GetAuraStackCount(SPELL_CORPORAL) < 5)then
+						v:CastSpell(SPELL_CORPORAL)
+					else
+						pUnit:SendChatMessageToPlayer(42, 0, "You have reached Rank 2: Lieutenant", v)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:AddAura(SPELL_LIEUTENANT,0)
+					end
+				end
+			end
+		end
+	end
+end
+
+function KillPlayer(event, pKiller, pVictim)
+if(battle == 1)then
+	for k,v in pairs(pVictim:GetInRangePlayers())do
+		if(pVictim:GetTeam() ~= v:GetTeam())then
+			if(v:HasAura(SPELL_RECRUIT))then
+					if(v:GetAuraStackCount(SPELL_RECRUIT) < 5)then
+						v:CastSpell(SPELL_RECRUIT)
+					else
+						v:SendAreaTriggerMessage("You have reached Rank 1: Corporal")
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:RemoveAura(SPELL_RECRUIT)
+						v:CastSpell(SPELL_CORPORAL)
+					end
+				elseif(v:HasAura(SPELL_CORPORAL))then
+					if(v:GetAuraStackCount(SPELL_CORPORAL) < 5)then
+						v:CastSpell(SPELL_CORPORAL)
+					else
+						v:SendAreaTriggerMessage("You have reached Rank 2: Lieutenant")
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:RemoveAura(SPELL_CORPORAL)
+						v:AddAura(SPELL_LIEUTENANT,0)
+					end
+				end
+		end
+	end
+end
+end
+
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,2,OnSP_Cpoint)
-
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,2,OnSP_Cpoint)
-
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_BT_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_BT_100,2,OnSP_Cpoint)
-
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_SR_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_SR_100,2,OnSP_Cpoint)
-
 RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,5,OnAIUpdateVehicleTeleporter)
 RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,2,OnLoadVehicleTeleporter)
 RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_A,4,PortalOnUse)
@@ -1579,3 +1750,6 @@ RegisterUnitEvent(NPC_NOT_IMMUNE_PC_NPC,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("WGUpdate", 1000, 0)
 RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
+RegisterServerHook(2,KillPlayer)
+RegisterUnitEvent(30739,4,KillCreature)
+RegisterUnitEvent(30740,4,KillCreature)
