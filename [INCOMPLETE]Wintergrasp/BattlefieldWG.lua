@@ -10,6 +10,7 @@ add_tokens = 1
 starttimer = 0
 spawnobjects = 0
 npcstarted = false
+south_towers = 3
 
 C_BAR_NEUTRAL = 80 -- the neutral vallue of the capture bar. MUST BE UNDER 100.
 C_BAR_CAPTURE = (100 - C_BAR_NEUTRAL)/2
@@ -214,6 +215,10 @@ SPELL_HORDE_FLAG = 14267
 SPELL_GRAB_PASSENGER = 61178
 SPELL_TELEPORT_DEFENDER = 54643
 SPELL_TELEPORT_VEHICLE = 49759
+SPELL_BUILD_CATAPULT = 56663
+SPELL_BUILD_DEMOLISHER = 56575
+SPELL_BUILD_ENGINE_A = 56661
+SPELL_BUILD_ENGINE_H = 61408
  -- Reward spells
 SPELL_VICTORY_REWARD = 56902
 SPELL_DEFEAT_REWARD = 58494
@@ -1729,6 +1734,88 @@ if(battle == 1)then
 end
 end
 
+function GengineerOnGossip(pUnit, event, pPlayer)
+if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES))then
+	if(pPlayer:HasAura(SPELL_CORPORAL) or pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
+		if(pPlayer:HasAura(SPELL_CORPORAL))then
+			pUnit:GossipCreateMenu(13798, pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		elseif(pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
+			pUnit:GossipCreateMenu(13798, pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a demolisher.", 2, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a siege engine.", 3, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		else
+			pUnit:GossipCreateMenu(14172, pPlayer, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		end
+	end
+else
+	pUnit:GossipCreateMenu(14172, pPlayer, 0)
+	pUnit:GossipSendMenu(pPlayer)
+end
+end
+
+function OnSelect(pUnit, event, pPlayer, id, intid, code)
+if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES))then
+	if(intid == 1)then
+		pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
+		pPlayer:GossipComplete()
+	elseif(intid == 2)then
+		pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
+		pPlayer:GossipComplete()
+	elseif(intid == 3)then
+		pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_A)
+		pPlayer:GossipComplete()
+	end
+end
+end
+
+function HGengineerOnGossip(pUnit, event, pPlayer)
+if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES))then
+	if(pPlayer:HasAura(SPELL_CORPORAL) or pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
+		if(pPlayer:HasAura(SPELL_CORPORAL))then
+			pUnit:GossipCreateMenu(13798, pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		elseif(pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
+			pUnit:GossipCreateMenu(13798, pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a demolisher.", 2, 0)
+			pUnit:GossipMenuAddItem(0, "I'd like to build a siege engine.", 3, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		else
+			pUnit:GossipCreateMenu(14172, pPlayer, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		end
+	end
+else
+	pUnit:GossipCreateMenu(14172, pPlayer, 0)
+	pUnit:GossipSendMenu(pPlayer)
+end
+end
+
+function HOnSelect(pUnit, event, pPlayer, id, intid, code)
+if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES))then
+	if(intid == 1)then
+		pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
+		pPlayer:GossipComplete()
+	elseif(intid == 2)then
+		pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
+		pPlayer:GossipComplete()
+	elseif(intid == 3)then
+		pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_H)
+		pPlayer:GossipComplete()
+	end
+end
+end
+
+RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
+RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
+RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
+RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,1,AGengineerOnGossip)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,2,OnSP_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,5,AIUpdate_Cpoint)
