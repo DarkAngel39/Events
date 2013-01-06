@@ -1,5 +1,5 @@
 TIME_TO_BATTLE = 9000
-BATTLE_TIMER = 2100
+BATTLE_TIMER = 1800
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
@@ -11,6 +11,8 @@ starttimer = 0
 spawnobjects = 0
 npcstarted = false
 south_towers = 3
+ATTACKER = " "
+DEFENDER = " "
 
 C_BAR_NEUTRAL = 80 -- the neutral vallue of the capture bar. MUST BE UNDER 100.
 C_BAR_CAPTURE = (100 - C_BAR_NEUTRAL)/2
@@ -396,6 +398,27 @@ else
 			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
 	end
 end
+if(l:GetZoneId() == ZONE_WG and controll == 1 and l:GetTeam() == 1 and battle == 1)then
+	if(l:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
+		l:CastSpell(SPELL_TOWER_CONTROL)
+	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and l:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
+		l:CastSpell(SPELL_TOWER_CONTROL)
+	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers < l:GetAuraStackCount(SPELL_TOWER_CONTROL))then
+		l:RemoveAura(SPELL_TOWER_CONTROL)
+	end
+elseif(l:GetZoneId() == ZONE_WG and controll == 2 and l:GetTeam() == 0 and battle == 1)then
+	if(l:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
+		l:CastSpell(SPELL_TOWER_CONTROL)
+	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and l:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
+		l:CastSpell(SPELL_TOWER_CONTROL)
+	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers < l:GetAuraStackCount(SPELL_TOWER_CONTROL))then
+		l:RemoveAura(SPELL_TOWER_CONTROL)
+	end
+elseif(l:GetZoneId() == ZONE_WG and battle == 0)then
+	if(l:HasAura(SPELL_TOWER_CONTROL))then
+		l:RemoveAura(SPELL_TOWER_CONTROL)
+	end
+end
 end
 end
 
@@ -423,6 +446,7 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	battle = 0
 	stateuiset = 0
 	starttimer = 0
+	south_towers = 3
 end
 for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
 if(v:GetZoneId() == ZONE_WG)then
@@ -557,7 +581,11 @@ if(controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+		eastspark_progress =  0
+		westspark_progress =  0
 		states = 1
+		ATTACKER = "Horde"
+		DEFENDER = "Alliance"
 	end
 elseif(controll == 2)then
 	if(states == 0)then
@@ -599,7 +627,11 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
 		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+		eastspark_progress = 100
+		westspark_progress = 100
 		states = 1
+		ATTACKER = "Alliance"
+		DEFENDER = "Horde"
 	end
 end
 end
@@ -615,6 +647,11 @@ end
 function DetectionUnitAIUpdate(pUnit)
 if(pUnit == nil)then
 	pUnit:RemoveAIUpdateEvent()
+end
+if(south_towers == 0)then
+	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
+	pUnit:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
+	south_towers = -1
 end
 if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
 	if(npcstarted == false)then
@@ -754,6 +791,7 @@ for k,v in pairs(pUnit:GetInRangeObjects())do
 if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
 		v:Rebuild()
+		south_towers = 3
 	end
 	if(v:GetEntry() == GO_WINTERGRASP_FORTRESS_GATE)then
 		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 5)then
@@ -1243,18 +1281,18 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 		end
 	end
 	if(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE and battle == 1 and controll == 2 and v:GetAreaId() == AREA_FORTRESS)then -- this changes the faction of the objects but for some reason they can not be damaged as they should by the vehicles.
-		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_HORDE)
+		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_HORDE)
 	elseif(battle == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
-		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_NEUTRAL)
+		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_NEUTRAL)
 	elseif(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE and battle == 1 and controll == 1 and v:GetAreaId() == AREA_FORTRESS)then
-		v:SetByte(GAMEOBJECT_FACTION,0,FACTION_ALLIANCE)
+		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_ALLIANCE)
 	elseif((v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T))then
 		if(battle == 1 and controll == 2 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE)then
-			v:SetByte(GAMEOBJECT_FACTION,0,FACTION_ALLIANCE)
+			v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_ALLIANCE)
 		elseif(battle == 1 and controll == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE)then
-			v:SetByte(GAMEOBJECT_FACTION,0,FACTION_HORDE)
+			v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_HORDE)
 		elseif(battle == 0 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
-			v:SetByte(GAMEOBJECT_FACTION,0,FACTION_NEUTRAL)
+			v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_NEUTRAL)
 		end
 	end
 end
@@ -1414,6 +1452,7 @@ local timebattle = os.time() - starttimer
 		pGO:Despawn(1,0)
 		stateuiset = 0
 		starttimer = 0
+		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 			if(v:GetTeam() == 1)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
@@ -1437,9 +1476,11 @@ local timebattle = os.time() - starttimer
 		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 		battle = 0
 		controll = 1
+		states = 0
 		pGO:Despawn(1,0)
 		stateuiset = 0
 		starttimer = 0
+		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 			if(v:GetTeam() == 0)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
@@ -1812,6 +1853,33 @@ if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZ
 end
 end
 
+function OnDestroy(pGO)
+for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+	if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER)then
+		south_towers = south_towers - 1
+		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+			g:SendBroadcastMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
+			g:SendAreaTriggerMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
+		end
+	elseif(pGO:GetEntry() == GO_WINTERGRASP_WE_TOWER)then
+		south_towers = south_towers - 1
+		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+			g:SendBroadcastMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
+			g:SendAreaTriggerMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
+		end
+	elseif(pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
+		south_towers = south_towers - 1
+		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+			g:SendBroadcastMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
+			g:SendAreaTriggerMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
+		end
+	end
+end
+end
+
+RegisterGameObjectEvent(GO_WINTERGRASP_SS_TOWER,8,OnDestroy)
+RegisterGameObjectEvent(GO_WINTERGRASP_WE_TOWER,8,OnDestroy)
+RegisterGameObjectEvent(GO_WINTERGRASP_FW_TOWER,8,OnDestroy)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
