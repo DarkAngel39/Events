@@ -251,6 +251,32 @@ QUEST_WG_VICTORY_H = 13183
 QUEST_WG_TOPPING_TOWERS = 13539
 QUEST_WG_SOUTHEN_SABOTAGE = 13538
 
+-- Opcodes
+SMSG_PLAY_SOUND = 0x2D2
+SMSG_BATTLEFIELD_MGR_ENTRY_INVITE = 0x4DE
+CMSG_BATTLEFIELD_MGR_ENTRY_INVITE_RESPONSE = 0x4DF
+SMSG_BATTLEFIELD_MGR_ENTERED = 0x4E0
+SMSG_BATTLEFIELD_MGR_QUEUE_INVITE = 0x4E1
+CMSG_BATTLEFIELD_MGR_QUEUE_INVITE_RESPONSE = 0x4E2
+CMSG_BATTLEFIELD_MGR_QUEUE_REQUEST = 0x4E3
+SMSG_BATTLEFIELD_MGR_QUEUE_REQUEST_RESPONSE = 0x4E4
+SMSG_BATTLEFIELD_MGR_EJECT_PENDING  = 0x4E5
+SMSG_BATTLEFIELD_MGR_EJECTED = 0x4E6
+CMSG_BATTLEFIELD_MGR_EXIT_REQUEST = 0x4E7
+SMSG_BATTLEFIELD_MGR_STATE_CHANGE = 0x4E8
+CMSG_BATTLEFIELD_MANAGER_ADVANCE_STATE = 0x4E9
+CMSG_BATTLEFIELD_MANAGER_SET_NEXT_TRANSITION_TIME = 0x4EA
+CMSG_START_BATTLEFIELD_CHEAT = 0x4CB
+CMSG_END_BATTLEFIELD_CHEAT = 0x4CC
+CMSG_LEAVE_BATTLEFIELD = 0x2E1
+CMSG_BATTLEFIELD_PORT = 0x2D5
+CMSG_BATTLEFIELD_STATUS = 0x2D3
+SMSG_BATTLEFIELD_STATUS = 0x2D4
+CMSG_BATTLEFIELD_LIST = 0x23C
+SMSG_BATTLEFIELD_LIST = 0x23D
+CMSG_BATTLEFIELD_JOIN = 0x23E
+SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
+
 function Aura()
 for k,l in pairs(GetPlayersInWorld())do
 if(l:GetMapId() == MAP_HOR or l:GetMapId() == MAP_NEXUS or l:GetMapId() == MAP_UP or l:GetMapId() == MAP_UK or l:GetMapId() == MAP_OCULUS or l:GetMapId() == MAP_POS or l:GetMapId() == MAP_TOC or l:GetMapId() == MAP_FOS or l:GetMapId() == MAP_AK or l:GetMapId() == MAP_VH or l:GetMapId() == MAP_GUND or l:GetMapId() == MAP_HOL or l:GetMapId() == MAP_AN or l:GetMapId() == MAP_HOS or l:GetMapId() == MAP_COS or l:GetMapId() == MAP_NORTHREND)then
@@ -439,6 +465,11 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 		eastspark_progress = 100
 		westspark_progress = 100
 	end
+	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+	local packetssound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
+	packetssound:WriteULong(3439)
+	v:SendPacketToPlayer(packetssound)
+	end
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
@@ -447,9 +478,24 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	stateuiset = 0
 	starttimer = 0
 	south_towers = 3
+	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+	local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
+	if(controll == 1)then
+		packetseound:WriteULong(8455)
+		v:SendPacketToPlayer(packetseound)
+	elseif(controll == 2)then
+		packetseound:WriteULong(8454)
+		v:SendPacketToPlayer(packetseound)
+	end
+	end
 end
 for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
 if(v:GetZoneId() == ZONE_WG)then
+if(south_towers == 0)then
+	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
+	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
+	south_towers = -1
+end
 	if(v:IsPvPFlagged() ~= true)then
 		v:FlagPvP()
 	end
@@ -648,11 +694,6 @@ function DetectionUnitAIUpdate(pUnit)
 if(pUnit == nil)then
 	pUnit:RemoveAIUpdateEvent()
 end
-if(south_towers == 0)then
-	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
-	pUnit:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
-	south_towers = -1
-end
 if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
 	if(npcstarted == false)then
 		stateuiset = 0
@@ -791,7 +832,6 @@ for k,v in pairs(pUnit:GetInRangeObjects())do
 if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
 		v:Rebuild()
-		south_towers = 3
 	end
 	if(v:GetEntry() == GO_WINTERGRASP_FORTRESS_GATE)then
 		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 5)then
@@ -1454,6 +1494,9 @@ local timebattle = os.time() - starttimer
 		starttimer = 0
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+		local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
+		packetseound:WriteULong(8454)
+		v:SendPacketToPlayer(packetseound)
 			if(v:GetTeam() == 1)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
 				v:CastSpell(SPELL_VICTORY_AURA)
@@ -1482,6 +1525,9 @@ local timebattle = os.time() - starttimer
 		starttimer = 0
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+		local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
+		packetseound:WriteULong(8455)
+		v:SendPacketToPlayer(packetseound)
 			if(v:GetTeam() == 0)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
 				v:CastSpell(SPELL_VICTORY_AURA)
