@@ -1530,3 +1530,5 @@ INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 	(19177,8222),
 	(19178,8222),
 	(20102,8222);
+
+UPDATE `creature_proto` SET `auras`='25824' WHERE `entry`=15897;
