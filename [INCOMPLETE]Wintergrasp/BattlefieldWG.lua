@@ -1487,7 +1487,7 @@ end
 function TitanRelickOnUse(pGO, event, pPlayer)
 if(battle == 1)then
 local timebattle = os.time() - starttimer
-	if(controll == 1 and pPlayer:GetTeam() == 1)then
+	if(controll == 1 and pPlayer:GetTeam() == 1 and pGO:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 9)then
 		timer_battle = 0
 		timer_nextbattle = os.time() + TIME_TO_BATTLE
 		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
@@ -1518,7 +1518,7 @@ local timebattle = os.time() - starttimer
 			end
 		end
 		end
-	if(controll == 2 and pPlayer:GetTeam() == 0)then
+	if(controll == 2 and pPlayer:GetTeam() == 0 and pGO:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 6)then
 		timer_battle = 0
 		timer_nextbattle = os.time() + TIME_TO_BATTLE
 		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
