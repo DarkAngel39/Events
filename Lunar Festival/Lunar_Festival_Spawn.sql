@@ -1532,3 +1532,4 @@ INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 	(20102,8222);
 
 UPDATE `creature_proto` SET `auras`='25824' WHERE `entry`=15897;
+UPDATE `creature_proto` SET `minlevel`=83,`maxlevel`=83,`minhealth`=5578000,`maxhealth`=5578000,`mindamage`=17815,`maxdamage`=23905,`armor`=9730 WHERE `entry`=15467; -- Omen
