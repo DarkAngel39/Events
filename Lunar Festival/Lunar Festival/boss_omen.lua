@@ -18,7 +18,7 @@ local self = getfenv(1)
 function OnLoad(pUnit)
 if(pUnit:GetZoneId() == ZONE_MOONGLADE)then
 	pUnit:SetMovementFlags(1)
-	pUnit:MoveTo(7549.977, -2855.137, 456.9678)
+	pUnit:MoveTo(7549.977, -2855.137, 456.9678, pUnit:GetO())
 end
 end
 
