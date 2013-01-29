@@ -13,7 +13,7 @@ elseif(entry == 19148)then -- Dwarf Commoner
 	if(aura == 0)then
 		pUnit:CastSpell(33437)
 	elseif(aura == 1)then
-		pUnit:CastSpell(33428)
+		pUnit:CastSpell(33434)
 	end
 elseif(entry == 19169)then -- Blood Elf Commoner
 	local aura = math.random(0,1)
@@ -27,7 +27,7 @@ elseif(entry == 19171)then -- Draenei Commoner
 	if(aura == 0)then
 		pUnit:CastSpell(33431)
 	elseif(aura == 1)then
-		pUnit:CastSpell(33431)
+		pUnit:CastSpell(33428)
 	end
 elseif(entry == 19172)then -- Gnome Commoner
 	local aura = math.random(0,1)

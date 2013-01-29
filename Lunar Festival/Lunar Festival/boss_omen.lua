@@ -1,5 +1,6 @@
 BOSS_OMEN = 15467
 NPC_LIGHT = 15902
+NPC_MINION_OF_OMEN = 15466
 SPELL_CLEAVE = 15284
 SPELL_STARFALL = 26540
 SPELL_SUMMON_SPOTLIGHT = 26392
@@ -68,6 +69,7 @@ function OnDeath(pUnit, event)
 pUnit:CastSpell(SPELL_SUMMON_SPOTLIGHT)
 pUnit:RemoveEvents()
 pUnit:RemoveAIUpdateEvent()
+pUnit:Despawn(300,0)
 end
 
 function LightOnLoad(pUnit)
@@ -91,6 +93,11 @@ for k,v in pairs(pUnit:GetInRangePlayers())do
 end
 end
 
+function MinionOnDeath(pUnit, event)
+pUnit:RemoveEvents()
+pUnit:Despawn(10,0)
+end
+
 RegisterUnitEvent(BOSS_OMEN,1,OnCombat)
 RegisterUnitEvent(BOSS_OMEN,2,OnLeaveCombat)
 RegisterUnitEvent(BOSS_OMEN,4,OnDeath)
@@ -98,3 +105,4 @@ RegisterUnitEvent(BOSS_OMEN,18,OnLoad)
 RegisterUnitEvent(BOSS_OMEN,21,AIUpdate)
 RegisterUnitEvent(NPC_LIGHT,18,LightOnLoad)
 RegisterUnitEvent(NPC_LIGHT,21,LightUpdate)
+RegisterUnitEvent(NPC_MINION_OF_OMEN,4,MinionOnDeath)
