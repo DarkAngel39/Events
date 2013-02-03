@@ -1,4 +1,4 @@
-DELETE FROM `creature_spawns` WHERE `id` BETWEEN '430000' AND '430228';
+DELETE FROM `creature_spawns` WHERE `id` BETWEEN '430000' AND '430229';
 INSERT INTO `creature_spawns` (`id`, `entry`, `map`, `position_x`, `position_y`, `position_z`, `orientation`, `movetype`, `displayid`, `faction`, `flags`, `bytes0`, `bytes1`, `bytes2`, `emote_state`, `npc_respawn_link`, `channel_spell`, `channel_target_sqlid`, `channel_target_sqlid_creature`, `standstate`, `death_state`, `mountdisplayid`, `slot1item`, `slot2item`, `slot3item`, `CanFly`, `phase`) VALUES
 	('430000',22237,530,'9578.32','-7136.39','14.2479','5.4785',0,20886,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
 	('430001',15567,0,'-7274.65','-801.765','296.871','6.14681',0,15617,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
@@ -228,7 +228,8 @@ INSERT INTO `creature_spawns` (`id`, `entry`, `map`, `position_x`, `position_y`,
 	('430225',30535,599,'995.1','856.152','185.062','5.16617',0,27097,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
 	('430226',30536,576,'323.178','-214.713','-14.0055','4.46804',0,27098,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
 	('430227',30537,604,'1643.43','964.7','116.027','4.79965',0,27099,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
-	('430228',30538,575,'468.646','-416.338','75.0085','0.296706',0,27100,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1');
+	('430228',30538,575,'468.646','-416.338','75.0085','0.296706',0,27100,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
+	('430229',15895,1,'10140.4','2579.71','1323.37','4.38697',0,15865,35,'0','0','0','4097',0,'0','0','0','0',0,0,'0','0','0','0',0,'1');
 
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '540000' AND '541270';
 INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
