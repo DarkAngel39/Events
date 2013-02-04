@@ -66,13 +66,13 @@ if(entry == NPC_FIREWORK_BLUE or entry == NPC_FIREWORK_GREEN or entry == NPC_FIR
 	local Obj2 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_FIREWORK_LAUNCHER_2)
 	local Obj3 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_FIREWORK_LAUNCHER_3)
 	if(Obj1 ~= nil or Obj2 ~= nil or Obj3 ~= nil)then
-		if(Obj1 ~= nil and pUnit:GetDistanceYards(Obj1) < 20)then
+		if(Obj1 ~= nil and pUnit:GetDistanceYards(Obj1) < 100)then
 			local O1X, O1Y, O1Z, _ = Obj1:GetSpawnLocation()
 			pUnit:TeleportCreature(O1X, O1Y, O1Z)
-		elseif(Obj2 ~= nil and pUnit:GetDistanceYards(Obj2) < 20)then
+		elseif(Obj2 ~= nil and pUnit:GetDistanceYards(Obj2) < 100)then
 			local O2X, O2Y, O2Z, _ = Obj2:GetSpawnLocation()
 			pUnit:TeleportCreature(O2X, O2Y, O2Z)
-		elseif(Obj3 ~= nil and pUnit:GetDistanceYards(Obj3) < 20)then
+		elseif(Obj3 ~= nil and pUnit:GetDistanceYards(Obj3) < 100)then
 			local O3X, O3Y, O3Z, _ = Obj3:GetSpawnLocation()
 			pUnit:TeleportCreature(O3X, O3Y, O3Z)
 		end
@@ -108,16 +108,16 @@ elseif(entry == NPC_CLUSTER_BLUE or entry == NPC_CLUSTER_GREEN or entry == NPC_C
 	local Obj3 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_CLUSTER_LAUNCHER_3)
 	local Obj4 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_CLUSTER_LAUNCHER_4)
 	if(Obj1 ~= nil or Obj2 ~= nil or Obj3 ~= nil or Obj4 ~= nil)then
-		if(Obj1 ~= nil and pUnit:GetDistanceYards(Obj1) < 20)then
+		if(Obj1 ~= nil and pUnit:GetDistanceYards(Obj1) < 100)then
 			local O1X, O1Y, O1Z, _ = Obj1:GetSpawnLocation()
 			pUnit:TeleportCreature(O1X, O1Y, O1Z)
-		elseif(Obj2 ~= nil and pUnit:GetDistanceYards(Obj2) < 20)then
+		elseif(Obj2 ~= nil and pUnit:GetDistanceYards(Obj2) < 100)then
 			local O2X, O2Y, O2Z, _ = Obj2:GetSpawnLocation()
 			pUnit:TeleportCreature(O2X, O2Y, O2Z)
-		elseif(Obj3 ~= nil and pUnit:GetDistanceYards(Obj3) < 20)then
+		elseif(Obj3 ~= nil and pUnit:GetDistanceYards(Obj3) < 100)then
 			local O3X, O3Y, O3Z, _ = Obj3:GetSpawnLocation()
 			pUnit:TeleportCreature(O3X, O3Y, O3Z)
-		elseif(Obj4 ~= nil and pUnit:GetDistanceYards(Obj4) < 20)then
+		elseif(Obj4 ~= nil and pUnit:GetDistanceYards(Obj4) < 100)then
 			local O4X, O4Y, O4Z, _ = Obj4:GetSpawnLocation()
 			pUnit:TeleportCreature(O4X, O4Y, O4Z)
 		end
@@ -133,27 +133,63 @@ elseif(entry == NPC_CLUSTER_BLUE or entry == NPC_CLUSTER_GREEN or entry == NPC_C
 		end
 		if(entry == NPC_CLUSTER_BLUE)then
 			pUnit:FullCastSpell(SPELL_ROCKET_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BLUE)
 		elseif(entry == NPC_CLUSTER_GREEN)then
+			pUnit:FullCastSpell(SPELL_ROCKET_GREEN)
+			pUnit:FullCastSpell(SPELL_ROCKET_GREEN)
+			pUnit:FullCastSpell(SPELL_ROCKET_GREEN)
 			pUnit:FullCastSpell(SPELL_ROCKET_GREEN)
 		elseif(entry == NPC_CLUSTER_PURPLE)then
 			pUnit:FullCastSpell(SPELL_ROCKET_PURPLE)
+			pUnit:FullCastSpell(SPELL_ROCKET_PURPLE)
+			pUnit:FullCastSpell(SPELL_ROCKET_PURPLE)
+			pUnit:FullCastSpell(SPELL_ROCKET_PURPLE)
 		elseif(entry == NPC_CLUSTER_RED)then
+			pUnit:FullCastSpell(SPELL_ROCKET_RED)
+			pUnit:FullCastSpell(SPELL_ROCKET_RED)
+			pUnit:FullCastSpell(SPELL_ROCKET_RED)
 			pUnit:FullCastSpell(SPELL_ROCKET_RED)
 		elseif(entry == NPC_CLUSTER_WHITE)then
 			pUnit:FullCastSpell(SPELL_ROCKET_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_WHITE)
 		elseif(entry == NPC_CLUSTER_YELLOW)then
+			pUnit:FullCastSpell(SPELL_ROCKET_YELLOW)
+			pUnit:FullCastSpell(SPELL_ROCKET_YELLOW)
+			pUnit:FullCastSpell(SPELL_ROCKET_YELLOW)
 			pUnit:FullCastSpell(SPELL_ROCKET_YELLOW)
 		elseif(entry == NPC_CLUSTER_BIG_BLUE)then
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_BLUE)
 		elseif(entry == NPC_CLUSTER_BIG_GREEN)then
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_GREEN)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_GREEN)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_GREEN)
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_GREEN)
 		elseif(entry == NPC_CLUSTER_BIG_PURPLE)then
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_PURPLE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_PURPLE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_PURPLE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_PURPLE)
 		elseif(entry == NPC_CLUSTER_BIG_RED)then
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_RED)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_RED)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_RED)
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_RED)
 		elseif(entry == NPC_CLUSTER_BIG_WHITE)then
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_WHITE)
 		elseif(entry == NPC_CLUSTER_BIG_YELLOW)then
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
 		end
 	end
@@ -222,25 +258,21 @@ function LaunchRocket (event, pPlayer, SpellId, pSpellObject)
 	local RD_FW_Cluster	= 26327  -- Red Firework Cluster
 	
 	local Quest = 8867
-
---	print('rocket')
---	print(SpellId)
 	
 	if ( pPlayer:HasQuest(Quest) ) then
 	
 		if ( NearLauncher(pPlayer) and (SpellId==SM_RD_Rocket or SpellId==SM_BL_Rocket or SpellId==SM_GN_Rocket) ) then
---			print('Launcher')
-
-			pPlayer:AdvanceQuestObjective(Quest, 0)
-
+			if(pPlayer:GetQuestObjectiveCompletion(Quest, 0) < 8)then
+				pPlayer:AdvanceQuestObjective(Quest, 0)
+			end
 		elseif ( NearCluster(pPlayer) and (SpellId==BL_FW_Cluster or SpellId==GN_FW_Cluster or SpellId==RD_FW_Cluster) ) then
---			print('Cluster')			
-			pPlayer:AdvanceQuestObjective(Quest, 1)
-
+			if(pPlayer:GetQuestObjectiveCompletion(Quest, 1) < 2)then		
+				pPlayer:AdvanceQuestObjective(Quest, 1)
+			end
 		end
 
 	end
 
 end
 
-RegisterServerHook(SERVER_HOOK_CAST_SPELL, "LaunchRocket")
+RegisterServerHook(10, "LaunchRocket")
