@@ -243,4 +243,4 @@ function LaunchRocket (event, pPlayer, SpellId, pSpellObject)
 
 end
 
-RegisterServerHook(SERVER_HOOK_CAST_SPELL, "LaunchRocket")
+RegisterServerHook(10, "LaunchRocket")
