@@ -275,4 +275,25 @@ function LaunchRocket (event, pPlayer, SpellId, pSpellObject)
 
 end
 
-RegisterServerHook(10, "LaunchRocket")
+
+function MoonTeleport( event, pPlayer, SpellId, pSpellObject )
+
+	local Quest = 8883
+	local Moonlight = 15897
+
+	if ( pPlayer:HasQuest(Quest) ) then
+		local pMoonlight = pPlayer:GetCreatureNearestCoords(pPlayer:GetX(), pPlayer:GetY(), pPlayer:GetZ(), Moonlight)
+		if ( pMoonlight ~= nil and pPlayer:GetDistanceYards(pMoonlight)<1.5) then
+			RegisterTimedEvent("Moonflight", 2000, 1, pPlayer)
+		end
+	end
+
+end
+
+function Moonflight(pPlayer)
+	pPlayer:Teleport(1, 7935, -2624, 492.6, 0.84)
+end
+
+
+RegisterServerHook(10, "LaunchRocket") -- SERVER_HOOK_CAST_SPELL
+RegisterServerHook(10, "MoonTeleport") -- SERVER_HOOK_CAST_SPELL
