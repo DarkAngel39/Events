@@ -56,6 +56,7 @@ local SPELL_ROCKET_BIG_RED = 26354
 local SPELL_ROCKET_BIG_WHITE = 26355
 local SPELL_ROCKET_BIG_YELLOW = 26356
 local SPELL_LUNAR_FORTUNE = 26522
+local SPELL_LUNAR_INVITATION = 26373
 
 local ZONE_MOONGLADE = 493
 
@@ -66,13 +67,13 @@ if(entry == NPC_FIREWORK_BLUE or entry == NPC_FIREWORK_GREEN or entry == NPC_FIR
 	local Obj2 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_FIREWORK_LAUNCHER_2)
 	local Obj3 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_FIREWORK_LAUNCHER_3)
 	if(Obj1 ~= nil or Obj2 ~= nil or Obj3 ~= nil)then
-		if(Obj1 ~= nil and pUnit:GetDistanceYards(Obj1) < 100)then
+		if(Obj1 ~= nil)then
 			local O1X, O1Y, O1Z, _ = Obj1:GetSpawnLocation()
 			pUnit:TeleportCreature(O1X, O1Y, O1Z)
-		elseif(Obj2 ~= nil and pUnit:GetDistanceYards(Obj2) < 100)then
+		elseif(Obj2 ~= nil)then
 			local O2X, O2Y, O2Z, _ = Obj2:GetSpawnLocation()
 			pUnit:TeleportCreature(O2X, O2Y, O2Z)
-		elseif(Obj3 ~= nil and pUnit:GetDistanceYards(Obj3) < 100)then
+		elseif(Obj3 ~= nil)then
 			local O3X, O3Y, O3Z, _ = Obj3:GetSpawnLocation()
 			pUnit:TeleportCreature(O3X, O3Y, O3Z)
 		end
@@ -102,22 +103,22 @@ if(entry == NPC_FIREWORK_BLUE or entry == NPC_FIREWORK_GREEN or entry == NPC_FIR
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
 		end
 	end
-elseif(entry == NPC_CLUSTER_BLUE or entry == NPC_CLUSTER_GREEN or entry == NPC_CLUSTER_PURPLE or entry == NPC_CLUSTER_RED or entry == NPC_CLUSTER_YELLOW or entry == NPC_CLUSTER_WHITE or entry == NPC_CLUSTER_BIG_BLUE or entry == NPC_CLUSTER_BIG_GREEN or entry == NPC_CLUSTER_BIG_PURPLE or entry == NPC_CLUSTER_BIG_RED or entry == NPC_CLUSTER_BIG_YELLOW or entry == NPC_CLUSTER_BIG_WHITE)then
+elseif(entry == NPC_CLUSTER_BLUE or entry == NPC_CLUSTER_GREEN or entry == NPC_CLUSTER_PURPLE or entry == NPC_CLUSTER_RED or entry == NPC_CLUSTER_YELLOW or entry == NPC_CLUSTER_WHITE or entry == NPC_CLUSTER_BIG_BLUE or entry == NPC_CLUSTER_BIG_GREEN or entry == NPC_CLUSTER_BIG_PURPLE or entry == NPC_CLUSTER_BIG_RED or entry == NPC_CLUSTER_BIG_YELLOW or entry == NPC_CLUSTER_BIG_WHITE or entry == NPC_CLUSTER_ELUNE)then
 	local Obj1 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_CLUSTER_LAUNCHER_1)
 	local Obj2 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_CLUSTER_LAUNCHER_2)
 	local Obj3 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_CLUSTER_LAUNCHER_3)
 	local Obj4 = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_CLUSTER_LAUNCHER_4)
 	if(Obj1 ~= nil or Obj2 ~= nil or Obj3 ~= nil or Obj4 ~= nil)then
-		if(Obj1 ~= nil and pUnit:GetDistanceYards(Obj1) < 100)then
+		if(Obj1 ~= nil)then
 			local O1X, O1Y, O1Z, _ = Obj1:GetSpawnLocation()
 			pUnit:TeleportCreature(O1X, O1Y, O1Z)
-		elseif(Obj2 ~= nil and pUnit:GetDistanceYards(Obj2) < 100)then
+		elseif(Obj2 ~= nil)then
 			local O2X, O2Y, O2Z, _ = Obj2:GetSpawnLocation()
 			pUnit:TeleportCreature(O2X, O2Y, O2Z)
-		elseif(Obj3 ~= nil and pUnit:GetDistanceYards(Obj3) < 100)then
+		elseif(Obj3 ~= nil)then
 			local O3X, O3Y, O3Z, _ = Obj3:GetSpawnLocation()
 			pUnit:TeleportCreature(O3X, O3Y, O3Z)
-		elseif(Obj4 ~= nil and pUnit:GetDistanceYards(Obj4) < 100)then
+		elseif(Obj4 ~= nil)then
 			local O4X, O4Y, O4Z, _ = Obj4:GetSpawnLocation()
 			pUnit:TeleportCreature(O4X, O4Y, O4Z)
 		end
@@ -191,6 +192,17 @@ elseif(entry == NPC_CLUSTER_BLUE or entry == NPC_CLUSTER_GREEN or entry == NPC_C
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
 			pUnit:FullCastSpell(SPELL_ROCKET_BIG_YELLOW)
+		elseif(entry == NPC_CLUSTER_ELUNE)then
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_WHITE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_BLUE)
+			pUnit:FullCastSpell(SPELL_ROCKET_BIG_BLUE)
+			for k,v in pairs(pUnit:GetInRangePlayers())do
+				if(v:HasAura(SPELL_LUNAR_FORTUNE))then
+					v:RemoveAura(SPELL_LUNAR_FORTUNE)
+				end
+				v:AddAura(SPELL_LUNAR_FORTUNE, 3600000, false)
+			end
 		end
 	end
 end
@@ -220,6 +232,7 @@ RegisterUnitEvent(NPC_CLUSTER_BIG_PURPLE,18,OnSummon)
 RegisterUnitEvent(NPC_CLUSTER_BIG_RED,18,OnSummon)
 RegisterUnitEvent(NPC_CLUSTER_BIG_YELLOW,18,OnSummon)
 RegisterUnitEvent(NPC_CLUSTER_BIG_WHITE,18,OnSummon)
+RegisterUnitEvent(NPC_CLUSTER_ELUNE,18,OnSummon)
 
 
 function NearLauncher( pUnit )
@@ -277,7 +290,6 @@ end
 
 
 function MoonTeleport( event, pPlayer, SpellId, pSpellObject )
-
 	local Quest = 8883
 	local Moonlight = 15897
 
