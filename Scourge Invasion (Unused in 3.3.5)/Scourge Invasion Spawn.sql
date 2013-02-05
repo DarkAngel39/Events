@@ -97,3 +97,5 @@ INSERT INTO `creature_quest_finisher` (`id`, `quest`) VALUES
 	(29087,12775),
 	(29087,12777),
 	(29087,12808);
+
+UPDATE `creature_proto` SET `minlevel`=71,`maxlevel`=71,`faction`=1897,`minhealth`=9291,`maxhealth`=9291,`mindamage`=386.4,`armor`=7039 WHERE `entry`=29346;
