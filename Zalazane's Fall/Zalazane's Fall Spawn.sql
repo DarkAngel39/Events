@@ -305,3 +305,4 @@ UPDATE `quests` SET `RequiredQuest1`=25495,`RewMoney`=68000,`RewXP`=21600 WHERE 
 
  -- Fix item stack size. (Whydb rev 158)
  UPDATE `items` SET `maxcount`=5 WHERE `entry`=53510;
+ 
