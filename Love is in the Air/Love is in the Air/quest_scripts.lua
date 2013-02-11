@@ -1,42 +1,56 @@
-QUEST_PERFECT_PERFUME = 24629
-QUEST_CLASSY_COLONGE = 24635
-QUEST_BONBON_BITZ = 24636
-QUEST_HOT_ON_THE_TRIAL_A = 24849
-QUEST_HOT_ON_THE_TRIAL_H = 24851
-QUEST_A_FRIENDLY_CHAT_H = 24576
-QUEST_A_FRIENDLY_CHAT_A = 24657
-SPELL_ROMANTIC_PICNIC = 45123
-SPELL_LUCKY_CHARM_COLLECTOR = 69510
-SPELL_LUCKY_CHARM = 69511
-SPELL_PERFUME_SPRITZ_CREDIT = 71002
-SPELL_HEAVY_PERFUMED = 71520
-SPELL_CREATE_LEDGER = 70646
-GO_PICNIC_BASKET = 187267
-GO_STRANGE_VIAL = 181015
-ITEM_CHARM_COLLECTOR = 49661
-ITEM_LEDGER = 49915
-AT_S_AUCTION_HOUSE = 5711
-AT_S_BARBER_HOUSE = 5712
-AT_S_BANK = 5710
-AT_O_AUCTION_HOUSE = 5714
-AT_O_BARBER_HOUSE = 5716
-AT_O_BANK = 5715
-NPC_A_GUARD = 68
-NPC_H_GUARD = 3296
-NPC_SNIVEL = 37715
+local QUEST_PERFECT_PERFUME = 24629
+local QUEST_CLASSY_COLONGE = 24635
+local QUEST_BONBON_BITZ = 24636
+local QUEST_HOT_ON_THE_TRIAL_A = 24849
+local QUEST_HOT_ON_THE_TRIAL_H = 24851
+local QUEST_A_FRIENDLY_CHAT_H = 24576
+local QUEST_A_FRIENDLY_CHAT_A = 24657
+local SPELL_ROMANTIC_PICNIC = 45123
+local SPELL_LUCKY_CHARM_COLLECTOR = 69510
+local SPELL_LUCKY_CHARM = 69511
+local SPELL_PERFUME_SPRITZ_CREDIT = 71002
+local SPELL_HEAVY_PERFUMED = 71520
+local SPELL_CREATE_LEDGER = 70646
+local GO_PICNIC_BASKET = 187267
+local GO_STRANGE_VIAL = 181015
+local ITEM_CHARM_COLLECTOR = 49661
+local ITEM_LEDGER = 49915
+local AT_S_AUCTION_HOUSE = 5711
+local AT_S_BARBER_HOUSE = 5712
+local AT_S_BANK = 5710
+local AT_O_AUCTION_HOUSE = 5714
+local AT_O_BARBER_HOUSE = 5716
+local AT_O_BANK = 5715
+local NPC_A_GUARD = 68
+local NPC_H_GUARD = 3296
+local NPC_SNIVEL = 37715
+
+local last_spell = 0
 
 function SpellCast(event, pPlayer, SpellId, pSpellObject)
-if(SpellId == SPELL_PERFUME_SPRITZ_CREDIT)then
-	if(pPlayer:GetQuestObjectiveCompletion(QUEST_PERFECT_PERFUME, 0) < 10)then
-		pPlayer:AdvanceQuestObjective(QUEST_PERFECT_PERFUME, 0)
+	local SPELL_1 = 69445 -- perfume
+	local SPELL_2 = 69563 -- cologne
+	local SPELL_3 = 69489 -- bonbon
+
+	if ( SpellId==SPELL_1 or SpellId==SPELL_2 or SpellId==SPELL_3 ) then
+		last_spell = SpellId
+	else
+		if ( SpellId ~= SPELL_PERFUME_SPRITZ_CREDIT and SpellId ~= 69438) then
+			last_spell = 0
+		end
 	end
-	if(pPlayer:GetQuestObjectiveCompletion(QUEST_CLASSY_COLONGE, 0) < 10)then
-		pPlayer:AdvanceQuestObjective(QUEST_CLASSY_COLONGE, 0)
+
+	if (SpellId == SPELL_PERFUME_SPRITZ_CREDIT) then
+		if (last_spell==SPELL_1 and pPlayer:GetQuestObjectiveCompletion(QUEST_PERFECT_PERFUME, 0) < 10) then
+			pPlayer:AdvanceQuestObjective(QUEST_PERFECT_PERFUME, 0)
+		end
+		if (last_spell==SPELL_2 and pPlayer:GetQuestObjectiveCompletion(QUEST_CLASSY_COLONGE, 0) < 10) then
+			pPlayer:AdvanceQuestObjective(QUEST_CLASSY_COLONGE, 0)
+		end
+		if (last_spell==SPELL_3 and pPlayer:GetQuestObjectiveCompletion(QUEST_BONBON_BITZ, 0) < 10) then
+			pPlayer:AdvanceQuestObjective(QUEST_BONBON_BITZ, 0)
+		end
 	end
-	if(pPlayer:GetQuestObjectiveCompletion(QUEST_BONBON_BITZ, 0) < 10)then
-		pPlayer:AdvanceQuestObjective(QUEST_BONBON_BITZ, 0)
-	end
-end
 end
 
 function OnUse(pGameObject, event, pPlayer)
