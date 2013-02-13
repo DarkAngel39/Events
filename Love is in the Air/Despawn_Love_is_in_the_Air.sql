@@ -1,2 +1,2 @@
-DELETE FROM `creature_spawns` WHERE `id` BETWEEN '400059' AND '400182';
+DELETE FROM `creature_spawns` WHERE `id` BETWEEN '400059' AND '400184';
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '210001' AND '211444';

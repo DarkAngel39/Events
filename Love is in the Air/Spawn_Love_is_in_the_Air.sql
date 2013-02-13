@@ -114,7 +114,7 @@ INSERT INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 	(38293,15284),
 	(38295,15284);
 
-DELETE FROM `creature_spawns` WHERE `id` BETWEEN '400059' AND '400182';
+DELETE FROM `creature_spawns` WHERE `id` BETWEEN '400059' AND '400184';
 INSERT INTO `creature_spawns` (`id`, `entry`, `map`, `position_x`, `position_y`, `position_z`, `orientation`, `movetype`, `displayid`, `faction`, `flags`, `bytes0`, `bytes1`, `bytes2`, `emote_state`, `npc_respawn_link`, `channel_spell`, `channel_target_sqlid`, `channel_target_sqlid_creature`, `standstate`, `death_state`, `mountdisplayid`, `slot1item`, `slot2item`, `slot3item`, `CanFly`, `phase`) VALUES
 	('400059',37172,1,'1658.82','-4392.51','23.3589','4.6346',0,30728,1801,'512','16777472','0','1',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
 	('400060',37674,1,'1654.56','-4435.7','19.1524','1.54799',0,30711,35,'32768','16777472','0','1',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
@@ -239,7 +239,9 @@ INSERT INTO `creature_spawns` (`id`, `entry`, `map`, `position_x`, `position_y`,
 	('400179',38065,0,'-9028.07','346.521','93.1502','3.60829',0,30912,35,'0','16777472','0','1',0,'0','0','0','0',0,0,'0','2809','0','34034',0,'1'),
 	('400180',38065,0,'-9031.66','357.245','93.1104','3.36874',0,30912,35,'0','16777472','0','1',0,'0','0','0','0',0,0,'0','2809','0','34034',0,'1'),
 	('400181',38065,0,'-9033.07','350.93','92.9121','3.1991',0,30912,35,'0','16777472','0','1',0,'0','0','0','0',0,0,'0','2809','0','34034',0,'1'),
-	('400182',38208,33,'-234.669','2154.3','90.6247','4.46749',0,30991,35,'0','16777472','0','1',0,'0','0','0','0',0,0,'0','0','0','0',0,'1');
+	('400182',38208,33,'-234.669','2154.3','90.6247','4.46749',0,30991,35,'0','16777472','0','1',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
+	('400183',37981,1,'9843.13','2430.73','1313.52','5,5676',0,16925,35,'33554432','16777472','0','1',0,'0','0','0','0',0,0,'0','0','0','0',0,'1'),
+	('400184',36817,0,'-8795.02','775.036','95.1398','0',0,16925,35,'33554432','16777472','0','1',0,'0','0','0','0',0,0,'0','0','0','0',0,'1');
 	
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '210001' AND '211444';
 INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
@@ -1690,3 +1692,6 @@ INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y
 
 UPDATE `creature_proto` SET `npcflags`=3 WHERE `entry` IN(38295,38328);
 UPDATE `creature_proto` SET `minlevel`=30,`maxlevel`=30,`faction`=1801,`minhealth`=955,`maxhealth`=955,`npcflags`=3,`attacktime`=2000,`mindamage`=38,`maxdamage`=57 WHERE `entry`=37172;
+UPDATE `creature_proto` SET `vehicleid`=548 WHERE `entry`=36812;
+UPDATE `creature_proto` SET `vehicleid`=616 WHERE `entry`=37966;
+UPDATE `creature_proto` SET `vehicleid`=615 WHERE `entry`=37980;
