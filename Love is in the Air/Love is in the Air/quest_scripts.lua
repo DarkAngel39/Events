@@ -12,17 +12,11 @@ SPELL_PERFUME_SPRITZ_CREDIT = 71002
 SPELL_HEAVY_PERFUMED = 71520
 SPELL_CREATE_LEDGER = 70646
 SPELL_SEARCH_AUCTION_HOUSE_A = 71760
- -- SPELL_SUMMON_AUCTION_HOUSE_A = 71763
 SPELL_SEARCH_BANK_A = 71713
- -- SPELL_SUMMON_BANK_A = 71712
 SPELL_SEARCH_BARBERSHOP_A = 71758
- -- SPELL_SUMMON_BARBERSHOP_A = 71765
 SPELL_SEARCH_AUCTION_HOUSE_H = 71745
- -- SPELL_SUMMON_AUCTION_HOUSE_H = 71744
 SPELL_SEARCH_BANK_H = 71759
- -- SPELL_SUMMON_BANK_H = 71762
 SPELL_SEARCH_BARBERSHOP_H = 71752
- -- SPELL_SUMMON_BARBERSHOP_H = 71751
 GO_PICNIC_BASKET = 187267
 GO_STRANGE_VIAL = 181015
 ITEM_CHARM_COLLECTOR = 49661
@@ -85,39 +79,27 @@ end
 function AreaTrigger(event, pPlayer, AreaTriggerId)
 if(AreaTriggerId == AT_S_BANK)then
 	if(pPlayer:GetQuestObjectiveCompletion(QUEST_HOT_ON_THE_TRIAL_A, 0) < 1)then
-		-- pPlayer:AdvanceQuestObjective(QUEST_HOT_ON_THE_TRIAL_A, 0)
 		pPlayer:CastSpell(SPELL_SEARCH_BANK_A)
-		-- pPlayer:CastSpell(SPELL_SUMMON_BANK_A)
 	end
 elseif(AreaTriggerId == AT_S_AUCTION_HOUSE)then
 	if(pPlayer:GetQuestObjectiveCompletion(QUEST_HOT_ON_THE_TRIAL_A, 1) < 1)then
-		-- pPlayer:AdvanceQuestObjective(QUEST_HOT_ON_THE_TRIAL_A, 1)
 		pPlayer:CastSpell(SPELL_SEARCH_AUCTION_HOUSE_A)
-		-- pPlayer:CastSpell(SPELL_SUMMON_AUCTION_HOUSE_A)
 	end
 elseif(AreaTriggerId == AT_S_BARBER_HOUSE)then
 	if(pPlayer:GetQuestObjectiveCompletion(QUEST_HOT_ON_THE_TRIAL_A, 2) < 1)then
-		-- pPlayer:AdvanceQuestObjective(QUEST_HOT_ON_THE_TRIAL_A, 2)
 		pPlayer:CastSpell(SPELL_SEARCH_BARBERSHOP_A)
-		-- pPlayer:CastSpell(SPELL_SUMMON_BARBERSHOP_A)
 	end
 elseif(AreaTriggerId == AT_O_BANK)then
 	if(pPlayer:GetQuestObjectiveCompletion(QUEST_HOT_ON_THE_TRIAL_H, 0) < 1)then
-		-- pPlayer:AdvanceQuestObjective(QUEST_HOT_ON_THE_TRIAL_H, 0)
 		pPlayer:CastSpell(SPELL_SEARCH_BANK_H)
-		-- pPlayer:CastSpell(SPELL_SUMMON_BANK_H)
 	end
 elseif(AreaTriggerId == AT_O_AUCTION_HOUSE)then
 	if(pPlayer:GetQuestObjectiveCompletion(QUEST_HOT_ON_THE_TRIAL_H, 1) < 1)then
-		-- pPlayer:AdvanceQuestObjective(QUEST_HOT_ON_THE_TRIAL_H, 1)
 		pPlayer:CastSpell(SPELL_SEARCH_AUCTION_HOUSE_H)
-		-- pPlayer:CastSpell(SPELL_SUMMON_AUCTION_HOUSE_H)
 	end
 elseif(AreaTriggerId == AT_O_BARBER_HOUSE)then
 	if(pPlayer:GetQuestObjectiveCompletion(QUEST_HOT_ON_THE_TRIAL_H, 2) < 1)then
-		-- pPlayer:AdvanceQuestObjective(QUEST_HOT_ON_THE_TRIAL_H, 2)
 		pPlayer:CastSpell(SPELL_SEARCH_BARBERSHOP_H)
-		-- pPlayer:CastSpell(SPELL_SUMMON_BARBERSHOP_H)
 	end
 end
 end
