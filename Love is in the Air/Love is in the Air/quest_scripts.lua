@@ -29,6 +29,7 @@ AT_O_BARBER_HOUSE = 5716
 AT_O_BANK = 5715
 NPC_A_GUARD = 68
 NPC_H_GUARD = 3296
+NPC_PARFUME_GURAD_TRIGGER = 38288
 NPC_SNIVEL = 37715
 
 function SpellCast(event, pPlayer, SpellId, pSpellObject)
@@ -59,19 +60,29 @@ end
 end
 
 function OnLoad(pUnit)
-pUnit:RegisterAIUpdateEvent(30000)
+for k,v in pairs(pUnit:GetInRangeUnits())do
+	if(v:IsCreature())then
+		if(v:GetEntry() == NPC_A_GUARD or v:GetEntry() == NPC_H_GUARD)then
+			if(v:HasAura(SPELL_HEAVY_PERFUMED) == false)then
+				v:CastSpell(SPELL_HEAVY_PERFUMED)
+			end
+		end
+	end
+end
+pUnit:RegisterAIUpdateEvent(600000)
 end
 
 function AIUpdate(pUnit)
 if(pUnit == nil)then
 	pUnit:RemoveAIUpdateEvent()
 end
-local chance = math.random(1,100)
-if(chance <= 30)then
-	pUnit:FullCastSpell(SPELL_HEAVY_PERFUMED)
-elseif(chance == 100)then
-	if(pUnit:HasAura(SPELL_HEAVY_PERFUMED))then
-		pUnit:RemoveAura(SPELL_HEAVY_PERFUMED)
+for k,v in pairs(pUnit:GetInRangeUnits())do
+	if(v:IsCreature())then
+		if(v:GetEntry() == NPC_A_GUARD or v:GetEntry() == NPC_H_GUARD)then
+			if(v:HasAura(SPELL_HEAVY_PERFUMED) == false)then
+				v:CastSpell(SPELL_HEAVY_PERFUMED)
+			end
+		end
 	end
 end
 end
@@ -134,9 +145,7 @@ RegisterServerHook(26, "AreaTrigger")
 RegisterServerHook(28, "KillCreature")
 RegisterServerHook(10, "SpellCast")
 RegisterGameObjectEvent(GO_PICNIC_BASKET,4,OnUse)
-RegisterUnitEvent(NPC_A_GUARD,18,OnLoad)
-RegisterUnitEvent(NPC_A_GUARD,21,AIUpdate)
-RegisterUnitEvent(NPC_H_GUARD,18,OnLoad)
-RegisterUnitEvent(NPC_H_GUARD,21,AIUpdate)
+RegisterUnitEvent(NPC_PARFUME_GURAD_TRIGGER,18,OnLoad)
+RegisterUnitEvent(NPC_PARFUME_GURAD_TRIGGER,21,AIUpdate)
 RegisterUnitGossipEvent(NPC_SNIVEL,1,OnGossip)
 RegisterUnitGossipEvent(NPC_SNIVEL,2,OnGossip_Submenus)
