@@ -1826,7 +1826,7 @@ if(battle == 1)then
 end
 end
 
-function GengineerOnGossip(pUnit, event, pPlayer)
+function AGengineerOnGossip(pUnit, event, pPlayer)
 if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES))then
 	if(pPlayer:HasAura(SPELL_CORPORAL) or pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
 		if(pPlayer:HasAura(SPELL_CORPORAL))then
@@ -1850,7 +1850,7 @@ else
 end
 end
 
-function OnSelect(pUnit, event, pPlayer, id, intid, code)
+function AOnSelect(pUnit, event, pPlayer, id, intid, code)
 if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES))then
 	if(intid == 1)then
 		pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
@@ -1931,10 +1931,10 @@ end
 RegisterGameObjectEvent(GO_WINTERGRASP_SS_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_WE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_FW_TOWER,8,OnDestroy)
- --[[ RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
+RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
-RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,1,AGengineerOnGossip) ]]--
+RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,1,AGengineerOnGossip)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,2,OnSP_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,5,AIUpdate_Cpoint)
