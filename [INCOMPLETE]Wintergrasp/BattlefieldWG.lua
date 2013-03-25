@@ -303,7 +303,7 @@ else
 		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
 	end
 end
-if(l:GetZoneId() ~= ZONE_WG)then
+if(l:GetZoneId() ~= ZONE_WG and l:GetAreaId() ~= ZONE_WG)then
 	if(l:HasAura(SPELL_RECRUIT))then
 		l:RemoveAura(SPELL_RECRUIT)
 	end
@@ -455,7 +455,6 @@ end
 
 function WGUpdate()
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
-	SendWorldMsg("[PH MESSAGE]Battlefield is starting!", 1)
 	timer_battle = os.time() + BATTLE_TIMER
 	timer_nextbattle = 0
 	battle = 1
@@ -471,6 +470,7 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 		westspark_progress = 100
 	end
 	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
+	v:SendAreaTriggerMessage("Let the battle begin!")
 	local packetssound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
 	packetssound:WriteULong(3439)
 	v:SendPacketToPlayer(packetssound)
@@ -478,7 +478,6 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
-	SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 	battle = 0
 	stateuiset = 0
 	starttimer = 0
@@ -488,14 +487,16 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	if(controll == 1)then
 		packetseound:WriteULong(8455)
 		v:SendPacketToPlayer(packetseound)
+		v:SendAreaTriggerMessage("The Alliance has successfully defended the Wintergrasp fortress!")
 	elseif(controll == 2)then
 		packetseound:WriteULong(8454)
 		v:SendPacketToPlayer(packetseound)
+		v:SendAreaTriggerMessage("The Horde has successfully defended the Wintergrasp fortress!")
 	end
 	end
 end
 for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
-if(v:GetZoneId() == ZONE_WG)then
+if(v:GetZoneId() == ZONE_WG or v:GetAreaId() == ZONE_WG)then
 if(south_towers == 0)then
 	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
 	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
@@ -722,7 +723,6 @@ if(spawnobjects == 0 and battle == 1)then
 	spawnobjects = 1
 end
 if(battle == 0 and spawnobjects == 1)then
-	SendWorldMsg("Wintergrasp condition: Battle = "..battle.." and objstate = "..spawnobjects..".|r", 1)
 	spawnobjects = 0
 	local relick = pUnit:GetGameObjectNearestCoords(5439.66,2840.83,430.282,GO_WINTERGRASP_TITAN_RELIC)
 	local collision = pUnit:GetGameObjectNearestCoords(5397.11,2841.54,425.901,GO_WINTERGRASP_KEEP_COLLISION_WALL)
@@ -1490,7 +1490,6 @@ local timebattle = os.time() - starttimer
 	if(controll == 1 and pPlayer:GetTeam() == 1 and pGO:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 9)then
 		timer_battle = 0
 		timer_nextbattle = os.time() + TIME_TO_BATTLE
-		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 		battle = 0
 		controll = 2
 		states = 0
@@ -1499,6 +1498,7 @@ local timebattle = os.time() - starttimer
 		starttimer = 0
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+		v:SendAreaTriggerMessage("The Wintergrasp fortress has been captured by the Horde!")
 		local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
 		packetseound:WriteULong(8454)
 		v:SendPacketToPlayer(packetseound)
@@ -1521,7 +1521,6 @@ local timebattle = os.time() - starttimer
 	if(controll == 2 and pPlayer:GetTeam() == 0 and pGO:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 6)then
 		timer_battle = 0
 		timer_nextbattle = os.time() + TIME_TO_BATTLE
-		SendWorldMsg("[PH MESSAGE]The battlefield is over!", 1)
 		battle = 0
 		controll = 1
 		states = 0
@@ -1530,6 +1529,7 @@ local timebattle = os.time() - starttimer
 		starttimer = 0
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+		v:SendAreaTriggerMessage("The Wintergrasp fortress has been captured by the Alliance!")
 		local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
 		packetseound:WriteULong(8455)
 		v:SendPacketToPlayer(packetseound)
@@ -1556,10 +1556,10 @@ function DebugWG(event, pPlayer, message, type, language)
 if(pPlayer:IsGm() and pPlayer:GetZoneId() == ZONE_WG and battle == 0)then
 	if(message == "#debug WG")then
 		timer_nextbattle = os.time() + 10
-		SendWorldMsg("Wintergrasp starts after 10s. Battlefield started by GM "..pPlayer:GetName()..".|r", 1)
+		for k,v in pairs(GetPlayersInWorld())do
+		v:SendBroadcastMessage("Wintergrasp battle starts after 10 sec. Battlefield started by GM "..pPlayer:GetName()..".|r")
+		end
 		pPlayer:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
-	elseif(message == "#st")then
-		SendWorldMsg("The states is "..states..".|r")
 	end
 end
 end
@@ -1931,10 +1931,10 @@ end
 RegisterGameObjectEvent(GO_WINTERGRASP_SS_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_WE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_FW_TOWER,8,OnDestroy)
-RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
+ --[[ RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
-RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,1,AGengineerOnGossip)
+RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,1,AGengineerOnGossip) ]]--
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,5,AIUpdate_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_WS_100,2,OnSP_Cpoint)
 RegisterGameObjectEvent(GO_WINTERGRASP_CAPTUREPOINT_ES_100,5,AIUpdate_Cpoint)
