@@ -480,6 +480,7 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
 	battle = 0
 	stateuiset = 0
+	states = 0
 	starttimer = 0
 	south_towers = 3
 	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
@@ -631,10 +632,12 @@ if(controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
 		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
-		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
-		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 4)
+		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 4)
 		eastspark_progress =  0
 		westspark_progress =  0
+		sunkenring_progress = 0
+		brokentemple_progres = 0
 		states = 1
 		ATTACKER = "Horde"
 		DEFENDER = "Alliance"
@@ -677,10 +680,12 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
 		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
-		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 1)
-		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 1)
+		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 7)
+		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 7)
 		eastspark_progress = 100
 		westspark_progress = 100
+		sunkenring_progress = 100
+		brokentemple_progres = 100
 		states = 1
 		ATTACKER = "Alliance"
 		DEFENDER = "Horde"
