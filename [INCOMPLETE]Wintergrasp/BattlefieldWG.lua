@@ -251,8 +251,6 @@ QUEST_WG_VICTORY_A = 13181
 QUEST_WG_VICTORY_H = 13183
 QUEST_WG_TOPPING_TOWERS = 13539
 QUEST_WG_SOUTHEN_SABOTAGE = 13538
-QUEST_WG_SOUTHEN_SABOTAGE_A = 13538
-QUEST_WG_TOPPING_THE_TOWERS_H = 13539
 QUEST_WG_DEFEND_SIEDGE_A = 13222
 QUEST_WG_DEFEND_SIEDGE_H = 13223
 
@@ -1910,6 +1908,43 @@ end
 end
 
 function OnDestroy(pGO)
+for k,g in pairs(pGO:GetInRangePlayers())do
+	if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER or pGO:GetEntry() == GO_WINTERGRASP_WE_TOWER or pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
+		if(DEFENDER == "Alliance")then
+			if(g:GetTeam() == 0)then
+				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+					g:AddAchievement(ACHIEVEMENT_LEANING_T)
+				end
+				if(g:HasQuest(QUEST_WG_SOUTHEN_SABOTAGE) and g:GetQuestObjectiveCompletion(QUEST_WG_SOUTHEN_SABOTAGE, 0) == 0)then
+					g:AdvanceQuestObjective(QUEST_WG_SOUTHEN_SABOTAGE, 0)
+				end
+			end
+		elseif(DEFENDER == "Horde")then
+			if(g:GetTeam() == 1)then
+				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+					g:AddAchievement(ACHIEVEMENT_LEANING_T)
+				end
+				if(g:HasQuest(QUEST_WG_TOPPING_TOWERS) and g:GetQuestObjectiveCompletion(QUEST_WG_TOPPING_TOWERS, 0) == 0)then
+					g:AdvanceQuestObjective(QUEST_WG_TOPPING_TOWERS, 0)
+				end
+			end
+		end
+	elseif(pGO:GetEntry() == GO_WINTERGRASP_SE_TOWER or pGO:GetEntry() == GO_WINTERGRASP_NE_TOWER or pGO:GetEntry() == GO_WINTERGRASP_SW_TOWER or pGO:GetEntry() == GO_WINTERGRASP_NW_TOWER)then
+		if(DEFENDER == "Horde")then
+			if(g:GetTeam() == 0)then
+				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+					g:AddAchievement(ACHIEVEMENT_LEANING_T)
+				end
+			end
+		elseif(DEFENDER == "Alliance")then
+			if(g:GetTeam() == 1)then
+				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+					g:AddAchievement(ACHIEVEMENT_LEANING_T)
+				end
+			end
+		end
+	end
+end
 for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 	if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER)then
 		south_towers = south_towers - 1
@@ -1933,6 +1968,10 @@ for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 end
 end
 
+RegisterGameObjectEvent(GO_WINTERGRASP_SE_TOWER,8,OnDestroy)
+RegisterGameObjectEvent(GO_WINTERGRASP_NE_TOWER,8,OnDestroy)
+RegisterGameObjectEvent(GO_WINTERGRASP_SW_TOWER,8,OnDestroy)
+RegisterGameObjectEvent(GO_WINTERGRASP_NW_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_SS_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_WE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_FW_TOWER,8,OnDestroy)
