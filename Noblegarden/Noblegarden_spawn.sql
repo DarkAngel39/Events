@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS `active_event_id` (
+  `active_event` int(10) unsigned NOT NULL,
+  `name` text COLLATE latin1_bin NOT NULL,
+  PRIMARY KEY (`active_event`)
+);
+
+DELETE FROM `active_event_id` WHERE `active_event`=2;
+INSERT INTO `active_event_id` (`active_event`, `name`) VALUES (2,"Noblegarden");
+
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN '110000' AND '110633';
 INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
 	('110000','113768','0','-5572.18','-462.293','402.306','4.1197','0','0','0.882777','-0.469792','1','0','0','1','0','1','0'),
