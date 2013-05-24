@@ -1,5 +1,5 @@
 function EventsList( event, pPlayer, message, type, language )
-if( message == "#event list" ) then
+if(pPlayer:IsGm() and message == "#event list" ) then
 	local result = WorldDBQuery( "SELECT `name` FROM `active_event_id` LIMIT 50" );
 	if( result ~= NIL ) then
 		local colcount = result:GetColumnCount();
