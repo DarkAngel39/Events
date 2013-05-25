@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS `active_event_id` (
+  `active_event` int(10) unsigned NOT NULL,
+  `name` text COLLATE latin1_bin NOT NULL,
+  PRIMARY KEY (`active_event`)
+);
+
+DELETE FROM `active_event_id` WHERE `active_event`=6;
+INSERT INTO `active_event_id` (`active_event`, `name`) VALUES (6,"Love is in the Air");
+
 DELETE FROM `creature_quest_starter` WHERE `quest` IN (24536,24541,24638,24645,24647,24648,24649,24650,24651,24652,24850,24629,24635,24636,24597,24610,24611,24609,24612,24615,24614,24613,24655,24656,24658,24659,24660,24662,24663,24664,24665,24666,24848,24804,24805,24657,24849,24576,24851,9025,8980,9027,8983,14488);
 INSERT INTO `creature_quest_starter` (`id`,`quest`) VALUES
 	(37172,24536),
