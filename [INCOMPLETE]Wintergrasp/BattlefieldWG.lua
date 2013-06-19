@@ -1,8 +1,10 @@
-TIME_TO_BATTLE = 9000
-BATTLE_TIMER = 1800
+TIME_TO_BATTLE = 9000 -- How much time there will be between the battles.
+BATTLE_TIMER = 1800 -- How long time will the battle last for. (if attacker towers are not destroyed)
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
+local jointimer_1 = 360 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
+local jointimer_2 = 30 -- SMSG_BATTLEFIELD_MGR_QUEUE_INVITE
 battle = 0
 states = 0
 stateuiset = 0
@@ -494,6 +496,17 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 		v:SendAreaTriggerMessage("The Horde has successfully defended the Wintergrasp fortress!")
 	end
 	end
+elseif(timer_nextbattle == os.time() + jointimer_1)then
+		local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_ENTRY_INVITE, 12)
+		p:WriteULong(1)
+		p:WriteULong(4197)
+		p:WriteULong(os.time() + jointimer_1)
+		SendPacketToZone(p, ZONE_WG)
+elseif(timer_nextbattle == os.time() + jointimer_2)then
+		local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_QUEUE_INVITE, 5)
+		p:WriteULong(1)
+		p:WriteUByte(1)
+		SendPacketToZone(p, ZONE_WG)
 end
 for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
 if(v:GetZoneId() == ZONE_WG or v:GetAreaId() == ZONE_WG)then
@@ -1561,8 +1574,12 @@ if(pPlayer:IsGm() and pPlayer:GetZoneId() == ZONE_WG and battle == 0)then
 	if(message == "#debug WG")then
 		timer_nextbattle = os.time() + 10
 		for k,v in pairs(GetPlayersInWorld())do
-		v:SendBroadcastMessage("Wintergrasp battle starts after 10 sec. Battlefield started by GM "..pPlayer:GetName()..".|r")
+			v:SendBroadcastMessage("Wintergrasp battle starts after 10 sec. Battlefield started by GM "..pPlayer:GetName()..".|r")
 		end
+		local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_QUEUE_INVITE, 5)
+		p:WriteULong(1)
+		p:WriteUByte(1)
+		SendPacketToZone(p, ZONE_WG)
 		pPlayer:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
 	end
 end
