@@ -3,7 +3,7 @@ BATTLE_TIMER = 1800 -- How long time will the battle last for. (if attacker towe
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
-local jointimer_1 = 360 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
+local jointimer_1 = 120 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
 local jointimer_2 = 30 -- SMSG_BATTLEFIELD_MGR_QUEUE_INVITE
 battle = 0
 states = 0
@@ -500,7 +500,7 @@ elseif(timer_nextbattle == os.time() + jointimer_1)then
 		local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_ENTRY_INVITE, 12)
 		p:WriteULong(1)
 		p:WriteULong(4197)
-		p:WriteULong(os.time() + jointimer_1)
+		p:WriteULong(timer_nextbattle)
 		SendPacketToZone(p, ZONE_WG)
 elseif(timer_nextbattle == os.time() + jointimer_2)then
 		local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_QUEUE_INVITE, 5)
@@ -1986,6 +1986,26 @@ for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 end
 end
 
+function OnZoneEnter(event, pPlayer, ZoneId, OldZoneId)
+if(ZoneId == ZONE_WG)then
+	if(battle == 0)then
+		if(timer_nextbattle <= os.time() + jointimer_1 and timer_nextbattle >= os.time() + jointimer_2)then
+			local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_ENTRY_INVITE, 12)
+			p:WriteULong(1)
+			p:WriteULong(4197)
+			p:WriteULong(timer_nextbattle)
+			pPlayer:SendPacketToPlayer(p)
+		elseif(timer_nextbattle >= os.time() + jointimer_2)then
+			local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_QUEUE_INVITE, 5)
+			p:WriteULong(1)
+			p:WriteUByte(1)
+			SendPacketToZonepPlayer:SendPacketToPlayer(p)
+		end
+	elseif(battle == 1)then
+	end
+end
+end
+
 RegisterGameObjectEvent(GO_WINTERGRASP_SE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_NE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_SW_TOWER,8,OnDestroy)
@@ -2019,5 +2039,6 @@ RegisterTimedEvent("WGUpdate", 1000, 0)
 RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
 RegisterServerHook(2,KillPlayer)
+RegisterServerHook(15,OnZoneEnter)
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
