@@ -3358,3 +3358,6 @@ UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealt
 UPDATE `creature_proto` SET `npcflags`=1,`attacktime`=2000,`mindamage`=80,`maxdamage`=120 WHERE `entry`=40443; -- Earthen Ring Scout
 UPDATE `creature_proto` SET `npcflags`=1,`attacktime`=2000,`mindamage`=80,`maxdamage`=120 WHERE `entry`=40436; -- EEarthen Ring Pathfinder
 UPDATE `creature_proto` SET `minlevel`=72,`maxlevel`=72,`minhealth`=4278,`maxhealth`=4278,`npcflags`=3,`mindamage`=307,`maxdamage`=438,`armor`=7318 WHERE `entry` IN (32816,32815,32814,32813,32812,32811,32810,32809,32808,32807,32806,32805,32804,32803,32802,32801); -- Northrend Flame Keepers
+UPDATE `creature_proto` SET `minlevel`=70,`maxlevel`=70,`minhealth`=13000,`maxhealth`=13000,`mindamage`=520,`maxdamage`=780,`armor`=6740 WHERE `entry`=25710; -- Numa Cloudsister
+UPDATE `creature_proto` SET `minlevel`=22,`maxlevel`=22,`minhealth`=480,`maxhealth`=480,`mana`=1357,`mindamage`=75.6 WHERE `entry`=25924; -- Twilight Speaker Viktor
+UPDATE `creature_proto` SET `minlevel`=20,`maxlevel`=21,`faction`=168,`minhealth`=480,`mindamage`=72.8,`maxdamage`=106.4,`armor`=875 WHERE `entry`=25866; -- Twilight Flameguard
