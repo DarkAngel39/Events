@@ -3350,7 +3350,7 @@ INSERT IGNORE INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 UPDATE `creature_proto` SET `minlevel`=76,`maxlevel`=76,`minhealth`=4781,`maxhealth`=4781,`npcflags`=3,`mindamage`=249,`maxdamage`=380 WHERE `entry`=25697; -- Luma Skymother
 UPDATE `creature_proto` SET `minlevel`=72,`maxlevel`=74,`minhealth`=9610,`maxhealth`=10282,`mana`=3309,`npcflags`=1,`mindamage`=325,`maxdamage`=464,`armor`=7903 WHERE `entry`=25754; -- Earthen Ring Flamecaller
 UPDATE `creature_proto` SET `minlevel`=20,`maxlevel`=20,`minhealth`=12000,`maxhealth`=12000,`mindamage`=34,`maxdamage`=50,`armor`=840 WHERE `entry`=25961; -- Earthen Ring Totem
-UPDATE `creature_proto` SET `minlevel`=82,`maxlevel`=82,`minhealth`=539240,`mindamage`=6418,`armor`=10328 WHERE `entry`=25740; -- Ahune
+UPDATE `creature_proto` SET `minlevel`=82,`maxlevel`=82,`minhealth`=539240,`maxhealth`=539240,`mindamage`=6418,`armor`=10328 WHERE `entry`=25740; -- Ahune
 UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealth`=100800,`maxhealth`=100800,`mindamage`=6330,`maxdamage`=8790,`armor`=9729 WHERE `entry`=25755; -- Ahunite Hailstone
 UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealth`=18900,`maxhealth`=18900,`mindamage`=422,`maxdamage`=586,`armor`=9729 WHERE `entry`=25756; -- Ahunite Coldwave
 UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealth`=504000,`maxhealth`=504000,`mindamage`=6630,`armor`=9729 WHERE `entry`=25865; -- Frozen Core
