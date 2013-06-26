@@ -110,10 +110,10 @@ INSERT INTO `creature_spawns` (`id`, `entry`, `map`, `position_x`, `position_y`,
 	(@SPID+97,26123,530,-3785.18,-11490.1,-134.595,5.79622,0,16541,1802,33280,16777472,0,4097,0,0,0,0,0,0,0,0,0,0,0,0,1),
 	(@SPID+98,25697,547,-93.4755,-119.921,-2.3357,4.54117,0,3848,35,0,16777472,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1),
 	(@SPID+99,25710,547,132.721,-116.256,-1.59053,3.85833,0,3848,35,0,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
-	(@SPID+100,24320,547,127.745,-109.161,-1.54947,2.75656,0,4683,1890,0,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
-	(@SPID+101,24320,547,-92.4903,-123.935,-1.67876,4.74753,0,4683,1890,0,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
-	(@SPID+102,24320,547,-97.9888,-122.327,-1.92884,4.18204,0,4683,1890,0,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
-	(@SPID+103,24320,547,128.56,-104.269,-1.59038,2.67802,0,4683,1890,0,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
+	(@SPID+100,24320,547,127.745,-109.161,-1.54947,2.75656,0,4683,1890,2,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
+	(@SPID+101,24320,547,-92.4903,-123.935,-1.67876,4.74753,0,4683,1890,2,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
+	(@SPID+102,24320,547,-97.9888,-122.327,-1.92884,4.18204,0,4683,1890,2,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
+	(@SPID+103,24320,547,128.56,-104.269,-1.59038,2.67802,0,4683,1890,2,16777472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
 	(@SPID+104,26124,1,1914.22,-4342.91,20.7326,2.81564,0,16585,1801,36864,16777472,0,4097,0,0,0,0,0,0,0,0,0,0,0,0,1),
 	(@SPID+105,26124,530,9800.2,-7257.32,26.2343,1.83782,0,16585,1801,36864,16777472,0,4097,0,0,0,0,0,0,0,0,0,0,0,0,1),
 	(@SPID+106,26124,1,-1024.74,294.716,135.746,1.97134,0,16585,1801,36864,16777472,0,4097,0,0,0,0,0,0,0,0,0,0,0,0,1),
@@ -3350,7 +3350,7 @@ INSERT IGNORE INTO `npc_gossip_textid` (`creatureid`,`textid`) VALUES
 UPDATE `creature_proto` SET `minlevel`=76,`maxlevel`=76,`minhealth`=4781,`maxhealth`=4781,`npcflags`=3,`mindamage`=249,`maxdamage`=380 WHERE `entry`=25697; -- Luma Skymother
 UPDATE `creature_proto` SET `minlevel`=72,`maxlevel`=74,`minhealth`=9610,`maxhealth`=10282,`mana`=3309,`npcflags`=1,`mindamage`=325,`maxdamage`=464,`armor`=7903 WHERE `entry`=25754; -- Earthen Ring Flamecaller
 UPDATE `creature_proto` SET `minlevel`=20,`maxlevel`=20,`minhealth`=12000,`maxhealth`=12000,`mindamage`=34,`maxdamage`=50,`armor`=840 WHERE `entry`=25961; -- Earthen Ring Totem
-UPDATE `creature_proto` SET `minlevel`=82,`maxlevel`=82,`minhealth`=539240,`maxhealth`=539240,`mindamage`=6418,`armor`=10328 WHERE `entry`=25740; -- Ahune
+UPDATE `creature_proto` SET `minlevel`=82,`maxlevel`=82,`minhealth`=539240,`maxhealth`=539240,`mindamage`=6418,`maxdamage`=9627.6,`armor`=10328 WHERE `entry`=25740; -- Ahune
 UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealth`=100800,`maxhealth`=100800,`mindamage`=6330,`maxdamage`=8790,`armor`=9729 WHERE `entry`=25755; -- Ahunite Hailstone
 UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealth`=18900,`maxhealth`=18900,`mindamage`=422,`maxdamage`=586,`armor`=9729 WHERE `entry`=25756; -- Ahunite Coldwave
 UPDATE `creature_proto` SET `minlevel`=80,`maxlevel`=80,`faction`=1998,`minhealth`=504000,`maxhealth`=504000,`mindamage`=6630,`armor`=9729 WHERE `entry`=25865; -- Frozen Core
