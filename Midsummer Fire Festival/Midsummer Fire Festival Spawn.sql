@@ -3361,3 +3361,11 @@ UPDATE `creature_proto` SET `minlevel`=72,`maxlevel`=72,`minhealth`=4278,`maxhea
 UPDATE `creature_proto` SET `minlevel`=70,`maxlevel`=70,`minhealth`=13000,`maxhealth`=13000,`mindamage`=520,`maxdamage`=780,`armor`=6740 WHERE `entry`=25710; -- Numa Cloudsister
 UPDATE `creature_proto` SET `minlevel`=22,`maxlevel`=22,`minhealth`=480,`maxhealth`=480,`mana`=1357,`mindamage`=75.6 WHERE `entry`=25924; -- Twilight Speaker Viktor
 UPDATE `creature_proto` SET `minlevel`=20,`maxlevel`=21,`faction`=168,`minhealth`=480,`mindamage`=72.8,`maxdamage`=106.4,`armor`=875 WHERE `entry`=25866; -- Twilight Flameguard
+
+DELETE FROM `ai_agents` WHERE `entry` IN (25755,25756,25757);
+INSERT INTO `ai_agents` (`entry`,`instance_mode`,`type`,`event`,`chance`,`maxcount`,`spell`,`spelltype`,`targettype_overwrite`,`cooldown_overwrite`,`floatMisc1`,`Misc2`) VALUES
+ (25755,4,4,0,100,1,46542,11,4,1000,0,0),
+ (25755,4,4,0,100,0,2676,7,3,10000,0,0),
+ (25756,4,4,0,100,0,46406,8,1,5000,0,0),
+ (25757,4,4,0,100,1,25020,10,4,1000,0,0),
+ (25757,4,4,0,100,0,46568,8,1,10000,0,0);
