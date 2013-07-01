@@ -3361,6 +3361,12 @@ UPDATE `creature_proto` SET `minlevel`=72,`maxlevel`=72,`minhealth`=4278,`maxhea
 UPDATE `creature_proto` SET `minlevel`=70,`maxlevel`=70,`minhealth`=13000,`maxhealth`=13000,`mindamage`=520,`maxdamage`=780,`armor`=6740 WHERE `entry`=25710; -- Numa Cloudsister
 UPDATE `creature_proto` SET `minlevel`=22,`maxlevel`=22,`minhealth`=480,`maxhealth`=480,`mana`=1357,`mindamage`=75.6 WHERE `entry`=25924; -- Twilight Speaker Viktor
 UPDATE `creature_proto` SET `minlevel`=20,`maxlevel`=21,`faction`=168,`minhealth`=480,`mindamage`=72.8,`maxdamage`=106.4,`armor`=875 WHERE `entry`=25866; -- Twilight Flameguard
+UPDATE `creature_proto` SET `minhealth`=4800,`maxhealth`=5000 WHERE `entry`=26216; -- Glacial Templar
+UPDATE `creature_proto` SET `minlevel`=22,`maxlevel`=22,`minhealth`=1500,`maxhealth`=1700,`mindamage`=36.4,`maxdamage`=58.8 WHERE `entry`=26116; -- Frostwave Lieutenant
+UPDATE `creature_proto` SET `minlevel`=32,`maxlevel`=32,`faction`=14,`minhealth`=1700,`maxhealth`=2200,`mindamage`=56,`maxdamage`=86.8 WHERE `entry`=26178; -- Hailstone Lieutenant
+UPDATE `creature_proto` SET `minlevel`=43,`maxlevel`=43,`minhealth`=3400,`maxhealth`=3700,`mindamage`=84,`maxdamage`=126,`armor`=2391 WHERE `entry`=26204; -- Chillwind Lieutenant
+UPDATE `creature_proto` SET `minlevel`=51,`maxlevel`=51,`faction`=14,`minhealth`=5000,`maxhealth`=6000,`mindamage`=114.8,`maxdamage`=170.8,`armor`=3011 WHERE `entry`=26214; -- Frigid Lieutenant
+UPDATE `creature_proto` SET `minlevel`=60,`maxlevel`=60,`faction`=14,`minhealth`=8000,`maxhealth`=9000,`mindamage`=268.8,`maxdamage`=319.2,`armor`=3750 WHERE `entry`=26215; -- Glacial Lieutenant
 
 DELETE FROM `ai_agents` WHERE `entry` IN (25755,25756,25757);
 INSERT INTO `ai_agents` (`entry`,`instance_mode`,`type`,`event`,`chance`,`maxcount`,`spell`,`spelltype`,`targettype_overwrite`,`cooldown_overwrite`,`floatMisc1`,`Misc2`) VALUES
