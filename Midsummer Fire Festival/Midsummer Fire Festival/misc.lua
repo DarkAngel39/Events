@@ -2,7 +2,7 @@ local NPC_TOTEM = 26534
 local NPC_GUIDE = 25324
 local SPELL_FULL_MID_SET	= 58933
 local SPELL_RIBBON_DANCE	= 29175 -- XP buff
-local SPELL_DANCER_AURA		= 29531 -- Ribbon visual channel (Channeling on gameonjects is not supported by the core.)
+local SPELL_DANCER_AURA		= 29531 -- Ribbon visual channel
 local SPELL_RIBBON_POLE		= 29708 -- Summon pole bunny
 local SPELL_RIBBON_FLAME	= 45422
 local SPELL_DANCER_CHECK	= 45390
@@ -85,7 +85,35 @@ if not(pPlayer:HasAura(SPELL_DANCER_VISUAL))then
 end
 end
 
+function OnZoneChange(event, pPlayer, ZoneId, OldZoneId)
+pPlayer:StopChannel()
+if(pPlayer:HasAura(SPELL_DANCER_CHECK))then
+	pPlayer:RemoveAura(SPELL_DANCER_CHECK)
+end
+if(pPlayer:HasAura(SPELL_DANCER_VISUAL))then
+	pPlayer:RemoveAura(SPELL_DANCER_VISUAL)
+end
+if(pPlayer:HasAura(SPELL_DANCER_AURA))then
+	pPlayer:RemoveAura(SPELL_DANCER_AURA)
+end
+end
+
+function OnLOgOut(event, pPlayer)
+pPlayer:StopChannel()
+if(pPlayer:HasAura(SPELL_DANCER_CHECK))then
+	pPlayer:RemoveAura(SPELL_DANCER_CHECK)
+end
+if(pPlayer:HasAura(SPELL_DANCER_VISUAL))then
+	pPlayer:RemoveAura(SPELL_DANCER_VISUAL)
+end
+if(pPlayer:HasAura(SPELL_DANCER_AURA))then
+	pPlayer:RemoveAura(SPELL_DANCER_AURA)
+end
+end
+
 RegisterGameObjectEvent(GO_RIBBON_POLE, 1, PoleOnLoad)
 RegisterGameObjectEvent(GO_RIBBON_POLE, 4, OnUse)
 RegisterUnitEvent(NPC_RIBBON_POLE_BUNNY,18,OnLoadPoleBunny)
 RegisterGameObjectEvent(GO_RIBBON_POLE,5,AIUpdate)
+RegisterServerHook(15, OnZoneChange)
+RegisterServerHook(13, OnLOgOut)
