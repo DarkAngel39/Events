@@ -7,7 +7,6 @@ local SPELL_RIBBON_POLE		= 29708 -- Summon pole bunny
 local SPELL_RIBBON_FLAME	= 45422
 local SPELL_DANCER_CHECK	= 45390
 local SPELL_DANCER_VISUAL	= 45406 -- Character spinning
-local SPLL_RIBBON_ROPE		= 29726 -- Visual channel [PH]
 local GO_RIBBON_POLE		= 181605
 local NPC_RIBBON_POLE_BUNNY	= 17066
 local ACHIEVEMENT_RIBBON	= 271
@@ -20,12 +19,11 @@ RegisterUnitEvent(NPC_TOTEM,18,OnLoad)
 
 function OnLoadPoleBunny(pUnit)
 local pole = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_RIBBON_POLE)
- -- local npc = pUnit:GetCreatureNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),NPC_RIBBON_POLE_BUNNY)
 if(pole)then
 	local x = pole:GetX()
 	local y = pole:GetY()
 	local z = pole:GetZ()
-	pUnit:TeleportCreature(x,y,z+3)
+	pUnit:TeleportCreature(x,y,z+2)
 	pUnit:RegisterEvent("CastVisual", 500, 1)
 end
 end
@@ -45,7 +43,6 @@ end
 for k,v in pairs(pGO:GetInRangePlayers())do
 	if(v:GetDistanceYards(pGO) < 20 and v:HasAura(SPELL_DANCER_VISUAL))then
 		if(v:HasAura(SPELL_DANCER_VISUAL) and v:HasAura(SPELL_DANCER_AURA) == false)then
-			-- v:ChannelSpell(SPLL_RIBBON_ROPE,pUnit)
 			v:ChannelSpell(SPELL_DANCER_AURA,pGO)
 		end
 		local aura = v:GetAuraObjectById(SPELL_RIBBON_DANCE)
@@ -81,7 +78,6 @@ function OnUse(pGO, event, pPlayer)
 if not(pPlayer:HasAura(SPELL_DANCER_VISUAL))then
 	pPlayer:CastSpell(SPELL_DANCER_VISUAL)
 	pPlayer:CastSpell(SPELL_RIBBON_POLE)
-	-- pPlayer:CastSpell(SPELL_DANCER_CHECK)
 end
 end
 
@@ -111,9 +107,9 @@ if(pPlayer:HasAura(SPELL_DANCER_AURA))then
 end
 end
 
-RegisterGameObjectEvent(GO_RIBBON_POLE, 1, PoleOnLoad)
-RegisterGameObjectEvent(GO_RIBBON_POLE, 4, OnUse)
+RegisterGameObjectEvent(GO_RIBBON_POLE,1,PoleOnLoad)
+RegisterGameObjectEvent(GO_RIBBON_POLE,4,OnUse)
 RegisterUnitEvent(NPC_RIBBON_POLE_BUNNY,18,OnLoadPoleBunny)
 RegisterGameObjectEvent(GO_RIBBON_POLE,5,AIUpdate)
-RegisterServerHook(15, OnZoneChange)
-RegisterServerHook(13, OnLOgOut)
+RegisterServerHook(15,OnZoneChange)
+RegisterServerHook(13,OnLOgOut)
