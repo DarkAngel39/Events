@@ -15,7 +15,12 @@ function OnLoad(pUnit)
 pUnit:SpawnCreature(NPC_GUIDE, pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), pUnit:GetO(),35,36000,0,0,0,1,0)
 end
 
+function Guide_OnLoad(pUnit)
+pUnit:SetModel(23114)
+end
+
 RegisterUnitEvent(NPC_TOTEM,18,OnLoad)
+RegisterUnitEvent(NPC_GUIDE,18,Guide_OnLoad)
 
 function OnLoadPoleBunny(pUnit)
 local pole = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_RIBBON_POLE)
