@@ -1,0 +1,5 @@
+SET @SPID := 400000;
+SET @GOID := 400000;
+
+DELETE FROM `creature_spawns` WHERE `id` BETWEEN @SPID+1 AND @SPID+9;
+DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN @GOID+1 AND @GOID+58;
