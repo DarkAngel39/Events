@@ -1,8 +1,8 @@
-RENDEER_1 = 8746
-RENDEER_2 = 8762
-ITEM_DUST = 21211
-NPC_RENDEER = 15664
-SPELL_RENDEER_DUST = 25952
+local RENDEER_1 = 8746
+local RENDEER_2 = 8762
+local ITEM_DUST = 21211
+local NPC_RENDEER = 15664
+local SPELL_RENDEER_DUST = 25952
 
 function OnGossip(pUnit, event, pPlayer)
 pUnit:GossipCreateMenu(8076, pPlayer, 0)

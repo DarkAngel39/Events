@@ -1,5 +1,5 @@
-NPC_MOONLIGHT = 15897
-GO_GREATER_MOONLIGHT = 300058
+local NPC_MOONLIGHT = 15897
+local GO_GREATER_MOONLIGHT = 300058
 
 function OnLoad(pUnit, event)
 local moonlight = pUnit:GetGameObjectNearestCoords(pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), GO_GREATER_MOONLIGHT)
