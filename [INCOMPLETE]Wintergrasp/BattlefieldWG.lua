@@ -57,6 +57,7 @@ WG_STATE_MAX_H_VEHICLES = 3491
 WG_STATE_CURRENT_A_VEHICLES = 3680
 WG_STATE_MAX_A_VEHICLES = 3681
  -- Map states:
+WG_STATE_BATTLEFIELD_STATUS_MAP = 3804
 WG_STATE_W_FORTRESS_WORKSHOP = 3698
 WG_STATE_E_FORTRESS_WORKSHOP = 3699
 WG_STATE_BT_WORKSHOP = 3700
@@ -589,6 +590,7 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, 0)
+		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
 		stateuiset = 1
 	elseif(battle == 0 and controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
@@ -596,6 +598,7 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
 		stateuiset = 1
 	elseif(battle == 0 and controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
@@ -603,6 +606,7 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
 		stateuiset = 1
 	end
 end
@@ -1854,7 +1858,7 @@ if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZ
 			pUnit:GossipCreateMenu(13798, pPlayer, 0)
 			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
 			pUnit:GossipSendMenu(pPlayer)
-		elseif(pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
+		elseif(pPlayer:HasAura(SPELL_LIEUTENANT))then
 			pUnit:GossipCreateMenu(13798, pPlayer, 0)
 			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
 			pUnit:GossipMenuAddItem(0, "I'd like to build a demolisher.", 2, 0)
@@ -1873,14 +1877,24 @@ end
 
 function AOnSelect(pUnit, event, pPlayer, id, intid, code)
 if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES))then
+local arms = pPlayer:GetCreatureNearestCoords(pPlayer:GetX(),pPlayer:GetY(),pPlayer:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
 	if(intid == 1)then
-		pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
+		if(arms ~= nil)then
+			arms:SpawnCreature(NPC_VEHICLE_CATAPULT, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0)
+		end
+		-- pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
 		pPlayer:GossipComplete()
 	elseif(intid == 2)then
-		pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
+		if(arms ~= nil)then
+			arms:SpawnCreature(NPC_VEHICLE_DEMOLISHER, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0)
+		end
+		-- pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
 		pPlayer:GossipComplete()
 	elseif(intid == 3)then
-		pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_A)
+		if(arms ~= nil)then
+			arms:SpawnCreature(NPC_VEHICLE_SIEGE_ENGINE_A, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0)
+		end
+		-- pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_A)
 		pPlayer:GossipComplete()
 	end
 end
@@ -1893,7 +1907,7 @@ if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZ
 			pUnit:GossipCreateMenu(13798, pPlayer, 0)
 			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
 			pUnit:GossipSendMenu(pPlayer)
-		elseif(pPlayer:HasAura(SPELL_LIEUTENANT) and battle == 1)then
+		elseif(pPlayer:HasAura(SPELL_LIEUTENANT))then
 			pUnit:GossipCreateMenu(13798, pPlayer, 0)
 			pUnit:GossipMenuAddItem(0, "I'd like to build a catapult.", 1, 0)
 			pUnit:GossipMenuAddItem(0, "I'd like to build a demolisher.", 2, 0)
@@ -1913,13 +1927,22 @@ end
 function HOnSelect(pUnit, event, pPlayer, id, intid, code)
 if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES))then
 	if(intid == 1)then
-		pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
+		if(arms ~= nil)then
+			arms:SpawnCreature(NPC_VEHICLE_CATAPULT, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0)
+		end
+		-- pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
 		pPlayer:GossipComplete()
 	elseif(intid == 2)then
-		pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
+		if(arms ~= nil)then
+			arms:SpawnCreature(NPC_VEHICLE_DEMOLISHER, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0)
+		end
+		-- pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
 		pPlayer:GossipComplete()
 	elseif(intid == 3)then
-		pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_H)
+		if(arms ~= nil)then
+			arms:SpawnCreature(NPC_VEHICLE_SIEGE_ENGINE_H, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0)
+		end
+		-- pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_H)
 		pPlayer:GossipComplete()
 	end
 end
