@@ -64,31 +64,8 @@ WG_STATE_BT_WORKSHOP = 3700
 WG_STATE_SR_WORKSHOP = 3701
 WG_STATE_WS_WORKSHOP = 3702
 WG_STATE_ES_WORKSHOP = 3703
-WG_STATE_MAIN_GATE = 3763
+ -- WG_STATE_MAIN_GATE = 3763
 WG_STATE_KEEP_GATE_ANDGY = 3773
-WG_STATE_KEEP_WALL_1 = 3749
-WG_STATE_KEEP_WALL_2 = 3750
-WG_STATE_KEEP_WALL_3 = 3751
-WG_STATE_KEEP_WALL_4 = 3752
-WG_STATE_KEEP_WALL_5 = 3753
-WG_STATE_KEEP_WALL_6 = 3754
-WG_STATE_KEEP_WALL_7 = 3755
-WG_STATE_KEEP_WALL_8 = 3756
-WG_STATE_KEEP_WALL_9 = 3757
-WG_STATE_KEEP_WALL_10 = 3758
-WG_STATE_KEEP_WALL_11 = 3759
-WG_STATE_KEEP_WALL_12 = 3760
-WG_STATE_KEEP_WALL_13 = 3761
-WG_STATE_KEEP_WALL_14 = 3762
-WG_STATE_KEEP_WALL_15 = 3764
-WG_STATE_KEEP_WALL_16 = 3765
-WG_STATE_KEEP_WALL_17 = 3766
-WG_STATE_KEEP_WALL_18 = 3767
-WG_STATE_KEEP_WALL_19 = 3768
-WG_STATE_KEEP_WALL_20 = 3769
-WG_STATE_KEEP_WALL_21 = 3770
-WG_STATE_KEEP_WALL_22 = 3771
-WG_STATE_KEEP_WALL_23 = 3772
 WG_STATE_KEEP_SE_TOWER = 3714
 WG_STATE_KEEP_SW_TOWER = 3713
 WG_STATE_KEEP_NW_TOWER = 3711
@@ -123,32 +100,9 @@ GO_WINTERGRASP_NW_TOWER = 190221
 GO_WINTERGRASP_SHADOWSIGHT_TOWER = 190356
 GO_WINTERGRASP_WINTER_S_EDGE_TOWER = 190357
 GO_WINTERGRASP_FLAMEWATCH_TOWER = 190358
-GO_WINTERGRASP_FORTRESS_GATE = 190375
+ -- GO_WINTERGRASP_FORTRESS_GATE = 190375
 GO_WINTERGRASP_VAULT_GATE = 191810
 GO_WINTERGRASP_KEEP_COLLISION_WALL = 194162
-GO_WINTERGRASP_KEEP_WALL_1 = 190219
-GO_WINTERGRASP_KEEP_WALL_2 = 190220
-GO_WINTERGRASP_KEEP_WALL_3 = 191802
-GO_WINTERGRASP_KEEP_WALL_4 = 191803
-GO_WINTERGRASP_KEEP_WALL_5 = 190369
-GO_WINTERGRASP_KEEP_WALL_6 = 190371
-GO_WINTERGRASP_KEEP_WALL_7 = 190374
-GO_WINTERGRASP_KEEP_WALL_8 = 190376
-GO_WINTERGRASP_KEEP_WALL_9 = 190372
-GO_WINTERGRASP_KEEP_WALL_10 = 190370
-GO_WINTERGRASP_KEEP_WALL_11 = 191807
-GO_WINTERGRASP_KEEP_WALL_12 = 191808
-GO_WINTERGRASP_KEEP_WALL_13 = 191809
-GO_WINTERGRASP_KEEP_WALL_14 = 191799
-GO_WINTERGRASP_KEEP_WALL_15 = 191795
-GO_WINTERGRASP_KEEP_WALL_16 = 191797
-GO_WINTERGRASP_KEEP_WALL_17 = 191800
-GO_WINTERGRASP_KEEP_WALL_18 = 191804
-GO_WINTERGRASP_KEEP_WALL_19 = 191805
-GO_WINTERGRASP_KEEP_WALL_20 = 191806
-GO_WINTERGRASP_KEEP_WALL_21 = 191801
-GO_WINTERGRASP_KEEP_WALL_22 = 191798
-GO_WINTERGRASP_KEEP_WALL_23 = 191796
 GO_WINTERGRASP_WORKSHOP_E = 192029
 GO_WINTERGRASP_WORKSHOP_W = 192028
 GO_WINTERGRASP_FW_TOWER = 190358
@@ -283,6 +237,49 @@ SMSG_BATTLEFIELD_LIST = 0x23D
 CMSG_BATTLEFIELD_JOIN = 0x23E
 SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
 SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
+
+ -- Fortress destructable objects
+local go_wall = {
+{190219, 3749},
+{190220, 3750},
+{191802, 3751},
+{191803, 3752},
+{190369, 3753},
+{190371, 3754},
+{190374, 3755},
+{190376, 3756},
+{190372, 3757},
+{190370, 3758},
+{191807, 3759},
+{191808, 3760},
+{191809, 3761},
+{191799, 3762},
+{191795, 3764},
+{191797, 3765},
+{191800, 3766},
+{191804, 3767},
+{191805, 3768},
+{191806, 3769},
+{191801, 3770},
+{191798, 3771},
+{191796, 3772},
+{192028, 3698},
+{192029, 3699},
+{190375, 3763};
+};
+
+local go_f_tower = {
+{190221, 3711},
+{190378, 3712},
+{190373, 3713},
+{190377, 3714};
+};
+
+local go_s_tower = {
+{190356, 3704},
+{190357, 3705},
+{190358, 3706};
+};
 
 function Aura()
 for k,l in pairs(GetPlayersInWorld())do
@@ -621,30 +618,30 @@ if(controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 7)
 		v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 7)
 		v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 7)
-		v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 7)
+		v:SetWorldStateForZone(3749, 7)
+		v:SetWorldStateForZone(3750, 7)
+		v:SetWorldStateForZone(3751, 7)
+		v:SetWorldStateForZone(3752, 7)
+		v:SetWorldStateForZone(3753, 7)
+		v:SetWorldStateForZone(3754, 7)
+		v:SetWorldStateForZone(3755, 7)
+		v:SetWorldStateForZone(3756, 7)
+		v:SetWorldStateForZone(3757, 7)
+		v:SetWorldStateForZone(3758, 7)
+		v:SetWorldStateForZone(3759, 7)
+		v:SetWorldStateForZone(3760, 7)
+		v:SetWorldStateForZone(3761, 7)
+		v:SetWorldStateForZone(3762, 7)
+		v:SetWorldStateForZone(3764, 7)
+		v:SetWorldStateForZone(3765, 7)
+		v:SetWorldStateForZone(3766, 7)
+		v:SetWorldStateForZone(3767, 7)
+		v:SetWorldStateForZone(3768, 7)
+		v:SetWorldStateForZone(3769, 7)
+		v:SetWorldStateForZone(3770, 7)
+		v:SetWorldStateForZone(3771, 7)
+		v:SetWorldStateForZone(3772, 7)
+		v:SetWorldStateForZone(3763, 7)
 		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
 		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
@@ -669,30 +666,30 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 4)
 		v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 4)
 		v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 4)
-		v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 4)
+		v:SetWorldStateForZone(3749, 4)
+		v:SetWorldStateForZone(3750, 4)
+		v:SetWorldStateForZone(3751, 4)
+		v:SetWorldStateForZone(3752, 4)
+		v:SetWorldStateForZone(3753, 4)
+		v:SetWorldStateForZone(3754, 4)
+		v:SetWorldStateForZone(3755, 4)
+		v:SetWorldStateForZone(3756, 4)
+		v:SetWorldStateForZone(3757, 4)
+		v:SetWorldStateForZone(3758, 4)
+		v:SetWorldStateForZone(3759, 4)
+		v:SetWorldStateForZone(3760, 4)
+		v:SetWorldStateForZone(3761, 4)
+		v:SetWorldStateForZone(3762, 4)
+		v:SetWorldStateForZone(3764, 4)
+		v:SetWorldStateForZone(3765, 4)
+		v:SetWorldStateForZone(3766, 4)
+		v:SetWorldStateForZone(3767, 4)
+		v:SetWorldStateForZone(3768, 4)
+		v:SetWorldStateForZone(3769, 4)
+		v:SetWorldStateForZone(3770, 4)
+		v:SetWorldStateForZone(3771, 4)
+		v:SetWorldStateForZone(3772, 4)
+		v:SetWorldStateForZone(3763, 4)
 		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
 		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
@@ -859,21 +856,7 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
 		v:Rebuild()
 	end
-	if(v:GetEntry() == GO_WINTERGRASP_FORTRESS_GATE)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_MAIN_GATE) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_MAIN_GATE, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_VAULT_GATE)then
+	if(v:GetEntry() == GO_WINTERGRASP_VAULT_GATE)then
 		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 5)then
 			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 5)
 		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 8)then
@@ -896,412 +879,6 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 					m:Activate()
 				end
 			end
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_SE_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SE_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_SW_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_SW_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_NW_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NW_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_NE_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_NE_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_1)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_1) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_1) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_1) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_1) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_1) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_1) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_1, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_2)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_2) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_2) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_2) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_2) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_2) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_2) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_2, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_3)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_3) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_3) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_3) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_3) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_3) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_3) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_3, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_4)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_4) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_4) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_4) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_4) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_4) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_4) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_4, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_5)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_5) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_5) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_5) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_5) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_5) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_5) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_5, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_6)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_6) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_6) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_6) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_6) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_6) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_6) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_6, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_7)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_7) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_7) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_7) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_7) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_7) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_7) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_7, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_8)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_8) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_8) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_8) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_8) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_8) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_8) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_8, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_9)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_9) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_9) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_9) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_9) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_9) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_9) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_9, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_10)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_10) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_10) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_10) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_10) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_10) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_10) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_10, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_11)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_11) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_11) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_11) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_11) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_11) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_11) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_11, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_12)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_12) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_12) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_12) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_12) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_12) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_12) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_12, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_13)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_13) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_13) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_13) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_13) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_13) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_13) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_13, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_14)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_14) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_14) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_14) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_14) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_14) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_14) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_14, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_15)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_15) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_15) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_15) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_15) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_15) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_15) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_15, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_16)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_16) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_16) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_16) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_16) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_16) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_16) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_16, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_17)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_17) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_17) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_17) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_17) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_17) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_17) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_17, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_18)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_18) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_18) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_18) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_18) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_18) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_18) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_18, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_19)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_19) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_19) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_19) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_19) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_19) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_19) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_19, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_20)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_20) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_20) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_20) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_20) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_20) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_20) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_20, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_21)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_21) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_21) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_21) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_21) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_21) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_21) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_21, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_22)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_22) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_22) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_22) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_22) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_22) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_22) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_22, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_KEEP_WALL_23)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_23) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_23) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_23) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_23) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_23) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_WALL_23) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_WALL_23, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_WORKSHOP_E)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_WORKSHOP_W)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 6)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 9)
 		end
 	elseif(v:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
 		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 5)then
@@ -2029,6 +1606,46 @@ if(ZoneId == ZONE_WG)then
 end
 end
 
+function WallOnDamage(pGO, damage)
+for i = 1, #go_wall do
+	if(pGO:GetEntry() == go_wall[i][1])then
+		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_wall[i][2])== 1 or pGO:GetWorldStateForZone(go_wall[i][2])== 4 or pGO:GetWorldStateForZone(go_wall[i][2])== 7))then
+			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
+		end
+	end
+end
+end
+
+function WallOnDestroy(pGO)
+for i = 1, #go_wall do
+	if(pGO:GetEntry() == go_wall[i][1])then
+		if(pGO:GetHP() == 0 and (pGO:GetWorldStateForZone(go_wall[i][2])== 2 or pGO:GetWorldStateForZone(go_wall[i][2])== 5 or pGO:GetWorldStateForZone(go_wall[i][2])== 8))then
+			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
+		end
+	end
+end
+end
+
+function FTOnDamage(pGO, damage)
+for i = 1, #go_f_tower do
+	if(pGO:GetEntry() == go_f_tower[i][1])then
+		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
+			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
+		end
+	end
+end
+end
+
+function FTOnDestroy(pGO)
+for i = 1, #go_f_tower do
+	if(pGO:GetEntry() == go_f_tower[i][1])then
+		if(pGO:GetHP() == 0 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 2 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 5 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 8))then
+			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
+		end
+	end
+end
+end
+
 RegisterGameObjectEvent(GO_WINTERGRASP_SE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_NE_TOWER,8,OnDestroy)
 RegisterGameObjectEvent(GO_WINTERGRASP_SW_TOWER,8,OnDestroy)
@@ -2065,3 +1682,63 @@ RegisterServerHook(2,KillPlayer)
 RegisterServerHook(15,OnZoneEnter)
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
+RegisterGameObjectEvent(190219,7,WallOnDamage)
+RegisterGameObjectEvent(190220,7,WallOnDamage)
+RegisterGameObjectEvent(191802,7,WallOnDamage)
+RegisterGameObjectEvent(191803,7,WallOnDamage)
+RegisterGameObjectEvent(190369,7,WallOnDamage)
+RegisterGameObjectEvent(190371,7,WallOnDamage)
+RegisterGameObjectEvent(190374,7,WallOnDamage)
+RegisterGameObjectEvent(190376,7,WallOnDamage)
+RegisterGameObjectEvent(190372,7,WallOnDamage)
+RegisterGameObjectEvent(190370,7,WallOnDamage)
+RegisterGameObjectEvent(191807,7,WallOnDamage)
+RegisterGameObjectEvent(191808,7,WallOnDamage)
+RegisterGameObjectEvent(191809,7,WallOnDamage)
+RegisterGameObjectEvent(191799,7,WallOnDamage)
+RegisterGameObjectEvent(191795,7,WallOnDamage)
+RegisterGameObjectEvent(191797,7,WallOnDamage)
+RegisterGameObjectEvent(191800,7,WallOnDamage)
+RegisterGameObjectEvent(191804,7,WallOnDamage)
+RegisterGameObjectEvent(191805,7,WallOnDamage)
+RegisterGameObjectEvent(191806,7,WallOnDamage)
+RegisterGameObjectEvent(191801,7,WallOnDamage)
+RegisterGameObjectEvent(191798,7,WallOnDamage)
+RegisterGameObjectEvent(191796,7,WallOnDamage)
+RegisterGameObjectEvent(192028,7,WallOnDamage)
+RegisterGameObjectEvent(192029,7,WallOnDamage)
+RegisterGameObjectEvent(190375,7,WallOnDamage)
+RegisterGameObjectEvent(190219,8,WallOnDestroy)
+RegisterGameObjectEvent(190220,8,WallOnDestroy)
+RegisterGameObjectEvent(191802,8,WallOnDestroy)
+RegisterGameObjectEvent(191803,8,WallOnDestroy)
+RegisterGameObjectEvent(190369,8,WallOnDestroy)
+RegisterGameObjectEvent(190371,8,WallOnDestroy)
+RegisterGameObjectEvent(190374,8,WallOnDestroy)
+RegisterGameObjectEvent(190376,8,WallOnDestroy)
+RegisterGameObjectEvent(190372,8,WallOnDestroy)
+RegisterGameObjectEvent(190370,8,WallOnDestroy)
+RegisterGameObjectEvent(191807,8,WallOnDestroy)
+RegisterGameObjectEvent(191808,8,WallOnDestroy)
+RegisterGameObjectEvent(191809,8,WallOnDestroy)
+RegisterGameObjectEvent(191799,8,WallOnDestroy)
+RegisterGameObjectEvent(191795,8,WallOnDestroy)
+RegisterGameObjectEvent(191797,8,WallOnDestroy)
+RegisterGameObjectEvent(191800,8,WallOnDestroy)
+RegisterGameObjectEvent(191804,8,WallOnDestroy)
+RegisterGameObjectEvent(191805,8,WallOnDestroy)
+RegisterGameObjectEvent(191806,8,WallOnDestroy)
+RegisterGameObjectEvent(191801,8,WallOnDestroy)
+RegisterGameObjectEvent(191798,8,WallOnDestroy)
+RegisterGameObjectEvent(191796,8,WallOnDestroy)
+RegisterGameObjectEvent(192028,8,WallOnDestroy)
+RegisterGameObjectEvent(192029,8,WallOnDestroy)
+RegisterGameObjectEvent(190375,8,WallOnDestroy)
+RegisterGameObjectEvent(190221,7,FTOnDamage)
+RegisterGameObjectEvent(190378,7,FTOnDamage)
+RegisterGameObjectEvent(190373,7,FTOnDamage)
+RegisterGameObjectEvent(190377,7,FTOnDamage)
+RegisterGameObjectEvent(190221,8,FTOnDestroy)
+RegisterGameObjectEvent(190378,8,FTOnDestroy)
+RegisterGameObjectEvent(190373,8,FTOnDestroy)
+RegisterGameObjectEvent(190377,8,FTOnDestroy)
