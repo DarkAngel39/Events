@@ -880,48 +880,6 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 				end
 			end
 		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_FW_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_FW_TOWER, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_WE_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_WE_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_WE_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_WE_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_WE_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_WE_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_WE_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_WE_TOWER, 9)
-		end
-	elseif(v:GetEntry() == GO_WINTERGRASP_SS_TOWER)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_SS_TOWER) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_SS_TOWER) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_SS_TOWER) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_SS_TOWER) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_SS_TOWER) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 6)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_SS_TOWER) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_SS_TOWER, 9)
-		end
 	end
 	if(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE and battle == 1 and controll == 2 and v:GetAreaId() == AREA_FORTRESS)then -- this changes the faction of the objects but for some reason they can not be damaged as they should by the vehicles.
 		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_HORDE)
@@ -1525,67 +1483,6 @@ if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZ
 end
 end
 
-function OnDestroy(pGO)
-for k,g in pairs(pGO:GetInRangePlayers())do
-	if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER or pGO:GetEntry() == GO_WINTERGRASP_WE_TOWER or pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
-		if(DEFENDER == "Alliance")then
-			if(g:GetTeam() == 0)then
-				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
-					g:AddAchievement(ACHIEVEMENT_LEANING_T)
-				end
-				if(g:HasQuest(QUEST_WG_SOUTHEN_SABOTAGE) and g:GetQuestObjectiveCompletion(QUEST_WG_SOUTHEN_SABOTAGE, 0) == 0)then
-					g:AdvanceQuestObjective(QUEST_WG_SOUTHEN_SABOTAGE, 0)
-				end
-			end
-		elseif(DEFENDER == "Horde")then
-			if(g:GetTeam() == 1)then
-				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
-					g:AddAchievement(ACHIEVEMENT_LEANING_T)
-				end
-				if(g:HasQuest(QUEST_WG_TOPPING_TOWERS) and g:GetQuestObjectiveCompletion(QUEST_WG_TOPPING_TOWERS, 0) == 0)then
-					g:AdvanceQuestObjective(QUEST_WG_TOPPING_TOWERS, 0)
-				end
-			end
-		end
-	elseif(pGO:GetEntry() == GO_WINTERGRASP_SE_TOWER or pGO:GetEntry() == GO_WINTERGRASP_NE_TOWER or pGO:GetEntry() == GO_WINTERGRASP_SW_TOWER or pGO:GetEntry() == GO_WINTERGRASP_NW_TOWER)then
-		if(DEFENDER == "Horde")then
-			if(g:GetTeam() == 0)then
-				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
-					g:AddAchievement(ACHIEVEMENT_LEANING_T)
-				end
-			end
-		elseif(DEFENDER == "Alliance")then
-			if(g:GetTeam() == 1)then
-				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
-					g:AddAchievement(ACHIEVEMENT_LEANING_T)
-				end
-			end
-		end
-	end
-end
-for k,v in pairs(GetPlayersInZone(ZONE_WG))do
-	if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER)then
-		south_towers = south_towers - 1
-		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
-			g:SendBroadcastMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
-			g:SendAreaTriggerMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
-		end
-	elseif(pGO:GetEntry() == GO_WINTERGRASP_WE_TOWER)then
-		south_towers = south_towers - 1
-		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
-			g:SendBroadcastMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
-			g:SendAreaTriggerMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
-		end
-	elseif(pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
-		south_towers = south_towers - 1
-		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
-			g:SendBroadcastMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
-			g:SendAreaTriggerMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
-		end
-	end
-end
-end
-
 function OnZoneEnter(event, pPlayer, ZoneId, OldZoneId)
 if(ZoneId == ZONE_WG)then
 	if(battle == 0)then
@@ -1619,7 +1516,7 @@ end
 function WallOnDestroy(pGO)
 for i = 1, #go_wall do
 	if(pGO:GetEntry() == go_wall[i][1])then
-		if(pGO:GetHP() == 0 and (pGO:GetWorldStateForZone(go_wall[i][2])== 2 or pGO:GetWorldStateForZone(go_wall[i][2])== 5 or pGO:GetWorldStateForZone(go_wall[i][2])== 8))then
+		if(pGO:GetWorldStateForZone(go_wall[i][2])== 2 or pGO:GetWorldStateForZone(go_wall[i][2])== 5 or pGO:GetWorldStateForZone(go_wall[i][2])== 8)then
 			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
 		end
 	end
@@ -1639,20 +1536,89 @@ end
 function FTOnDestroy(pGO)
 for i = 1, #go_f_tower do
 	if(pGO:GetEntry() == go_f_tower[i][1])then
-		if(pGO:GetHP() == 0 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 2 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 5 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 8))then
+		if(pGO:GetWorldStateForZone(go_f_tower[i][2])== 2 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 5 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 8)then
 			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
+		end
+	end
+	for k,g in pairs(pGO:GetInRangePlayers())do
+	if(DEFENDER == "Horde")then
+			if(g:GetTeam() == 0)then
+				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+					g:AddAchievement(ACHIEVEMENT_LEANING_T)
+				end
+			end
+	elseif(DEFENDER == "Alliance")then
+			if(g:GetTeam() == 1)then
+				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+					g:AddAchievement(ACHIEVEMENT_LEANING_T)
+				end
+			end
 		end
 	end
 end
 end
 
-RegisterGameObjectEvent(GO_WINTERGRASP_SE_TOWER,8,OnDestroy)
-RegisterGameObjectEvent(GO_WINTERGRASP_NE_TOWER,8,OnDestroy)
-RegisterGameObjectEvent(GO_WINTERGRASP_SW_TOWER,8,OnDestroy)
-RegisterGameObjectEvent(GO_WINTERGRASP_NW_TOWER,8,OnDestroy)
-RegisterGameObjectEvent(GO_WINTERGRASP_SS_TOWER,8,OnDestroy)
-RegisterGameObjectEvent(GO_WINTERGRASP_WE_TOWER,8,OnDestroy)
-RegisterGameObjectEvent(GO_WINTERGRASP_FW_TOWER,8,OnDestroy)
+
+function STOnDamage(pGO, damage)
+for i = 1, #go_s_tower do
+	if(pGO:GetEntry() == go_s_tower[i][1])then
+		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_s_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 7))then
+			pGO:SetWorldStateForZone(go_s_tower[i][2],pGO:GetWorldStateForZone(go_s_tower[i][2])+1)
+		end
+	end
+end
+end
+
+function STOnDestroy(pGO)
+for i = 1, #go_s_tower do
+	if(pGO:GetEntry() == go_s_tower[i][1])then
+		if(pGO:GetWorldStateForZone(go_s_tower[i][2])== 2 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 5 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 8)then
+			pGO:SetWorldStateForZone(go_s_tower[i][2],pGO:GetWorldStateForZone(go_s_tower[i][2])+1)
+		end
+	end
+end
+for k,g in pairs(pGO:GetInRangePlayers())do
+	if(DEFENDER == "Alliance")then
+		if(g:GetTeam() == 0)then
+			if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+				g:AddAchievement(ACHIEVEMENT_LEANING_T)
+			end
+			if(g:HasQuest(QUEST_WG_SOUTHEN_SABOTAGE) and g:GetQuestObjectiveCompletion(QUEST_WG_SOUTHEN_SABOTAGE, 0) == 0)then
+				g:AdvanceQuestObjective(QUEST_WG_SOUTHEN_SABOTAGE, 0)
+			end
+		end
+	elseif(DEFENDER == "Horde")then
+		if(g:GetTeam() == 1)then
+			if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
+				g:AddAchievement(ACHIEVEMENT_LEANING_T)
+			end
+			if(g:HasQuest(QUEST_WG_TOPPING_TOWERS) and g:GetQuestObjectiveCompletion(QUEST_WG_TOPPING_TOWERS, 0) == 0)then
+				g:AdvanceQuestObjective(QUEST_WG_TOPPING_TOWERS, 0)
+			end
+		end
+	end
+if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER)then
+	south_towers = south_towers - 1
+	for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+		g:SendBroadcastMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
+		g:SendAreaTriggerMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
+	end
+elseif(pGO:GetEntry() == GO_WINTERGRASP_WE_TOWER)then
+	south_towers = south_towers - 1
+	for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+		g:SendBroadcastMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
+		g:SendAreaTriggerMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
+	end
+elseif(pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
+	south_towers = south_towers - 1
+	for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+		g:SendBroadcastMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
+		g:SendAreaTriggerMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
+	end
+end
+end
+end
+
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
@@ -1742,3 +1708,9 @@ RegisterGameObjectEvent(190221,8,FTOnDestroy)
 RegisterGameObjectEvent(190378,8,FTOnDestroy)
 RegisterGameObjectEvent(190373,8,FTOnDestroy)
 RegisterGameObjectEvent(190377,8,FTOnDestroy)
+RegisterGameObjectEvent(190356,7,STOnDamage)
+RegisterGameObjectEvent(190357,7,STOnDamage)
+RegisterGameObjectEvent(190358,7,STOnDamage)
+RegisterGameObjectEvent(190356,8,STOnDestroy)
+RegisterGameObjectEvent(190357,8,STOnDestroy)
+RegisterGameObjectEvent(190358,8,STOnDestroy)
