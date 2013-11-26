@@ -64,15 +64,7 @@ WG_STATE_BT_WORKSHOP = 3700
 WG_STATE_SR_WORKSHOP = 3701
 WG_STATE_WS_WORKSHOP = 3702
 WG_STATE_ES_WORKSHOP = 3703
- -- WG_STATE_MAIN_GATE = 3763
 WG_STATE_KEEP_GATE_ANDGY = 3773
-WG_STATE_KEEP_SE_TOWER = 3714
-WG_STATE_KEEP_SW_TOWER = 3713
-WG_STATE_KEEP_NW_TOWER = 3711
-WG_STATE_KEEP_NE_TOWER = 3712
-WG_STATE_FW_TOWER = 3706
-WG_STATE_WE_TOWER = 3705
-WG_STATE_SS_TOWER = 3704
  -- Dynamic capturebar states
 WG_STATE_SOUTH_SHOW = 3501
 WG_STATE_SOUTH_PROGRESS = 3502
@@ -93,14 +85,6 @@ local NPC_VEHICLE_SIEGE_ENGINE_H = 32627
 local NPC_VEHICLE_SIEGE_ENGINE_A = 28312
 
 GO_WINTERGRASP_TITAN_RELIC = 192829
-GO_WINTERGRASP_SE_TOWER = 190377
-GO_WINTERGRASP_NE_TOWER = 190378
-GO_WINTERGRASP_SW_TOWER = 190373
-GO_WINTERGRASP_NW_TOWER = 190221
-GO_WINTERGRASP_SHADOWSIGHT_TOWER = 190356
-GO_WINTERGRASP_WINTER_S_EDGE_TOWER = 190357
-GO_WINTERGRASP_FLAMEWATCH_TOWER = 190358
- -- GO_WINTERGRASP_FORTRESS_GATE = 190375
 GO_WINTERGRASP_VAULT_GATE = 191810
 GO_WINTERGRASP_KEEP_COLLISION_WALL = 194162
 GO_WINTERGRASP_WORKSHOP_E = 192029
@@ -129,21 +113,6 @@ GO_WINTERGRASP_WORKSHOP_BT = 192030
 GO_WINTERGRASP_CAPTUREPOINT_BT_100 = 190487
 GO_WINTERGRASP_CAPTUREPOINT_BT_0 = 192627
  -- Map info
-local MAP_HOR = 668
-local MAP_NEXUS = 576
-local MAP_UP = 575
-local MAP_UK = 574
-local MAP_OCULUS = 578
-local MAP_POS = 658
-local MAP_TOC = 650
-local MAP_FOS = 632
-local MAP_AK = 619
-local MAP_VH = 608
-local MAP_GUND = 604
-local MAP_HOL = 602
-local MAP_AN = 601
-local MAP_HOS = 599
-local MAP_COS = 595
 local MAP_NORTHREND = 571
  -- Areass
 local ZONE_WG = 4197
@@ -267,41 +236,52 @@ local go_wall = {
 {192029, 3699},
 {190375, 3763};
 };
-
+ -- Fortress towers
 local go_f_tower = {
 {190221, 3711},
 {190378, 3712},
 {190373, 3713},
 {190377, 3714};
 };
-
+ -- South towers
 local go_s_tower = {
 {190356, 3704},
 {190357, 3705},
 {190358, 3706};
 };
 
+local buff_areas = {
+4494,
+4277,
+4100,
+4723,
+4196,
+4416,
+4820,
+4813,
+4809,
+4265,
+4228,
+4415,
+4272,
+4264,
+206,
+1196,
+3537,
+2817,
+4395,
+65,
+394,
+495,
+4742,
+210,
+3711,
+67,
+66;
+};
+
 function Aura()
 for k,l in pairs(GetPlayersInWorld())do
-if(l:GetMapId() == MAP_HOR or l:GetMapId() == MAP_NEXUS or l:GetMapId() == MAP_UP or l:GetMapId() == MAP_UK or l:GetMapId() == MAP_OCULUS or l:GetMapId() == MAP_POS or l:GetMapId() == MAP_TOC or l:GetMapId() == MAP_FOS or l:GetMapId() == MAP_AK or l:GetMapId() == MAP_VH or l:GetMapId() == MAP_GUND or l:GetMapId() == MAP_HOL or l:GetMapId() == MAP_AN or l:GetMapId() == MAP_HOS or l:GetMapId() == MAP_COS or l:GetMapId() == MAP_NORTHREND)then
-	if(battle == 0 and controll == 1 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
-		l:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
-	elseif(controll == 1 and l:GetTeam() == 1 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
-	elseif(battle == 0 and controll == 2 and l:GetTeam() == 1 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP) ~= true)then
-		l:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
-	elseif(controll == 2 and l:GetTeam() == 0 and l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
-	elseif(battle == 1)then
-		if(l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-			l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
-		end
-	end
-else
-	if(l:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-		l:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
-	end
-end
 if(l:GetZoneId() ~= ZONE_WG and l:GetAreaId() ~= ZONE_WG)then
 	if(l:HasAura(SPELL_RECRUIT))then
 		l:RemoveAura(SPELL_RECRUIT)
@@ -611,13 +591,13 @@ if(controll == 1)then
 	if(states == 0)then
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
-		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_WE_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_FW_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 7)
+		v:SetWorldStateForZone(3704, 4)
+		v:SetWorldStateForZone(3705, 4)
+		v:SetWorldStateForZone(3706, 4)
+		v:SetWorldStateForZone(3711, 7)
+		v:SetWorldStateForZone(3712, 7)
+		v:SetWorldStateForZone(3713, 7)
+		v:SetWorldStateForZone(3714, 7)
 		v:SetWorldStateForZone(3749, 7)
 		v:SetWorldStateForZone(3750, 7)
 		v:SetWorldStateForZone(3751, 7)
@@ -659,13 +639,13 @@ elseif(controll == 2)then
 	if(states == 0)then
 		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
 		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
-		v:SetWorldStateForZone(WG_STATE_SS_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_WE_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_FW_TOWER, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_NW_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_NE_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_SW_TOWER, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_SE_TOWER, 4)
+		v:SetWorldStateForZone(3704, 7)
+		v:SetWorldStateForZone(3705, 7)
+		v:SetWorldStateForZone(3706, 7)
+		v:SetWorldStateForZone(3711, 4)
+		v:SetWorldStateForZone(3712, 4)
+		v:SetWorldStateForZone(3713, 4)
+		v:SetWorldStateForZone(3714, 4)
 		v:SetWorldStateForZone(3749, 4)
 		v:SetWorldStateForZone(3750, 4)
 		v:SetWorldStateForZone(3751, 4)
@@ -1492,15 +1472,59 @@ if(ZoneId == ZONE_WG)then
 			p:WriteULong(4197)
 			p:WriteULong(timer_nextbattle)
 			pPlayer:SendPacketToPlayer(p)
-		elseif(timer_nextbattle >= os.time() + jointimer_2)then
+		elseif(timer_nextbattle <= os.time() + jointimer_2)then
 			local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_QUEUE_INVITE, 5)
 			p:WriteULong(1)
 			p:WriteUByte(1)
-			SendPacketToZonepPlayer:SendPacketToPlayer(p)
+			pPlayer:SendPacketToPlayer(p)
 		end
 	elseif(battle == 1)then
 	end
 end
+function zonecheck(buff_areas, ZoneId)
+	for key, value in pairs(buff_areas) do
+		if(value == ZoneId)then
+			-- if(controll == pPlayer:GetTeam() + 1)then
+				if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+					if(controll == pPlayer:GetTeam()+1)then
+						pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
+					end
+				end
+			-- end
+		 return true end
+	end
+	if(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		pPlayer:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+	end
+	return false
+end
+print(zonecheck(buff_areas, ZoneId))
+end
+ --[[
+function OnZoneEnterBuff(event, pPlayer, ZoneId, OldZoneId)
+
+end
+]]--
+function OnEnterBuff(event, pPlayer)
+local ZoneId = pPlayer:GetZoneId()
+function zonecheck(buff_areas, ZoneId)
+	for key, value in pairs(buff_areas) do
+		if(value == ZoneId)then
+			-- if(controll == pPlayer:GetTeam() + 1)then
+				if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+					if(controll == pPlayer:GetTeam()+1)then
+						pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
+					end
+				end
+			-- end
+		 return true end
+	end
+	if(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		pPlayer:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+	end
+	return false
+end
+print(zonecheck(buff_areas, ZoneId))
 end
 
 function WallOnDamage(pGO, damage)
@@ -1646,6 +1670,8 @@ RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
 RegisterServerHook(2,KillPlayer)
 RegisterServerHook(15,OnZoneEnter)
+ -- RegisterServerHook(15,OnZoneEnterBuff)
+RegisterServerHook(4,OnEnterBuff)
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
 RegisterGameObjectEvent(190219,7,WallOnDamage)
