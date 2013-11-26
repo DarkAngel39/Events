@@ -232,8 +232,6 @@ local go_wall = {
 {191801, 3770},
 {191798, 3771},
 {191796, 3772},
-{192028, 3698},
-{192029, 3699},
 {190375, 3763};
 };
  -- Fortress towers
@@ -248,6 +246,21 @@ local go_s_tower = {
 {190356, 3704},
 {190357, 3705},
 {190358, 3706};
+};
+
+local workshop_data = {
+{192028, 3698, -1, -1, -1},
+{192029, 3699, -1, -1, -1},
+{192030, 3700, brokentemple_progres, 4539, 190487},
+{192031, 3701, sunkenring_progress, 4538, 190475},
+{192032, 3702, westspark_progress, 4611, 194959},
+{192033, 3702, westspark_progress, 4612, 194962};
+};
+
+local buildingstate_vallues = {
+{1, 2, 3}, -- neutral (intact, damaged, destroyed)
+{4, 5, 6}, -- horde (intact, damaged, destroyed)
+{7, 8, 9}; -- alliance (intact, damaged, destroyed)
 };
 
 local buff_areas = {
@@ -1484,13 +1497,11 @@ end
 function zonecheck(buff_areas, ZoneId)
 	for key, value in pairs(buff_areas) do
 		if(value == ZoneId)then
-			-- if(controll == pPlayer:GetTeam() + 1)then
 				if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
 					if(controll == pPlayer:GetTeam()+1)then
 						pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
 					end
 				end
-			-- end
 		 return true end
 	end
 	if(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
@@ -1500,23 +1511,17 @@ function zonecheck(buff_areas, ZoneId)
 end
 print(zonecheck(buff_areas, ZoneId))
 end
- --[[
-function OnZoneEnterBuff(event, pPlayer, ZoneId, OldZoneId)
 
-end
-]]--
 function OnEnterBuff(event, pPlayer)
 local ZoneId = pPlayer:GetZoneId()
 function zonecheck(buff_areas, ZoneId)
 	for key, value in pairs(buff_areas) do
 		if(value == ZoneId)then
-			-- if(controll == pPlayer:GetTeam() + 1)then
 				if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
 					if(controll == pPlayer:GetTeam()+1)then
 						pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
 					end
 				end
-			-- end
 		 return true end
 	end
 	if(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
@@ -1670,7 +1675,6 @@ RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
 RegisterServerHook(2,KillPlayer)
 RegisterServerHook(15,OnZoneEnter)
- -- RegisterServerHook(15,OnZoneEnterBuff)
 RegisterServerHook(4,OnEnterBuff)
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
