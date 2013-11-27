@@ -249,18 +249,12 @@ local go_s_tower = {
 };
 
 local workshop_data = {
-{192028, 3698, -1, -1, -1},
-{192029, 3699, -1, -1, -1},
-{192030, 3700, brokentemple_progres, 4539, 190487},
-{192031, 3701, sunkenring_progress, 4538, 190475},
-{192032, 3702, westspark_progress, 4611, 194959},
-{192033, 3702, westspark_progress, 4612, 194962};
-};
-
-local buildingstate_vallues = {
-{1, 2, 3}, -- neutral (intact, damaged, destroyed)
-{4, 5, 6}, -- horde (intact, damaged, destroyed)
-{7, 8, 9}; -- alliance (intact, damaged, destroyed)
+{192028, 3698, -1, -1, -1,2,4},
+{192029, 3699, -1, -1, -1,2,4},
+{192030, 3700, brokentemple_progres, 4539, 190487,2},
+{192031, 3701, sunkenring_progress, 4538, 190475,2},
+{192032, 3702, westspark_progress, 4611, 194959,2},
+{192033, 3703, eastspark_progress, 4612, 194962,2};
 };
 
 local buff_areas = {
@@ -292,6 +286,10 @@ local buff_areas = {
 67,
 66;
 };
+
+local vehicle_vallue_a = 8
+local vehicle_vallue_h = 8
+local self = getfenv(1)
 
 function Aura()
 for k,l in pairs(GetPlayersInWorld())do
@@ -1163,148 +1161,70 @@ end
 end
 
 function OnSP_Cpoint(pGO)
+self[tostring(pGO)] = {
+data = 0,
+health = 0,
+state = 0,
+plrvall = 0
+}
 pGO:RegisterAIUpdateEvent(1500)
 end
 
 function AIUpdate_Cpoint(pGO)
-if(battle == 1)then
-ES_P = 0
-WS_P = 0
-SR_P = 0
-BT_P = 0
 if(pGO == nil)then
 	pGO:RemoveAIUpdateEvent()
 end
-for k,m in pairs(pGO:GetInRangePlayers())do
-if(battle == 1 and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive())then
-	if(m:GetAreaId() == AREA_EASTSPARK and pGO:GetDistance(m) <= 5500)then
-		ES_A = 0
-		ES_H = 0
+local vars = self[tostring(pGO)]
+for k,m in pairs (pGO:GetInRangePlayers())do
+if(m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive())then
+	if(pGO:GetDistance(m) <= 5500)then
 		if(m:GetTeam() == 0)then
-			ES_A = ES_A + 1
-		elseif(m:GetTeam() == 1)then
-			ES_H = ES_H + 1
-		end
-		ES_P = ES_A - ES_H
-		if(eastspark_progress < 100 and eastspark_progress > 0)then
-			if(ES_P < 0)then
-				eastspark_progress = eastspark_progress - 1
-			elseif(ES_P > 0)then
-				eastspark_progress = eastspark_progress + 1
-			end
-		elseif(eastspark_progress == 0)then
-			if(ES_P > 0)then
-				eastspark_progress = eastspark_progress + 1
-			end
-		elseif(eastspark_progress == 100)then
-			if(ES_P < 0)then
-				eastspark_progress = eastspark_progress - 1
-			end
+			vars.plrvall = vars.plrvall + 1
+		elseif(m:GetTeam() == 0)then
+			vars.plrvall = vars.plrvall - 1
 		end
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,eastspark_progress)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,C_BAR_NEUTRAL)
-	elseif(m:GetAreaId() == AREA_WESTSPARK and pGO:GetDistance(m) <= 5500)then
-		WS_A = 0
-		WS_H = 0
-		if(m:GetTeam() == 0)then
-			WS_A = WS_A + 1
-		elseif(m:GetTeam() == 1)then
-			WS_H = WS_H + 1
-		end
-		WS_P = WS_A - WS_H
-		if(westspark_progress < 100 and westspark_progress > 0)then
-			if(WS_P < 0)then
-				westspark_progress = westspark_progress - 1
-			elseif(WS_P > 0)then
-				westspark_progress = westspark_progress + 1
-			end
-		elseif(westspark_progress == 0)then
-			if(WS_P > 0)then
-				westspark_progress = westspark_progress + 1
-			end
-		elseif(westspark_progress == 100)then
-			if(WS_P < 0)then
-				westspark_progress = westspark_progress - 1
+		for i = 1, #workshop_data do
+			if(pGO:GetEntry() == workshop_data[i][5])then
+				m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,workshop_data[i][3])
 			end
 		end
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,westspark_progress)
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,C_BAR_NEUTRAL)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
 	else
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
 	end
-	if(m:GetAreaId() == AREA_SUNKENRING and pGO:GetDistance(m) <= 5500)then
-		SR_A = 0
-		SR_H = 0
-		if(m:GetTeam() == 0)then
-			SR_A = SR_A + 1
-		elseif(m:GetTeam() == 1)then
-			SR_H = SR_H + 1
+end
+end
+for i = 1, #workshop_data do
+	if(pGO:GetEntry() == workshop_data[i][5] and pGO:GetWorldStateForZone(workshop_data[i][2])~=3 and pGO:GetWorldStateForZone(workshop_data[i][2])~=6 and pGO:GetWorldStateForZone(workshop_data[i][2])~=9)then
+		if(workshop_data[i][3] < 100 and workshop_data[i][3] > 0)then
+			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/5)
+		elseif(workshop_data[i][3] >= 100)then
+			workshop_data[i][3] = 100
+		elseif(workshop_data[i][3] <= 0)then
+			workshop_data[i][3] = 0
 		end
-		SR_P = SR_A - SR_H
-		if(sunkenring_progress < 100 and sunkenring_progress > 0)then
-			if(SR_P < 0)then
-				sunkenring_progress = sunkenring_progress - 1
-			elseif(SR_P > 0)then
-				sunkenring_progress = sunkenring_progress + 1
-			end
-		elseif(sunkenring_progress == 0)then
-			if(SR_P > 0)then
-				sunkenring_progress = sunkenring_progress + 1
-			end
-		elseif(sunkenring_progress == 100)then
-			if(SR_P < 0)then
-				sunkenring_progress = sunkenring_progress - 1
-			end
-		end
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,sunkenring_progress)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,C_BAR_NEUTRAL)
-	elseif(m:GetAreaId() == AREA_BROKENTEMPLE and pGO:GetDistance(m) <= 5500)then
-		BT_A = 0
-		BT_H = 0
-		if(m:GetTeam() == 0)then
-			BT_A = BT_A + 1
-		elseif(m:GetTeam() == 1)then
-			BT_H = BT_H + 1
-		end
-		BT_P = BT_A - BT_H
-		if(brokentemple_progres < 100 and brokentemple_progres > 0)then
-			if(BT_P < 0)then
-				brokentemple_progres = brokentemple_progres - 1
-			elseif(BT_P > 0)then
-				brokentemple_progres = brokentemple_progres + 1
-			end
-		elseif(brokentemple_progres == 0)then
-			if(BT_P > 0)then
-				brokentemple_progres = brokentemple_progres + 1
-			end
-		elseif(brokentemple_progres == 100)then
-			if(BT_P < 0)then
-				brokentemple_progres = brokentemple_progres - 1
-			end
-		end
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,1)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,brokentemple_progres)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,C_BAR_NEUTRAL)
-	else
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
-		m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
 	end
-else
-	m:SetWorldStateForPlayer(WG_STATE_NORTH_SHOW,0)
-	m:SetWorldStateForPlayer(WG_STATE_NORTH_PROGRESS,0)
-	m:SetWorldStateForPlayer(WG_STATE_NORTH_NEUTRAL,0)
-	m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
-	m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
-	m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,0)
 end
-end
-end
+vars.plrvall = 0
+ --[[ local shop1 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192030)
+local shop2 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192031)
+local shop3 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192032)
+local shop4 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192033)
+if(pGO:GetEntry() == 190487 and shop1 ~= nil)then
+	if(pGO:GetHP() > pGO:GetMaxHP()/2)then
+		if()then
+		end
+	end
+elseif(pGO:GetEntry() == 190475 and shop2 ~= nil)then
+	
+elseif(pGO:GetEntry() == 190475 and shop3 ~= nil)then
+	
+elseif(pGO:GetEntry() == 190475 and shop4 ~= nil)then
+	
+end ]]--
 end
 
 function KillCreature(pUnit, event, pLastTarget)
@@ -1587,7 +1507,6 @@ for i = 1, #go_f_tower do
 end
 end
 
-
 function STOnDamage(pGO, damage)
 for i = 1, #go_s_tower do
 	if(pGO:GetEntry() == go_s_tower[i][1])then
@@ -1645,6 +1564,42 @@ elseif(pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
 		g:SendAreaTriggerMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
 	end
 end
+end
+end
+
+function ShopOnDamage(pGO, damage)
+for i = 1, #workshop_data do
+if(pGO:GetEntry() == workshop_data[i][1])then
+		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(workshop_data[i][2])== 1 or pGO:GetWorldStateForZone(workshop_data[i][2])== 4 or pGO:GetWorldStateForZone(workshop_data[i][2])== 7))then
+			if(pGO:GetWorldStateForZone(workshop_data[i][2]) == 4)then
+				vehicle_vallue_h = vehicle_vallue_h - 2
+				pGO:SetWorldStateForZone(3490,vehicle_vallue_h)
+			elseif(pGO:GetWorldStateForZone(workshop_data[i][2]) == 7)then
+				vehicle_vallue_a = vehicle_vallue_a - 2
+				pGO:SetWorldStateForZone(3680,vehicle_vallue_a)
+			end
+			workshop_data[i][6] = 1
+			pGO:SetWorldStateForZone(workshop_data[i][2],pGO:GetWorldStateForZone(workshop_data[i][2])+1)
+		end
+	end
+end
+end
+
+function ShopOnDestroy(pGO)
+for i = 1, #workshop_data do
+	if(pGO:GetEntry() == workshop_data[i][1])then
+		if(pGO:GetWorldStateForZone(workshop_data[i][2])== 2 or pGO:GetWorldStateForZone(workshop_data[i][2])== 5 or pGO:GetWorldStateForZone(workshop_data[i][2])== 8)then
+			if(pGO:GetWorldStateForZone(workshop_data[i][2]) == 5)then
+				vehicle_vallue_h = vehicle_vallue_h - 2
+				pGO:SetWorldStateForZone(3490,vehicle_vallue_h)
+			elseif(pGO:GetWorldStateForZone(workshop_data[i][2]) == 8)then
+				vehicle_vallue_a = vehicle_vallue_a - 2
+				pGO:SetWorldStateForZone(3680,vehicle_vallue_a)
+			end
+			workshop_data[i][6] = 0
+			pGO:SetWorldStateForZone(workshop_data[i][2],pGO:GetWorldStateForZone(workshop_data[i][2])+1)
+		end
+	end
 end
 end
 
@@ -1744,3 +1699,15 @@ RegisterGameObjectEvent(190358,7,STOnDamage)
 RegisterGameObjectEvent(190356,8,STOnDestroy)
 RegisterGameObjectEvent(190357,8,STOnDestroy)
 RegisterGameObjectEvent(190358,8,STOnDestroy)
+RegisterGameObjectEvent(192028,7,ShopOnDamage)
+RegisterGameObjectEvent(192028,8,ShopOnDestroy)
+RegisterGameObjectEvent(192029,7,ShopOnDamage)
+RegisterGameObjectEvent(192029,8,ShopOnDestroy)
+RegisterGameObjectEvent(192030,7,ShopOnDamage)
+RegisterGameObjectEvent(192030,8,ShopOnDestroy)
+RegisterGameObjectEvent(192031,7,ShopOnDamage)
+RegisterGameObjectEvent(192031,8,ShopOnDestroy)
+RegisterGameObjectEvent(192032,7,ShopOnDamage)
+RegisterGameObjectEvent(192032,8,ShopOnDestroy)
+RegisterGameObjectEvent(192033,7,ShopOnDamage)
+RegisterGameObjectEvent(192033,8,ShopOnDestroy)
