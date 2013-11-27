@@ -1,7 +1,7 @@
 -- Workshop
 REPLACE INTO `gameobject_spawns` VALUES (47761, 192028, 571, 5389.64, 2978.28, 409.677, 1.57952, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0);
 REPLACE INTO `gameobject_spawns` VALUES (47762, 192029, 571, 5387.97, 2710.79, 409.505, 1.53589, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0);
-REPLACE INTO `gameobject_spawns` VALUES (47763, 192030, 571, 4961.61, 3380.94, 377.364, 2.7838, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0);.-- checking
+REPLACE INTO `gameobject_spawns` VALUES (47763, 192030, 571, 4961.61, 3380.94, 377.364, 2.7838, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0); -- checking
 REPLACE INTO `gameobject_spawns` VALUES (47764, 192031, 571, 4942.26, 2392.65, 320.607, -0.209439, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0); -- checking
 REPLACE INTO `gameobject_spawns` VALUES (47765, 192032, 571, 4357.52, 3309.53, 372.5, -1.78023, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0);
 REPLACE INTO `gameobject_spawns` VALUES (47766, 192033, 571, 4360.98, 2355.47, 376.46, -1.56207, 0, 0, 0, 1, 1, 6553632, 0, 1, 0, 1, 0);
