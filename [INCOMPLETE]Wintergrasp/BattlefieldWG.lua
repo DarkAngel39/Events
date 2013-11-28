@@ -66,7 +66,7 @@ local WG_STATE_CURRENT_H_VEHICLES = 3490
 local WG_STATE_MAX_H_VEHICLES = 3491
 local WG_STATE_CURRENT_A_VEHICLES = 3680
 local WG_STATE_MAX_A_VEHICLES = 3681
-
+local WG_STATE_BATTLEFIELD_STATUS_MAP = 3804
  -- Map states:
 local WG_STATE_KEEP_GATE_ANDGY = 3773
 
@@ -1214,7 +1214,7 @@ for i = 1, #go_wall do
 		if(pGO:GetWorldStateForZone(go_wall[i][2])== 2 or pGO:GetWorldStateForZone(go_wall[i][2])== 5 or pGO:GetWorldStateForZone(go_wall[i][2])== 8)then
 			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
 		end
-		if(pGO:GetEntry() ==191810)then
+		if(pGO:GetEntry() == 191810)then
 			local wall = pGO:GetGameObjectNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),GO_WINTERGRASP_KEEP_COLLISION_WALL)
 			if(wall)then
 				wall:Despawn(1,0)
@@ -1409,6 +1409,7 @@ RegisterGameObjectEvent(191796,7,WallOnDamage)
 RegisterGameObjectEvent(192028,7,WallOnDamage)
 RegisterGameObjectEvent(192029,7,WallOnDamage)
 RegisterGameObjectEvent(190375,7,WallOnDamage)
+RegisterGameObjectEvent(191810,7,WallOnDamage)
 RegisterGameObjectEvent(190219,8,WallOnDestroy)
 RegisterGameObjectEvent(190220,8,WallOnDestroy)
 RegisterGameObjectEvent(191802,8,WallOnDestroy)
@@ -1435,6 +1436,7 @@ RegisterGameObjectEvent(191796,8,WallOnDestroy)
 RegisterGameObjectEvent(192028,8,WallOnDestroy)
 RegisterGameObjectEvent(192029,8,WallOnDestroy)
 RegisterGameObjectEvent(190375,8,WallOnDestroy)
+RegisterGameObjectEvent(191810,8,WallOnDestroy)
 RegisterGameObjectEvent(190221,7,FTOnDamage)
 RegisterGameObjectEvent(190378,7,FTOnDamage)
 RegisterGameObjectEvent(190373,7,FTOnDamage)
