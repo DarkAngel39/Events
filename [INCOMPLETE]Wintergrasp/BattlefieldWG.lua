@@ -1328,19 +1328,19 @@ if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZ
 local arms = pPlayer:GetCreatureNearestCoords(pPlayer:GetX(),pPlayer:GetY(),pPlayer:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
 	if(intid == 1)then
 		if(arms ~= nil)then
-			arms:SpawnCreature(NPC_VEHICLE_CATAPULT, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0)
+			arms:SpawnCreature(NPC_VEHICLE_CATAPULT, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0, 241, 0)
 		end
 		-- pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
 		pPlayer:GossipComplete()
 	elseif(intid == 2)then
 		if(arms ~= nil)then
-			arms:SpawnCreature(NPC_VEHICLE_DEMOLISHER, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0)
+			arms:SpawnCreature(NPC_VEHICLE_DEMOLISHER, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0, 241, 0)
 		end
 		-- pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
 		pPlayer:GossipComplete()
 	elseif(intid == 3)then
 		if(arms ~= nil)then
-			arms:SpawnCreature(NPC_VEHICLE_SIEGE_ENGINE_A, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0)
+			arms:SpawnCreature(NPC_VEHICLE_SIEGE_ENGINE_A, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_ALLIANCE, 3300000, 35, 0, 0, 241, 0)
 		end
 		-- pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_A)
 		pPlayer:GossipComplete()
@@ -1376,19 +1376,19 @@ function HOnSelect(pUnit, event, pPlayer, id, intid, code)
 if(pUnit:GetWorldStateForZone(WG_STATE_MAX_H_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES))then
 	if(intid == 1)then
 		if(arms ~= nil)then
-			arms:SpawnCreature(NPC_VEHICLE_CATAPULT, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0)
+			arms:SpawnCreature(NPC_VEHICLE_CATAPULT, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0, 241, 0)
 		end
 		-- pPlayer:FullCastSpell(SPELL_BUILD_CATAPULT)
 		pPlayer:GossipComplete()
 	elseif(intid == 2)then
 		if(arms ~= nil)then
-			arms:SpawnCreature(NPC_VEHICLE_DEMOLISHER, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0)
+			arms:SpawnCreature(NPC_VEHICLE_DEMOLISHER, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0, 241, 0)
 		end
 		-- pPlayer:FullCastSpell(SPELL_BUILD_DEMOLISHER)
 		pPlayer:GossipComplete()
 	elseif(intid == 3)then
 		if(arms ~= nil)then
-			arms:SpawnCreature(NPC_VEHICLE_SIEGE_ENGINE_H, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0)
+			arms:SpawnCreature(NPC_VEHICLE_SIEGE_ENGINE_H, arms:GetX(), arms:GetY(),arms:GetZ(), arms:GetO(), FACTION_HORDE, 3300000, 35, 0, 0, 241, 0)
 		end
 		-- pPlayer:FullCastSpell(SPELL_BUILD_ENGINE_H)
 		pPlayer:GossipComplete()
@@ -1711,3 +1711,4 @@ RegisterGameObjectEvent(192032,7,ShopOnDamage)
 RegisterGameObjectEvent(192032,8,ShopOnDestroy)
 RegisterGameObjectEvent(192033,7,ShopOnDamage)
 RegisterGameObjectEvent(192033,8,ShopOnDestroy)
+	print("-- Wintergrasp loaded --")
