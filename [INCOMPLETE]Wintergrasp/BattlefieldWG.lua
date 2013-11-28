@@ -222,6 +222,7 @@ local go_wall = {
 {191801, 3770},
 {191798, 3771},
 {191796, 3772},
+{191810, 3773},
 {190375, 3763};
 };
  -- Fortress towers
@@ -738,31 +739,6 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
 		v:Rebuild()
 	end
-	if(v:GetEntry() == GO_WINTERGRASP_VAULT_GATE)then
-		if(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 5)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 5)
-		elseif(v:GetHP() <= v:GetMaxHP()/2 and v:GetHP() > 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 8)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 8)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 4)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
-		elseif(v:GetHP() > v:GetMaxHP()/2 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 7)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
-		elseif(v:GetHP() == 0 and controll == 2 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 6)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 6)
-			for k,m in pairs(v:GetInRangeObjects())do
-				if(m:GetEntry() == GO_WINTERGRASP_KEEP_COLLISION_WALL)then
-					m:Activate()
-				end
-			end
-		elseif(v:GetHP() == 0 and controll == 1 and v:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) ~= 9)then
-			v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 9)
-			for k,m in pairs(v:GetInRangeObjects())do
-				if(m:GetEntry() == GO_WINTERGRASP_KEEP_COLLISION_WALL)then
-					m:Activate()
-				end
-			end
-		end
-	end
 	if(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE and battle == 1 and controll == 2 and v:GetAreaId() == AREA_FORTRESS)then -- this changes the faction of the objects but for some reason they can not be damaged as they should by the vehicles.
 		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_HORDE)
 	elseif(battle == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
@@ -1250,6 +1226,12 @@ for i = 1, #go_wall do
 	if(pGO:GetEntry() == go_wall[i][1])then
 		if(pGO:GetWorldStateForZone(go_wall[i][2])== 2 or pGO:GetWorldStateForZone(go_wall[i][2])== 5 or pGO:GetWorldStateForZone(go_wall[i][2])== 8)then
 			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
+		end
+		if(pGO:GetEntry() ==191810)then
+			local wall = pGO:GetGameObjectNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),GO_WINTERGRASP_KEEP_COLLISION_WALL)
+			if(wall)then
+				wall:Despawn(1,0)
+			end
 		end
 	end
 end
