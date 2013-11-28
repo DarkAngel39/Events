@@ -756,19 +756,6 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	end
 end
 end
-if(pUnit:GetEntry() == NPC_NOT_IMMUNE_PC_NPC)then
-local XT = pUnit:GetX()
-local YT = pUnit:GetY()
-	if(XT >= 5245.92 and XT <= 5247.92 and YT >= 2977.32 and YT <= 2979.32)then
-		pUnit:TeleportCreature(5316.25,2977.04,409.274)
-	elseif(XT >= 5248.89 and XT <= 5250.89 and YT >= 2702.11 and YT <= 2704.11)then
-		pUnit:TeleportCreature(5314.51,2703.11,409.275)
-	elseif(XT >= 5400.92 and XT <= 5402.92 and YT >= 2828.91 and YT <= 2830.91)then
-		pUnit:TeleportCreature(5391.28,2828.09,418.675)
-	elseif(XT >= 5391.81 and XT <= 5393.81 and YT >= 2853.02 and YT <= 2855.02)then
-		pUnit:TeleportCreature(5401.63,2853.67,418.675)
-	end
-end
 end
 
 function TitanRelickOnUse(pGO, event, pPlayer)
@@ -1388,8 +1375,6 @@ RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_N,4,PortalOnUse)
 RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
-RegisterUnitEvent(NPC_NOT_IMMUNE_PC_NPC,18,DetectionUnitOnSpawn)
-RegisterUnitEvent(NPC_NOT_IMMUNE_PC_NPC,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("WGUpdate", 1000, 0)
 RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
