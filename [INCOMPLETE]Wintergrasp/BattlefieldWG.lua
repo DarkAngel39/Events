@@ -16,10 +16,12 @@ local south_towers = 3
 local ATTACKER = " "
 local DEFENDER = " "
 
+ -- Old capture bar controller. Will be removed or reused
 local C_BAR_NEUTRAL = 80 -- the neutral vallue of the capture bar. MUST BE UNDER 100.
 local C_BAR_CAPTURE = (100 - C_BAR_NEUTRAL)/2
 
-GAMEOBJECT_FACTION = 0x0006 + 0x0009
+ -- GO FACTION (not working for now)
+local GAMEOBJECT_FACTION = 0x0006 + 0x0009
 
  -- Factions
 local FACTION_HORDE = 1735
@@ -27,53 +29,53 @@ local FACTION_ALLIANCE = 1732
 local FACTION_NEUTRAL = 35
 
  -- vehicle workshops capture bar controllers
-local eastspark_progress = 50
-local westspark_progress = 50
-local sunkenring_progress = 50
-local brokentemple_progres = 50
- -- Max vehicle worldstate controllers (neutral, destroyed - 0, half destroyed (A/H) - 2, intact (A/H) - 4)
-local A_V_EASTSPARK = 0
-local H_V_EASTSPARK = 0
-local A_V_WESTSPARK = 0
-local H_V_WESTSPARK = 0
-local A_V_SUNKENRING = 0
-local H_V_SUNKENRING = 0
-local A_V_BROKENTEMPLE = 0
-local H_V_BROKENTEMPLE = 0
-local A_V_FORTRESS_EAST = 0
-local H_V_FORTRESS_EAST = 0
-local A_V_FORTRESS_WEST = 0
-local H_V_FORTRESS_WEST = 0
+local eastspark_progress = 0
+local westspark_progress = 0
+local sunkenring_progress = 0
+local brokentemple_progres = 0
+
+ -- Worldstate workshop controllers
+local vehicle_vallue_a = 0
+local vehicle_vallue_h = 0
+
+if(controll == 2)then
+	eastspark_progress = 100
+	westspark_progress = 100
+	sunkenring_progress = 100
+	brokentemple_progres = 100
+	vehicle_vallue_h = 8
+	vehicle_vallue_a = 16
+else
+	eastspark_progress = 0
+	westspark_progress = 0
+	sunkenring_progress = 0
+	brokentemple_progres = 0
+	vehicle_vallue_h = 16
+	vehicle_vallue_a = 8
+end
+
  -- UI STATES
-WG_STATE_NEXT_BATTLE_TIME =	4354
-WG_STATE_END_BATTLE_TIME = 3781
-WG_HORDE_CONTROLLED = 3802
-WG_ALLIANCE_CONTROLLED = 3803
-WG_STATE_BATTLE_UI = 3710
-WG_STATE_BATTLE_TIME = 3781
-WG_STATE_NEXT_BATTLE_TIMER = 3801
-WG_STATE_CURRENT_H_VEHICLES = 3490
-WG_STATE_MAX_H_VEHICLES = 3491
-WG_STATE_CURRENT_A_VEHICLES = 3680
-WG_STATE_MAX_A_VEHICLES = 3681
+local WG_STATE_NEXT_BATTLE_TIME =	4354
+local WG_STATE_END_BATTLE_TIME = 3781
+local WG_HORDE_CONTROLLED = 3802
+local WG_ALLIANCE_CONTROLLED = 3803
+local WG_STATE_BATTLE_UI = 3710
+local WG_STATE_BATTLE_TIME = 3781
+local WG_STATE_NEXT_BATTLE_TIMER = 3801
+local WG_STATE_CURRENT_H_VEHICLES = 3490
+local WG_STATE_MAX_H_VEHICLES = 3491
+local WG_STATE_CURRENT_A_VEHICLES = 3680
+local WG_STATE_MAX_A_VEHICLES = 3681
+
  -- Map states:
-WG_STATE_BATTLEFIELD_STATUS_MAP = 3804
-WG_STATE_W_FORTRESS_WORKSHOP = 3698
-WG_STATE_E_FORTRESS_WORKSHOP = 3699
-WG_STATE_BT_WORKSHOP = 3700
-WG_STATE_SR_WORKSHOP = 3701
-WG_STATE_WS_WORKSHOP = 3702
-WG_STATE_ES_WORKSHOP = 3703
-WG_STATE_KEEP_GATE_ANDGY = 3773
+local WG_STATE_KEEP_GATE_ANDGY = 3773
+
  -- Dynamic capturebar states
-WG_STATE_SOUTH_SHOW = 3501
-WG_STATE_SOUTH_PROGRESS = 3502
-WG_STATE_SOUTH_NEUTRAL = 3508
+local WG_STATE_SOUTH_SHOW = 3501
+local WG_STATE_SOUTH_PROGRESS = 3502
+local WG_STATE_SOUTH_NEUTRAL = 3508
 
-WG_STATE_NORTH_SHOW = 3466
-WG_STATE_NORTH_PROGRESS = 3467
-WG_STATE_NORTH_NEUTRAL = 3468
-
+ -- Npc's
 local NPC_DETECTION_UNIT = 27869
 local NPC_GOBLIN_ENGINEER = 30400
 local NPC_GNOME_ENGINEER = 30499
@@ -84,36 +86,21 @@ local NPC_VEHICLE_DEMOLISHER = 28094
 local NPC_VEHICLE_SIEGE_ENGINE_H = 32627
 local NPC_VEHICLE_SIEGE_ENGINE_A = 28312
 
-GO_WINTERGRASP_TITAN_RELIC = 192829
-GO_WINTERGRASP_VAULT_GATE = 191810
-GO_WINTERGRASP_KEEP_COLLISION_WALL = 194162
-GO_WINTERGRASP_WORKSHOP_E = 192029
-GO_WINTERGRASP_WORKSHOP_W = 192028
-GO_WINTERGRASP_FW_TOWER = 190358
-GO_WINTERGRASP_WE_TOWER = 190357
-GO_WINTERGRASP_SS_TOWER = 190356
-GO_WINTERGRASP_DEFENDER_H = 190763
-GO_WINTERGRASP_DEFENDER_A = 191575
-GO_WINTERGRASP_DEFENDER_N = 192819
-GO_WINTERGRASP_VEHICLE_TELEPORTER = 192951
- -- Eastspark
-GO_WINTERGRASP_WORKSHOP_ES = 192033
-GO_WINTERGRASP_CAPTUREPOINT_ES_100 = 194959
-GO_WINTERGRASP_CAPTUREPOINT_ES_0 = 194960
+ -- Objects
+local GO_WINTERGRASP_TITAN_RELIC = 192829
+local GO_WINTERGRASP_VAULT_GATE = 191810
+local GO_WINTERGRASP_KEEP_COLLISION_WALL = 194162
+local GO_WINTERGRASP_FW_TOWER = 190358
+local GO_WINTERGRASP_WE_TOWER = 190357
+local GO_WINTERGRASP_SS_TOWER = 190356
+local GO_WINTERGRASP_DEFENDER_H = 190763
+local GO_WINTERGRASP_DEFENDER_A = 191575
+local GO_WINTERGRASP_DEFENDER_N = 192819
+local GO_WINTERGRASP_VEHICLE_TELEPORTER = 192951
 
-GO_WINTERGRASP_WORKSHOP_WS = 192032
-GO_WINTERGRASP_CAPTUREPOINT_WS_100 = 194962
-GO_WINTERGRASP_CAPTUREPOINT_WS_0 = 194963
-
-GO_WINTERGRASP_WORKSHOP_SR = 192031
-GO_WINTERGRASP_CAPTUREPOINT_SR_100 = 190475
-GO_WINTERGRASP_CAPTUREPOINT_SR_0 = 192626
-
-GO_WINTERGRASP_WORKSHOP_BT = 192030
-GO_WINTERGRASP_CAPTUREPOINT_BT_100 = 190487
-GO_WINTERGRASP_CAPTUREPOINT_BT_0 = 192627
  -- Map info
 local MAP_NORTHREND = 571
+
  -- Areass
 local ZONE_WG = 4197
 local AREA_FORTRESS = 4575
@@ -127,6 +114,7 @@ local AREA_SHADOWSIGHT_T = 4583
 local AREA_C_BRIDGE = 4576
 local AREA_E_BRIDGE = 4557
 local AREA_W_BRIDGE = 4578
+
  -- Spells
 local SPELL_RECRUIT = 37795
 local SPELL_CORPORAL = 33280
@@ -147,6 +135,7 @@ local SPELL_BUILD_CATAPULT = 56663
 local SPELL_BUILD_DEMOLISHER = 56575
 local SPELL_BUILD_ENGINE_A = 56661
 local SPELL_BUILD_ENGINE_H = 61408
+
  -- Reward spells
 local SPELL_VICTORY_REWARD = 56902
 local SPELL_DEFEAT_REWARD = 58494
@@ -161,6 +150,7 @@ local SPELL_VICTORY_AURA = 60044
 local SPELL_WINTERGRASP_WATER = 36444
 local SPELL_ESSENCE_OF_WINTERGRASP = 57940
 local SPELL_WINTERGRASP_RESTRICTED_FLIGHT_AREA = 58730
+
  -- Phasing spells
 local SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT = 56618 -- phase 16
 local SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT = 56617 -- phase 32
@@ -181,31 +171,31 @@ local QUEST_WG_DEFEND_SIEDGE_A = 13222
 local QUEST_WG_DEFEND_SIEDGE_H = 13223
 
 -- Opcodes
-SMSG_PLAY_SOUND = 0x2D2
-SMSG_BATTLEFIELD_MGR_ENTRY_INVITE = 0x4DE
-CMSG_BATTLEFIELD_MGR_ENTRY_INVITE_RESPONSE = 0x4DF
-SMSG_BATTLEFIELD_MGR_ENTERED = 0x4E0
-SMSG_BATTLEFIELD_MGR_QUEUE_INVITE = 0x4E1
-CMSG_BATTLEFIELD_MGR_QUEUE_INVITE_RESPONSE = 0x4E2
-CMSG_BATTLEFIELD_MGR_QUEUE_REQUEST = 0x4E3
-SMSG_BATTLEFIELD_MGR_QUEUE_REQUEST_RESPONSE = 0x4E4
-SMSG_BATTLEFIELD_MGR_EJECT_PENDING  = 0x4E5
-SMSG_BATTLEFIELD_MGR_EJECTED = 0x4E6
-CMSG_BATTLEFIELD_MGR_EXIT_REQUEST = 0x4E7
-SMSG_BATTLEFIELD_MGR_STATE_CHANGE = 0x4E8
-CMSG_BATTLEFIELD_MANAGER_ADVANCE_STATE = 0x4E9
-CMSG_BATTLEFIELD_MANAGER_SET_NEXT_TRANSITION_TIME = 0x4EA
-CMSG_START_BATTLEFIELD_CHEAT = 0x4CB
-CMSG_END_BATTLEFIELD_CHEAT = 0x4CC
-CMSG_LEAVE_BATTLEFIELD = 0x2E1
-CMSG_BATTLEFIELD_PORT = 0x2D5
-CMSG_BATTLEFIELD_STATUS = 0x2D3
-SMSG_BATTLEFIELD_STATUS = 0x2D4
-CMSG_BATTLEFIELD_LIST = 0x23C
-SMSG_BATTLEFIELD_LIST = 0x23D
-CMSG_BATTLEFIELD_JOIN = 0x23E
-SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
-SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
+local SMSG_PLAY_SOUND = 0x2D2
+local SMSG_BATTLEFIELD_MGR_ENTRY_INVITE = 0x4DE
+local CMSG_BATTLEFIELD_MGR_ENTRY_INVITE_RESPONSE = 0x4DF
+local SMSG_BATTLEFIELD_MGR_ENTERED = 0x4E0
+local SMSG_BATTLEFIELD_MGR_QUEUE_INVITE = 0x4E1
+local CMSG_BATTLEFIELD_MGR_QUEUE_INVITE_RESPONSE = 0x4E2
+local CMSG_BATTLEFIELD_MGR_QUEUE_REQUEST = 0x4E3
+local SMSG_BATTLEFIELD_MGR_QUEUE_REQUEST_RESPONSE = 0x4E4
+local SMSG_BATTLEFIELD_MGR_EJECT_PENDING  = 0x4E5
+local SMSG_BATTLEFIELD_MGR_EJECTED = 0x4E6
+local CMSG_BATTLEFIELD_MGR_EXIT_REQUEST = 0x4E7
+local SMSG_BATTLEFIELD_MGR_STATE_CHANGE = 0x4E8
+local CMSG_BATTLEFIELD_MANAGER_ADVANCE_STATE = 0x4E9
+local CMSG_BATTLEFIELD_MANAGER_SET_NEXT_TRANSITION_TIME = 0x4EA
+local CMSG_START_BATTLEFIELD_CHEAT = 0x4CB
+local CMSG_END_BATTLEFIELD_CHEAT = 0x4CC
+local CMSG_LEAVE_BATTLEFIELD = 0x2E1
+local CMSG_BATTLEFIELD_PORT = 0x2D5
+local CMSG_BATTLEFIELD_STATUS = 0x2D3
+local SMSG_BATTLEFIELD_STATUS = 0x2D4
+local CMSG_BATTLEFIELD_LIST = 0x23C
+local SMSG_BATTLEFIELD_LIST = 0x23D
+local CMSG_BATTLEFIELD_JOIN = 0x23E
+local SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
+local SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
 
  -- Fortress destructable objects
 local go_wall = {
@@ -247,16 +237,16 @@ local go_s_tower = {
 {190357, 3705},
 {190358, 3706};
 };
-
+ -- Workshop data
 local workshop_data = {
 {192028, 3698, -1, -1, -1,2,4},
 {192029, 3699, -1, -1, -1,2,4},
 {192030, 3700, brokentemple_progres, 4539, 190487,2},
 {192031, 3701, sunkenring_progress, 4538, 190475,2},
-{192032, 3702, westspark_progress, 4611, 194959,2},
-{192033, 3703, eastspark_progress, 4612, 194962,2};
+{192032, 3702, eastspark_progress, 4611, 194959,2},
+{192033, 3703, westspark_progress, 4612, 194962,2};
 };
-
+ -- Zone ID's for wg buff
 local buff_areas = {
 4494,
 4277,
@@ -287,8 +277,6 @@ local buff_areas = {
 66;
 };
 
-local vehicle_vallue_a = 8
-local vehicle_vallue_h = 8
 local self = getfenv(1)
 
 function Aura()
@@ -579,6 +567,8 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
+		v:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, vehicle_vallue_a)
+		v:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, vehicle_vallue_h)
 		stateuiset = 1
 	elseif(battle == 0 and controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
@@ -600,8 +590,8 @@ if(stateuiset == 0)then
 end
 if(controll == 1)then
 	if(states == 0)then
-		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 7)
-		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 7)
+		v:SetWorldStateForZone(3698, 7)
+		v:SetWorldStateForZone(3699, 7)
 		v:SetWorldStateForZone(3704, 4)
 		v:SetWorldStateForZone(3705, 4)
 		v:SetWorldStateForZone(3706, 4)
@@ -634,10 +624,10 @@ if(controll == 1)then
 		v:SetWorldStateForZone(3772, 7)
 		v:SetWorldStateForZone(3763, 7)
 		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
-		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 4)
-		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 4)
-		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 4)
-		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 4)
+		v:SetWorldStateForZone(3702, 4)
+		v:SetWorldStateForZone(3703, 4)
+		v:SetWorldStateForZone(3700, 4)
+		v:SetWorldStateForZone(3701, 4)
 		eastspark_progress =  0
 		westspark_progress =  0
 		sunkenring_progress = 0
@@ -648,8 +638,8 @@ if(controll == 1)then
 	end
 elseif(controll == 2)then
 	if(states == 0)then
-		v:SetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP, 4)
-		v:SetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP, 4)
+		v:SetWorldStateForZone(3698, 4)
+		v:SetWorldStateForZone(3699, 4)
 		v:SetWorldStateForZone(3704, 7)
 		v:SetWorldStateForZone(3705, 7)
 		v:SetWorldStateForZone(3706, 7)
@@ -682,10 +672,10 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(3772, 4)
 		v:SetWorldStateForZone(3763, 4)
 		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
-		v:SetWorldStateForZone(WG_STATE_WS_WORKSHOP, 7)
-		v:SetWorldStateForZone(WG_STATE_ES_WORKSHOP, 7)
-		v:SetWorldStateForZone(WG_STATE_BT_WORKSHOP, 7)
-		v:SetWorldStateForZone(WG_STATE_SR_WORKSHOP, 7)
+		v:SetWorldStateForZone(3702, 7)
+		v:SetWorldStateForZone(3703, 7)
+		v:SetWorldStateForZone(3700, 7)
+		v:SetWorldStateForZone(3701, 7)
 		eastspark_progress = 100
 		westspark_progress = 100
 		sunkenring_progress = 100
@@ -742,106 +732,7 @@ if(battle == 0 and spawnobjects == 1)then
 		collision:Despawn(1,0)
 	end
 end
-if(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 4)then
-	A_V_FORTRESS_WEST = 0
-	H_V_FORTRESS_WEST = 4
-elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 5)then
-	A_V_FORTRESS_WEST = 0
-	H_V_FORTRESS_WEST = 2
-elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 9)then
-	A_V_FORTRESS_WEST = 0
-	H_V_FORTRESS_WEST = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 7)then
-	A_V_FORTRESS_WEST = 4
-	H_V_FORTRESS_WEST = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_W_FORTRESS_WORKSHOP) == 8)then
-	A_V_FORTRESS_WEST = 2
-	H_V_FORTRESS_WEST = 0
-end
-if(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 4)then
-	A_V_FORTRESS_EAST = 0
-	H_V_FORTRESS_EAST = 4
-elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 5)then
-	A_V_FORTRESS_EAST = 0
-	H_V_FORTRESS_EAST = 2
-elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 9)then
-	A_V_FORTRESS_EAST = 0
-	H_V_FORTRESS_EAST = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 7)then
-	A_V_FORTRESS_EAST = 4
-	H_V_FORTRESS_EAST = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_E_FORTRESS_WORKSHOP) == 8)then
-	A_V_FORTRESS_EAST = 2
-	H_V_FORTRESS_EAST = 0
-end
-if(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 4)then
-	A_V_BROKENTEMPLE = 0
-	H_V_BROKENTEMPLE = 4
-elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 5)then
-	A_V_BROKENTEMPLE = 0
-	H_V_BROKENTEMPLE = 2
-elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 9)then
-	A_V_BROKENTEMPLE = 0
-	H_V_BROKENTEMPLE = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 7)then
-	A_V_BROKENTEMPLE = 4
-	H_V_BROKENTEMPLE = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) == 8)then
-	A_V_BROKENTEMPLE = 2
-	H_V_BROKENTEMPLE = 0
-end
-if(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 4)then
-	A_V_SUNKENRING = 0
-	H_V_SUNKENRING = 4
-elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 5)then
-	A_V_SUNKENRING = 0
-	H_V_SUNKENRING = 2
-elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 9)then
-	A_V_SUNKENRING = 0
-	H_V_SUNKENRING = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 7)then
-	A_V_SUNKENRING = 4
-	H_V_SUNKENRING = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) == 8)then
-	A_V_SUNKENRING = 2
-	H_V_SUNKENRING = 0
-end
-if(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 4)then
-	A_V_WESTSPARK = 0
-	H_V_WESTSPARK = 4
-elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 5)then
-	A_V_WESTSPARK = 0
-	H_V_WESTSPARK = 2
-elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 9)then
-	A_V_WESTSPARK = 0
-	H_V_WESTSPARK = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 7)then
-	A_V_WESTSPARK = 4
-	H_V_WESTSPARK = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) == 8)then
-	A_V_WESTSPARK = 2
-	H_V_WESTSPARK = 0
-end
-if(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 4)then
-	A_V_EASTSPARK = 0
-	H_V_EASTSPARK = 4
-elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 5)then
-	A_V_EASTSPARK = 0
-	H_V_EASTSPARK = 2
-elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 0 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 1 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 2 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 3 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 6 or pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 9)then
-	A_V_EASTSPARK = 0
-	H_V_EASTSPARK = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 7)then
-	A_V_EASTSPARK = 4
-	H_V_EASTSPARK = 0
-elseif(pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) == 8)then
-	A_V_EASTSPARK = 2
-	H_V_EASTSPARK = 0
-end
-local alliancevehicles = A_V_EASTSPARK + A_V_WESTSPARK + A_V_SUNKENRING + A_V_BROKENTEMPLE + A_V_FORTRESS_EAST + A_V_FORTRESS_WEST
-local hordevehicles = H_V_EASTSPARK + H_V_WESTSPARK + H_V_SUNKENRING + H_V_BROKENTEMPLE + H_V_FORTRESS_EAST + H_V_FORTRESS_WEST
-pUnit:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, alliancevehicles)
-pUnit:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, hordevehicles)
+
 for k,v in pairs(pUnit:GetInRangeObjects())do
 if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
@@ -900,133 +791,6 @@ local YT = pUnit:GetY()
 		pUnit:TeleportCreature(5391.28,2828.09,418.675)
 	elseif(XT >= 5391.81 and XT <= 5393.81 and YT >= 2853.02 and YT <= 2855.02)then
 		pUnit:TeleportCreature(5401.63,2853.67,418.675)
-	end
-end
-if(C_BAR_CAPTURE >= 1 and battle == 1)then
-	if(pUnit:GetAreaId() == AREA_EASTSPARK)then
-	local esshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_ES)
-	if(esshop ~= nil)then
-		if(esshop:GetHP() ~= nil)then
-			if(esshop:GetHP() > esshop:GetMaxHP()/2)then
-				if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 7)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,7)
-				elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 1)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,1)
-				elseif(eastspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 4)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,4)
-				end
-			elseif(esshop:GetHP() < esshop:GetMaxHP()/2 and esshop:GetHP() > 0)then
-				if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL  and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 8)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,8)
-				elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE  and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 2)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,2)
-				elseif(eastspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 5)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,5)
-				end
-			elseif(esshop:GetHP() == 0)then
-				if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 9)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,9)
-				elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 3)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,3)
-				elseif(eastspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_ES_WORKSHOP) ~= 6)then
-					pUnit:SetWorldStateForZone(WG_STATE_ES_WORKSHOP,6)
-				end
-			end
-		end
-	end
-	elseif(pUnit:GetAreaId() == AREA_WESTSPARK)then
-	local wsshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_WS)
-	if(wsshop ~= nil)then
-		if(wsshop:GetHP() ~= nil)then
-			if(wsshop:GetHP() > wsshop:GetMaxHP()/2)then
-				if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 7)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,7)
-				elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 1)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,1)
-				elseif(westspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 4)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,4)
-				end
-			elseif(wsshop:GetHP() < wsshop:GetMaxHP()/2 and wsshop:GetHP() > 0)then
-				if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 8)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,8)
-				elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 2)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,2)
-				elseif(westspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 5)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,5)
-				end
-			elseif(wsshop:GetHP() == 0)then
-				if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 9)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,9)
-				elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 3)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,3)
-				elseif(westspark_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_WS_WORKSHOP) ~= 6)then
-					pUnit:SetWorldStateForZone(WG_STATE_WS_WORKSHOP,6)
-				end
-			end
-		end
-	end
-	elseif(pUnit:GetAreaId() == AREA_SUNKENRING)then
-	local srshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_SR)
-	if(srshop ~= nil)then
-		if(srshop:GetHP() ~= nil)then
-			if(srshop:GetHP() > srshop:GetMaxHP()/2)then
-				if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 7)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,7)
-				elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 1)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,1)
-				elseif(sunkenring_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 4)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,4)
-				end
-			elseif(srshop:GetHP() < srshop:GetMaxHP()/2 and srshop:GetHP() > 0)then
-				if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 8)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,8)
-				elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 2)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,2)
-				elseif(sunkenring_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 5)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,5)
-				end
-			elseif(srshop:GetHP() == 0)then
-				if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 9)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,9)
-				elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 3)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,3)
-				elseif(sunkenring_progress < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_SR_WORKSHOP) ~= 6)then
-					pUnit:SetWorldStateForZone(WG_STATE_SR_WORKSHOP,6)
-				end
-			end
-		end
-	end
-	elseif(pUnit:GetAreaId() == AREA_BROKENTEMPLE)then
-	local srshop = pUnit:GetGameObjectNearestCoords(pUnit:GetX(),pUnit:GetY(),pUnit:GetZ(),GO_WINTERGRASP_WORKSHOP_BT)
-	if(srshop ~= nil)then
-		if(srshop:GetHP() ~= nil)then
-			if(srshop:GetHP() > srshop:GetMaxHP()/2)then
-				if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 7)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,7)
-				elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 1)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,1)
-				elseif(brokentemple_progres < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 4)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,4)
-				end
-			elseif(srshop:GetHP() < srshop:GetMaxHP()/2 and srshop:GetHP() > 0)then
-				if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 8)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,8)
-				elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 2)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,2)
-				elseif(brokentemple_progres < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 5)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,5)
-				end
-			elseif(srshop:GetHP() == 0)then
-				if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 9)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,9)
-				elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 3)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,3)
-				elseif(brokentemple_progres < C_BAR_CAPTURE and pUnit:GetWorldStateForZone(WG_STATE_BT_WORKSHOP) ~= 6)then
-					pUnit:SetWorldStateForZone(WG_STATE_BT_WORKSHOP,6)
-				end
-			end
-		end
-	end
 	end
 end
 end
@@ -1167,7 +931,7 @@ health = 0,
 state = 0,
 plrvall = 0
 }
-pGO:RegisterAIUpdateEvent(1500)
+pGO:RegisterAIUpdateEvent(300)
 end
 
 function AIUpdate_Cpoint(pGO)
@@ -1176,11 +940,11 @@ if(pGO == nil)then
 end
 local vars = self[tostring(pGO)]
 for k,m in pairs (pGO:GetInRangePlayers())do
-if(m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive())then
+if(m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive() and battle == 1)then
 	if(pGO:GetDistance(m) <= 5500)then
 		if(m:GetTeam() == 0)then
 			vars.plrvall = vars.plrvall + 1
-		elseif(m:GetTeam() == 0)then
+		elseif(m:GetTeam() == 1)then
 			vars.plrvall = vars.plrvall - 1
 		end
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,1)
@@ -1199,32 +963,51 @@ end
 end
 for i = 1, #workshop_data do
 	if(pGO:GetEntry() == workshop_data[i][5] and pGO:GetWorldStateForZone(workshop_data[i][2])~=3 and pGO:GetWorldStateForZone(workshop_data[i][2])~=6 and pGO:GetWorldStateForZone(workshop_data[i][2])~=9)then
-		if(workshop_data[i][3] < 100 and workshop_data[i][3] > 0)then
-			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/5)
-		elseif(workshop_data[i][3] >= 100)then
+		if(workshop_data[i][3] <= 100.9 and workshop_data[i][3] >= -0.9)then
+			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/10)
+		elseif(workshop_data[i][3] > 100)then
 			workshop_data[i][3] = 100
-		elseif(workshop_data[i][3] <= 0)then
+		elseif(workshop_data[i][3] < 0)then
 			workshop_data[i][3] = 0
+		end
+		if(workshop_data[i][5] == pGO:GetEntry())then
+			if(workshop_data[i][3] >= 90 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],7)
+				vehicle_vallue_a = vehicle_vallue_a + 4
+				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==7)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],1)
+				vehicle_vallue_a = vehicle_vallue_a - 4
+				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==4)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],1)
+				vehicle_vallue_h = vehicle_vallue_h - 4
+				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+			elseif(workshop_data[i][3] <= 10 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],4)
+				vehicle_vallue_h = vehicle_vallue_h + 4
+				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+			elseif(workshop_data[i][3] >= 90 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],8)
+				vehicle_vallue_a = vehicle_vallue_a + 2
+				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==8)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],2)
+				vehicle_vallue_a = vehicle_vallue_a - 2
+				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==5)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],2)
+				vehicle_vallue_h = vehicle_vallue_h - 2
+				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+			elseif(workshop_data[i][3] > 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+				pGO:SetWorldStateForZone(workshop_data[i][2],5)
+				vehicle_vallue_h = vehicle_vallue_h + 2
+				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+			end
 		end
 	end
 end
 vars.plrvall = 0
- --[[ local shop1 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192030)
-local shop2 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192031)
-local shop3 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192032)
-local shop4 =  pGO:GetGameObjectNearestCoords(pGO:GetX(), pGO:GetY(), pGO:GetZ(),192033)
-if(pGO:GetEntry() == 190487 and shop1 ~= nil)then
-	if(pGO:GetHP() > pGO:GetMaxHP()/2)then
-		if()then
-		end
-	end
-elseif(pGO:GetEntry() == 190475 and shop2 ~= nil)then
-	
-elseif(pGO:GetEntry() == 190475 and shop3 ~= nil)then
-	
-elseif(pGO:GetEntry() == 190475 and shop4 ~= nil)then
-	
-end ]]--
 end
 
 function KillCreature(pUnit, event, pLastTarget)
