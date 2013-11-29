@@ -244,8 +244,8 @@ local workshop_data = {
 {192029, 3699, -1, -1, -1,2,4},
 {192030, 3700, brokentemple_progres, 4539, 190487,2},
 {192031, 3701, sunkenring_progress, 4538, 190475,2},
-{192032, 3702, eastspark_progress, 4611, 194959,2},
-{192033, 3703, westspark_progress, 4612, 194962,2};
+{192032, 3702, westspark_progress, 4611, 194962,2},
+{192033, 3703, eastspark_progress, 4612, 194959,2};
 };
  -- Zone ID's for wg buff
 local buff_areas = {
@@ -276,6 +276,47 @@ local buff_areas = {
 3711,
 67,
 66;
+};
+
+local pvp_detection_data = {
+{3723, 5051.19, 2849.41},
+{3724, 4488.25, 2823.86},
+{3725, 4748.14, 2877.06},
+{3726, 5015.43, 2588.31},
+{3727, 4736.71, 2418.49},
+{3728, 4491.45, 2326.30},
+{3729, 5049.93, 3183.56},
+{3730, 4814.13, 3304.06},
+{3731, 4492.49, 3336.17},
+{3737, 4774.71, 2045.71},
+{3738, 4516.30, 2087.43},
+{3739, 5016.75, 2733.45},
+{3740, 4820.90, 2618.30},
+{3741, 4450.00, 2528.82},
+{3742, 4403.17, 3091.06},
+{3743, 4788.79, 3066.96},
+{3744, 5045.93, 3016.11},
+{3745, 4393.02, 3468.74},
+{3746, 4555.75, 3479.11},
+{3747, 4832.32, 3457.11},
+{3748, 5075.76, 3445.33},
+{3774, 5217.59, 2842.80},
+{3775, 5214.62, 2995.52},
+{3776, 5206.28, 2683.36},
+{3777, 5335.53, 2706.81},
+{3778, 5333.18, 2840.28},
+{3779, 5338.16, 2981.39},
+{3788, 4948.71, 3332.18},
+{3790, 4932.04, 2440.23},
+{3791, 4403.33, 2349.30},
+{3792, 4394.57, 3294.98},
+{3793, 4531.44, 3584.90},
+{3794, 4481.27, 1994.00},
+{3795, 4446.45, 2820.81},
+{3796, 4683.09, 3824.08},
+{3797, 4860.65, 2023.60},
+{3798, 4310.05, 1811.11},
+{3799, 4506.89, 4030.26};
 };
 
 local self = getfenv(1)
@@ -950,7 +991,7 @@ for i = 1, #workshop_data do
 				pGO:SetWorldStateForZone(workshop_data[i][2],4)
 				vehicle_vallue_h = vehicle_vallue_h + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] >= 90 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+			elseif(workshop_data[i][3] >= 90 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],8)
 				vehicle_vallue_a = vehicle_vallue_a + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
@@ -962,7 +1003,7 @@ for i = 1, #workshop_data do
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_h = vehicle_vallue_h - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] > 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+			elseif(workshop_data[i][3] <= 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],5)
 				vehicle_vallue_h = vehicle_vallue_h + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
@@ -1325,10 +1366,10 @@ if(pGO:GetEntry() == workshop_data[i][1])then
 		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(workshop_data[i][2])== 1 or pGO:GetWorldStateForZone(workshop_data[i][2])== 4 or pGO:GetWorldStateForZone(workshop_data[i][2])== 7))then
 			if(pGO:GetWorldStateForZone(workshop_data[i][2]) == 4)then
 				vehicle_vallue_h = vehicle_vallue_h - 2
-				pGO:SetWorldStateForZone(3490,vehicle_vallue_h)
+				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
 			elseif(pGO:GetWorldStateForZone(workshop_data[i][2]) == 7)then
 				vehicle_vallue_a = vehicle_vallue_a - 2
-				pGO:SetWorldStateForZone(3680,vehicle_vallue_a)
+				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
 			end
 			workshop_data[i][6] = 1
 			pGO:SetWorldStateForZone(workshop_data[i][2],pGO:GetWorldStateForZone(workshop_data[i][2])+1)
@@ -1343,10 +1384,10 @@ for i = 1, #workshop_data do
 		if(pGO:GetWorldStateForZone(workshop_data[i][2])== 2 or pGO:GetWorldStateForZone(workshop_data[i][2])== 5 or pGO:GetWorldStateForZone(workshop_data[i][2])== 8)then
 			if(pGO:GetWorldStateForZone(workshop_data[i][2]) == 5)then
 				vehicle_vallue_h = vehicle_vallue_h - 2
-				pGO:SetWorldStateForZone(3490,vehicle_vallue_h)
+				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
 			elseif(pGO:GetWorldStateForZone(workshop_data[i][2]) == 8)then
 				vehicle_vallue_a = vehicle_vallue_a - 2
-				pGO:SetWorldStateForZone(3680,vehicle_vallue_a)
+				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
 			end
 			workshop_data[i][6] = 0
 			pGO:SetWorldStateForZone(workshop_data[i][2],pGO:GetWorldStateForZone(workshop_data[i][2])+1)
@@ -1359,14 +1400,12 @@ RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,1,AGengineerOnGossip)
-RegisterGameObjectEvent(194962,5,AIUpdate_Cpoint)
-RegisterGameObjectEvent(194962,2,OnSP_Cpoint)
-RegisterGameObjectEvent(194959,5,AIUpdate_Cpoint)
-RegisterGameObjectEvent(194959,2,OnSP_Cpoint)
-RegisterGameObjectEvent(190487,5,AIUpdate_Cpoint)
-RegisterGameObjectEvent(190487,2,OnSP_Cpoint)
-RegisterGameObjectEvent(190475,5,AIUpdate_Cpoint)
-RegisterGameObjectEvent(190475,2,OnSP_Cpoint)
+for i = 1, #workshop_data do
+if(workshop_data[i][5] > 0)then
+	RegisterGameObjectEvent(workshop_data[i][5],5,AIUpdate_Cpoint)
+	RegisterGameObjectEvent(workshop_data[i][5],2,OnSP_Cpoint)
+end
+end
 RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,5,OnAIUpdateVehicleTeleporter)
 RegisterGameObjectEvent(GO_WINTERGRASP_VEHICLE_TELEPORTER,2,OnLoadVehicleTeleporter)
 RegisterGameObjectEvent(GO_WINTERGRASP_DEFENDER_A,4,PortalOnUse)
@@ -1383,84 +1422,20 @@ RegisterServerHook(15,OnZoneEnter)
 RegisterServerHook(4,OnEnterBuff)
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
-RegisterGameObjectEvent(190219,7,WallOnDamage)
-RegisterGameObjectEvent(190220,7,WallOnDamage)
-RegisterGameObjectEvent(191802,7,WallOnDamage)
-RegisterGameObjectEvent(191803,7,WallOnDamage)
-RegisterGameObjectEvent(190369,7,WallOnDamage)
-RegisterGameObjectEvent(190371,7,WallOnDamage)
-RegisterGameObjectEvent(190374,7,WallOnDamage)
-RegisterGameObjectEvent(190376,7,WallOnDamage)
-RegisterGameObjectEvent(190372,7,WallOnDamage)
-RegisterGameObjectEvent(190370,7,WallOnDamage)
-RegisterGameObjectEvent(191807,7,WallOnDamage)
-RegisterGameObjectEvent(191808,7,WallOnDamage)
-RegisterGameObjectEvent(191809,7,WallOnDamage)
-RegisterGameObjectEvent(191799,7,WallOnDamage)
-RegisterGameObjectEvent(191795,7,WallOnDamage)
-RegisterGameObjectEvent(191797,7,WallOnDamage)
-RegisterGameObjectEvent(191800,7,WallOnDamage)
-RegisterGameObjectEvent(191804,7,WallOnDamage)
-RegisterGameObjectEvent(191805,7,WallOnDamage)
-RegisterGameObjectEvent(191806,7,WallOnDamage)
-RegisterGameObjectEvent(191801,7,WallOnDamage)
-RegisterGameObjectEvent(191798,7,WallOnDamage)
-RegisterGameObjectEvent(191796,7,WallOnDamage)
-RegisterGameObjectEvent(192028,7,WallOnDamage)
-RegisterGameObjectEvent(192029,7,WallOnDamage)
-RegisterGameObjectEvent(190375,7,WallOnDamage)
-RegisterGameObjectEvent(191810,7,WallOnDamage)
-RegisterGameObjectEvent(190219,8,WallOnDestroy)
-RegisterGameObjectEvent(190220,8,WallOnDestroy)
-RegisterGameObjectEvent(191802,8,WallOnDestroy)
-RegisterGameObjectEvent(191803,8,WallOnDestroy)
-RegisterGameObjectEvent(190369,8,WallOnDestroy)
-RegisterGameObjectEvent(190371,8,WallOnDestroy)
-RegisterGameObjectEvent(190374,8,WallOnDestroy)
-RegisterGameObjectEvent(190376,8,WallOnDestroy)
-RegisterGameObjectEvent(190372,8,WallOnDestroy)
-RegisterGameObjectEvent(190370,8,WallOnDestroy)
-RegisterGameObjectEvent(191807,8,WallOnDestroy)
-RegisterGameObjectEvent(191808,8,WallOnDestroy)
-RegisterGameObjectEvent(191809,8,WallOnDestroy)
-RegisterGameObjectEvent(191799,8,WallOnDestroy)
-RegisterGameObjectEvent(191795,8,WallOnDestroy)
-RegisterGameObjectEvent(191797,8,WallOnDestroy)
-RegisterGameObjectEvent(191800,8,WallOnDestroy)
-RegisterGameObjectEvent(191804,8,WallOnDestroy)
-RegisterGameObjectEvent(191805,8,WallOnDestroy)
-RegisterGameObjectEvent(191806,8,WallOnDestroy)
-RegisterGameObjectEvent(191801,8,WallOnDestroy)
-RegisterGameObjectEvent(191798,8,WallOnDestroy)
-RegisterGameObjectEvent(191796,8,WallOnDestroy)
-RegisterGameObjectEvent(192028,8,WallOnDestroy)
-RegisterGameObjectEvent(192029,8,WallOnDestroy)
-RegisterGameObjectEvent(190375,8,WallOnDestroy)
-RegisterGameObjectEvent(191810,8,WallOnDestroy)
-RegisterGameObjectEvent(190221,7,FTOnDamage)
-RegisterGameObjectEvent(190378,7,FTOnDamage)
-RegisterGameObjectEvent(190373,7,FTOnDamage)
-RegisterGameObjectEvent(190377,7,FTOnDamage)
-RegisterGameObjectEvent(190221,8,FTOnDestroy)
-RegisterGameObjectEvent(190378,8,FTOnDestroy)
-RegisterGameObjectEvent(190373,8,FTOnDestroy)
-RegisterGameObjectEvent(190377,8,FTOnDestroy)
-RegisterGameObjectEvent(190356,7,STOnDamage)
-RegisterGameObjectEvent(190357,7,STOnDamage)
-RegisterGameObjectEvent(190358,7,STOnDamage)
-RegisterGameObjectEvent(190356,8,STOnDestroy)
-RegisterGameObjectEvent(190357,8,STOnDestroy)
-RegisterGameObjectEvent(190358,8,STOnDestroy)
-RegisterGameObjectEvent(192028,7,ShopOnDamage)
-RegisterGameObjectEvent(192028,8,ShopOnDestroy)
-RegisterGameObjectEvent(192029,7,ShopOnDamage)
-RegisterGameObjectEvent(192029,8,ShopOnDestroy)
-RegisterGameObjectEvent(192030,7,ShopOnDamage)
-RegisterGameObjectEvent(192030,8,ShopOnDestroy)
-RegisterGameObjectEvent(192031,7,ShopOnDamage)
-RegisterGameObjectEvent(192031,8,ShopOnDestroy)
-RegisterGameObjectEvent(192032,7,ShopOnDamage)
-RegisterGameObjectEvent(192032,8,ShopOnDestroy)
-RegisterGameObjectEvent(192033,7,ShopOnDamage)
-RegisterGameObjectEvent(192033,8,ShopOnDestroy)
+for i = 1, #go_wall do
+RegisterGameObjectEvent(go_wall[i][1],7,WallOnDamage)
+RegisterGameObjectEvent(go_wall[i][1],8,WallOnDestroy)
+end
+for i = 1, #go_f_tower do
+RegisterGameObjectEvent(go_f_tower[i][1],7,FTOnDamage)
+RegisterGameObjectEvent(go_f_tower[i][1],8,FTOnDestroy)
+end
+for i = 1, #go_s_tower do
+RegisterGameObjectEvent(go_s_tower[i][1],7,STOnDamage)
+RegisterGameObjectEvent(go_s_tower[i][1],8,STOnDestroy)
+end
+for i = 1, #workshop_data do
+RegisterGameObjectEvent(workshop_data[i][1],7,ShopOnDamage)
+RegisterGameObjectEvent(workshop_data[i][1],8,ShopOnDestroy)
+end
 	print("-- Wintergrasp loaded --")
