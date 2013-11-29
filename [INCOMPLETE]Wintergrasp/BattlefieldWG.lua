@@ -1395,6 +1395,11 @@ for i = 1, #workshop_data do
 	end
 end
 end
+-- [[ Spirit Guide]]
+function SpiritGuideAura (pUnit, Event)
+	pUnit:Root()
+	pUnit:FullCastSpell(22011)
+end
 
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
@@ -1420,6 +1425,8 @@ RegisterServerHook(16, "DebugWG")
 RegisterServerHook(2,KillPlayer)
 RegisterServerHook(15,OnZoneEnter)
 RegisterServerHook(4,OnEnterBuff)
+RegisterUnitEvent(31841, 18, "SpiritGuideAura")
+RegisterUnitEvent(31842, 18, "SpiritGuideAura")
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
 for i = 1, #go_wall do
