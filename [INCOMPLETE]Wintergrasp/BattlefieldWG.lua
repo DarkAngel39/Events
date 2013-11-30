@@ -135,6 +135,7 @@ local SPELL_BUILD_CATAPULT = 56663
 local SPELL_BUILD_DEMOLISHER = 56575
 local SPELL_BUILD_ENGINE_A = 56661
 local SPELL_BUILD_ENGINE_H = 61408
+local SPIRIT_HEAL_CHANNEL = 22011
 
  -- Reward spells
 local SPELL_VICTORY_REWARD = 56902
@@ -1398,7 +1399,7 @@ end
 -- [[ Spirit Guide]]
 function SpiritGuideAura (pUnit, Event)
 	pUnit:Root()
-	pUnit:FullCastSpell(22011)
+	pUnit:FullCastSpell(SPIRIT_HEAL_CHANNEL)
 end
 
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
