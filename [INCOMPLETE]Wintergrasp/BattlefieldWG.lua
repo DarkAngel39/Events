@@ -1,4 +1,4 @@
-local TIME_TO_BATTLE = 9000 -- How much time there will be between the battles.
+local TIME_TO_BATTLE = 90 -- How much time there will be between the battles.
 local BATTLE_TIMER = 1800 -- How long time will the battle last for. (if attacker towers are not destroyed)
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
@@ -55,7 +55,7 @@ else
 end
 
  -- UI STATES
-local WG_STATE_NEXT_BATTLE_TIME =	4354
+local WG_STATE_NEXT_BATTLE_TIME = 4354
 local WG_STATE_END_BATTLE_TIME = 3781
 local WG_HORDE_CONTROLLED = 3802
 local WG_ALLIANCE_CONTROLLED = 3803
@@ -77,6 +77,8 @@ local WG_STATE_SOUTH_NEUTRAL = 3508
 
  -- Npc's
 local NPC_DETECTION_UNIT = 27869
+local NPC_TAUNKA_SPIRIT_GUIDE = 31841
+local NPC_DWARVEN_SPIRIT_GUIDE = 31842
 local NPC_GOBLIN_ENGINEER = 30400
 local NPC_GNOME_ENGINEER = 30499
 local NPC_NOT_IMMUNE_PC_NPC = 23472
@@ -1111,6 +1113,11 @@ else
 end
 end
 
+-- Flag Allinace
+function AllianceFlag(pUnit, Event)
+	pUnit:FullCastSpell(SPELL_ALLIANCE_FLAG)
+end
+
 function AOnSelect(pUnit, event, pPlayer, id, intid, code)
 if(pUnit:GetWorldStateForZone(WG_STATE_MAX_A_VEHICLES) > pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES))then
 local arms = pPlayer:GetCreatureNearestCoords(pPlayer:GetX(),pPlayer:GetY(),pPlayer:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
@@ -1158,6 +1165,11 @@ else
 	pUnit:GossipCreateMenu(14172, pPlayer, 0)
 	pUnit:GossipSendMenu(pPlayer)
 end
+end
+
+-- Flag Horde
+function HordeFlag(pUnit, Event)
+	pUnit:FullCastSpell(SPELL_HORDE_FLAG)
 end
 
 function HOnSelect(pUnit, event, pPlayer, id, intid, code)
@@ -1398,10 +1410,17 @@ end
 end
 -- [[ Spirit Guide]]
 function SpiritGuideAura (pUnit, Event)
-	pUnit:Root()
 	pUnit:FullCastSpell(SPIRIT_HEAL_CHANNEL)
 end
 
+RegisterUnitEvent(NPC_VEHICLE_CATAPULT, 18, AllianceFlag)
+RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER, 18, AllianceFlag)
+RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_A, 18, AllianceFlag)
+RegisterUnitEvent(NPC_VEHICLE_CATAPULT, 18, HordeFlag)
+RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER, 18, HordeFlag)
+RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_H, 18, HordeFlag)
+RegisterUnitEvent(NPC_TAUNKA_SPIRIT_GUIDE, 18, SpiritGuideAura)
+RegisterUnitEvent(NPC_DWARVEN_SPIRIT_GUIDE, 18, SpiritGuideAura)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
@@ -1426,8 +1445,6 @@ RegisterServerHook(16, "DebugWG")
 RegisterServerHook(2,KillPlayer)
 RegisterServerHook(15,OnZoneEnter)
 RegisterServerHook(4,OnEnterBuff)
-RegisterUnitEvent(31841, 18, "SpiritGuideAura")
-RegisterUnitEvent(31842, 18, "SpiritGuideAura")
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
 for i = 1, #go_wall do
