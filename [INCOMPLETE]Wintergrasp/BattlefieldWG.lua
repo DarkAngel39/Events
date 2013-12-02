@@ -327,156 +327,109 @@ local self = getfenv(1)
 function Aura()
 for k,l in pairs(GetPlayersInWorld())do
 if(l:GetZoneId() ~= ZONE_WG and l:GetAreaId() ~= ZONE_WG)then
-	if(l:HasAura(SPELL_RECRUIT))then
+	while l:HasAura(SPELL_RECRUIT)do
 		l:RemoveAura(SPELL_RECRUIT)
 	end
-	if(l:HasAura(SPELL_CORPORAL))then
+	while l:HasAura(SPELL_CORPORAL)do
 		l:RemoveAura(SPELL_CORPORAL)
 	end
-	if(l:HasAura(SPELL_LIEUTENANT))then
+	while l:HasAura(SPELL_LIEUTENANT)do
 		l:RemoveAura(SPELL_LIEUTENANT)
 	end
-	if(l:HasAura(SPELL_TOWER_CONTROL))then
+	while l:HasAura(SPELL_TOWER_CONTROL)do
 		l:RemoveAura(SPELL_TOWER_CONTROL)
 	end
-	if(l:HasAura(SPELL_GREAT_HONOR))then
+	while l:HasAura(SPELL_GREAT_HONOR)do
 		l:RemoveAura(SPELL_GREAT_HONOR)
 	end
-	if(l:HasAura(SPELL_GREATER_HONOR))then
+	while l:HasAura(SPELL_GREATER_HONOR)do
 		l:RemoveAura(SPELL_GREATER_HONOR)
 	end
-	if(l:HasAura(SPELL_GREATEST_HONOR))then
+	while l:HasAura(SPELL_GREATEST_HONOR)do
 		l:RemoveAura(SPELL_GREATEST_HONOR)
 	end
-	if(l:HasAura(SPELL_VICTORY_AURA))then
+	while l:HasAura(SPELL_VICTORY_AURA)do
 		l:RemoveAura(SPELL_VICTORY_AURA)
-	end
-end
-if(l:GetAreaId() == AREA_EASTSPARK)then
-	if(eastspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(eastspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and eastspark_progress > C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(eastspark_progress < C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	end
-elseif(l:GetAreaId() == AREA_WESTSPARK)then
-	if(westspark_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(westspark_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and westspark_progress > C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(westspark_progress < C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	end
-elseif(l:GetAreaId() == AREA_SUNKENRING)then
-	if(sunkenring_progress > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(sunkenring_progress < C_BAR_CAPTURE + C_BAR_NEUTRAL and sunkenring_progress > C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(sunkenring_progress < C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	end
-elseif(l:GetAreaId() == AREA_BROKENTEMPLE)then
-	if(brokentemple_progres > C_BAR_CAPTURE + C_BAR_NEUTRAL)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(brokentemple_progres < C_BAR_CAPTURE + C_BAR_NEUTRAL and brokentemple_progres > C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	elseif(brokentemple_progres < C_BAR_CAPTURE)then
-		if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT) == false)then
-			l:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-		if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	end
-else
-	if(l:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		end
-	if(l:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-			l:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-	end
-end
-if(l:GetZoneId() == ZONE_WG and controll == 1 and l:GetTeam() == 1 and battle == 1)then
-	if(l:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
-		l:CastSpell(SPELL_TOWER_CONTROL)
-	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and l:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
-		l:CastSpell(SPELL_TOWER_CONTROL)
-	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers < l:GetAuraStackCount(SPELL_TOWER_CONTROL))then
-		l:RemoveAura(SPELL_TOWER_CONTROL)
-	end
-elseif(l:GetZoneId() == ZONE_WG and controll == 2 and l:GetTeam() == 0 and battle == 1)then
-	if(l:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
-		l:CastSpell(SPELL_TOWER_CONTROL)
-	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and l:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
-		l:CastSpell(SPELL_TOWER_CONTROL)
-	elseif(l:HasAura(SPELL_TOWER_CONTROL) and south_towers < l:GetAuraStackCount(SPELL_TOWER_CONTROL))then
-		l:RemoveAura(SPELL_TOWER_CONTROL)
-	end
-elseif(l:GetZoneId() == ZONE_WG and battle == 0)then
-	if(l:HasAura(SPELL_TOWER_CONTROL))then
-		l:RemoveAura(SPELL_TOWER_CONTROL)
 	end
 end
 end
 end
 
 function WGUpdate()
+for k,v in pairs (GetPlayersInZone(ZONE_WG))do
+if(v:GetZoneId() == ZONE_WG and controll == 1 and v:GetTeam() == 1 and battle == 1)then
+	if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
+		v:CastSpell(SPELL_TOWER_CONTROL)
+		while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers do
+			v:CastSpell(SPELL_TOWER_CONTROL)
+		end
+	elseif(v:HasAura(SPELL_TOWER_CONTROL) and v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers)then
+		while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
+			v:RemoveAura(SPELL_TOWER_CONTROL)
+		end
+	end
+elseif(v:GetZoneId() == ZONE_WG and controll == 2 and v:GetTeam() == 0 and battle == 1)then
+	if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
+		v:CastSpell(SPELL_TOWER_CONTROL)
+	elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
+		v:CastSpell(SPELL_TOWER_CONTROL)
+	elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers < v:GetAuraStackCount(SPELL_TOWER_CONTROL))then
+		v:RemoveAura(SPELL_TOWER_CONTROL)
+	end
+elseif(v:GetZoneId() == ZONE_WG and battle == 0)then
+	if(v:HasAura(SPELL_TOWER_CONTROL))then
+		v:RemoveAura(SPELL_TOWER_CONTROL)
+	end
+end
+	for i = 1, #workshop_data do
+	if(v:GetAreaId() == workshop_data[i][4])then
+		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
+			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+		end
+		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
+			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+		end
+		if(workshop_data[i][3] >= 100 - C_BAR_CAPTURE)then
+			if not(v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+				v:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+			end
+		elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE)then
+			if (v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+				v:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+				-- v:SetPhase(1)
+			end
+			if (v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+				v:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+				-- v:SetPhase(1)
+			end
+		elseif(workshop_data[i][3] <= C_BAR_CAPTURE)then
+			if not(v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+				v:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+			end
+		end	
+	end
+	end
+if(v:GetAreaId() ~= 4539 and v:GetAreaId() ~= 4538 and v:GetAreaId() ~= 4611 and v:GetAreaId() ~= 4612)then
+	if (v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
+		v:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+		v:SetPhase(1)
+	end
+	if (v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
+		v:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+		v:SetPhase(1)
+	end
+	if(controll == 2 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT) == false)then
+		v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+	elseif(controll == 1 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
+		v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+	end
+	if(controll == 1 and v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT) == false)then
+		v:CastSpell(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+	elseif(controll == 2 and v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
+		v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+	end
+end
+end
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	timer_battle = os.time() + BATTLE_TIMER
 	timer_nextbattle = 0
@@ -485,13 +438,6 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	states = 0
 	add_tokens = 0
 	starttimer = os.time()
-	if(controll == 1)then
-		eastspark_progress = 0
-		westspark_progress = 0
-	elseif(controll == 2)then
-		eastspark_progress = 100
-		westspark_progress = 100
-	end
 	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 	v:SendAreaTriggerMessage("Let the battle begin!")
 	local packetssound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
@@ -583,26 +529,6 @@ end
 			end
 			add_tokens = 1
 	end
-if(v:GetAreaId() == AREA_FORTRESS or v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T or v:GetAreaId() == AREA_C_BRIDGE or v:GetAreaId() == AREA_W_BRIDGE or v:GetAreaId() == AREA_E_BRIDGE or v:GetAreaId() == ZONE_WG)then
-	if(controll == 1)then
-		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
-			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-		end
-		v:CastSpell(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-	elseif(controll == 2)then
-		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
-			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-		end
-		v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-	end
-elseif(v:GetAreaId() ~= AREA_FORTRESS and v:GetAreaId() ~= AREA_FLAMEWATCH_T and v:GetAreaId() ~= AREA_WINTERSEDGE_T and v:GetAreaId() ~= AREA_SHADOWSIGHT_T and v:GetAreaId() ~= AREA_C_BRIDGE and v:GetAreaId() ~= AREA_W_BRIDGE and v:GetAreaId() ~= AREA_E_BRIDGE and v:GetAreaId() ~= ZONE_WG)then
-	if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
-		v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-	end
-	if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
-		v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-	end
-end
 if(stateuiset == 0)then
 	if(battle == 1)then
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
@@ -673,10 +599,14 @@ if(controll == 1)then
 		v:SetWorldStateForZone(3703, 4)
 		v:SetWorldStateForZone(3700, 4)
 		v:SetWorldStateForZone(3701, 4)
-		eastspark_progress =  0
-		westspark_progress =  0
-		sunkenring_progress = 0
-		brokentemple_progres = 0
+		workshop_data = {
+		{192028, 3698, -1, -1, -1,2,4},
+		{192029, 3699, -1, -1, -1,2,4},
+		{192030, 3700, 0, 4539, 190487,2},
+		{192031, 3701, 0, 4538, 190475,2},
+		{192032, 3702, 0, 4611, 194962,2},
+		{192033, 3703, 0, 4612, 194959,2};
+		};
 		states = 1
 		ATTACKER = "Horde"
 		DEFENDER = "Alliance"
@@ -721,10 +651,14 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(3703, 7)
 		v:SetWorldStateForZone(3700, 7)
 		v:SetWorldStateForZone(3701, 7)
-		eastspark_progress = 100
-		westspark_progress = 100
-		sunkenring_progress = 100
-		brokentemple_progres = 100
+		workshop_data = {
+		{192028, 3698, -1, -1, -1,2,4},
+		{192029, 3699, -1, -1, -1,2,4},
+		{192030, 3700, 100, 4539, 190487,2},
+		{192031, 3701, 100, 4538, 190475,2},
+		{192032, 3702, 100, 4611, 194962,2},
+		{192033, 3703, 100, 4612, 194959,2};
+		};
 		states = 1
 		ATTACKER = "Alliance"
 		DEFENDER = "Horde"
@@ -743,6 +677,23 @@ end
 function DetectionUnitAIUpdate(pUnit)
 if(pUnit == nil)then
 	pUnit:RemoveAIUpdateEvent()
+end
+if(battle == 1)then
+for i = 1, #pvp_detection_data do
+	if((pUnit:GetSpawnX() < pvp_detection_data[i][2]+1 and pUnit:GetSpawnX() > pvp_detection_data[i][2]-1) and (pUnit:GetSpawnY() < pvp_detection_data[i][3]+1 and pUnit:GetSpawnY() > pvp_detection_data[i][3]-1))then
+		for k,v in pairs (pUnit:GetInRangePlayers())do
+			if(v and pUnit:GetDistanceYards(v) < 90 and v:IsInCombat())then
+				if(pUnit:GetWorldStateForZone(pvp_detection_data[i][1]) ~= 1)then
+					pUnit:SetWorldStateForZone(pvp_detection_data[i][1],1)
+				end
+			else
+				if(pUnit:GetWorldStateForZone(pvp_detection_data[i][1]) == 1)then
+					pUnit:SetWorldStateForZone(pvp_detection_data[i][1],0)
+				end
+			end
+		end
+	end
+end
 end
 if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
 	if(npcstarted == false)then
@@ -946,9 +897,10 @@ if(pGO == nil)then
 	pGO:RemoveAIUpdateEvent()
 end
 local vars = self[tostring(pGO)]
+if(pGO:GetClosestPlayer())then
 for k,m in pairs (pGO:GetInRangePlayers())do
 if(m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive() and battle == 1)then
-	if(pGO:GetDistance(m) <= 5500)then
+	if(pGO:GetDistanceYards(m) <= 90)then
 		if(m:GetTeam() == 0)then
 			vars.plrvall = vars.plrvall + 1
 		elseif(m:GetTeam() == 1)then
@@ -969,7 +921,7 @@ if(m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive() and battle == 1
 end
 end
 for i = 1, #workshop_data do
-	if(pGO:GetEntry() == workshop_data[i][5] and pGO:GetWorldStateForZone(workshop_data[i][2])~=3 and pGO:GetWorldStateForZone(workshop_data[i][2])~=6 and pGO:GetWorldStateForZone(workshop_data[i][2])~=9)then
+	if(pGO:GetEntry() == workshop_data[i][5] and pGO:GetWorldStateForZone(workshop_data[i][2])~=3 and pGO:GetWorldStateForZone(workshop_data[i][2])~=6 and pGO:GetWorldStateForZone(workshop_data[i][2])~=9 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 		if(workshop_data[i][3] + vars.plrvall/10 < 100 and workshop_data[i][3] + vars.plrvall/10 > 0)then
 			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/10)
 		elseif(workshop_data[i][3] + vars.plrvall/10 > 100)then
@@ -977,42 +929,43 @@ for i = 1, #workshop_data do
 		elseif(workshop_data[i][3] + vars.plrvall/10 < 0)then
 			workshop_data[i][3] = 0
 		end
-		if(workshop_data[i][5] == pGO:GetEntry())then
-			if(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
+		if(workshop_data[i][5] == pGO:GetEntry() and states == 1)then
+			if(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],7)
 				vehicle_vallue_a = vehicle_vallue_a + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==7)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==7 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],1)
 				vehicle_vallue_a = vehicle_vallue_a - 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==4)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==4 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],1)
 				vehicle_vallue_h = vehicle_vallue_h - 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
+			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],4)
 				vehicle_vallue_h = vehicle_vallue_h + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+			elseif(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],8)
 				vehicle_vallue_a = vehicle_vallue_a + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==8)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==8 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_a = vehicle_vallue_a - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==5)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==5 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_h = vehicle_vallue_h - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],5)
 				vehicle_vallue_h = vehicle_vallue_h + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
 			end
 		end
 	end
+end
 end
 vars.plrvall = 0
 end
@@ -1026,12 +979,9 @@ function KillCreature(pUnit, event, pLastTarget)
 						v:CastSpell(SPELL_RECRUIT)
 					else
 						pUnit:SendChatMessageToPlayer(42, 0, "You have reached Rank 1: Corporal", v)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
+						while v:HasAura(SPELL_RECRUIT)do
+							v:RemoveAura(SPELL_RECRUIT)
+						end
 						v:CastSpell(SPELL_CORPORAL)
 					end
 				elseif(v:HasAura(SPELL_CORPORAL))then
@@ -1039,12 +989,9 @@ function KillCreature(pUnit, event, pLastTarget)
 						v:CastSpell(SPELL_CORPORAL)
 					else
 						pUnit:SendChatMessageToPlayer(42, 0, "You have reached Rank 2: Lieutenant", v)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
+						while v:HasAura(SPELL_CORPORAL)do
+							v:RemoveAura(SPELL_CORPORAL)
+						end
 						v:AddAura(SPELL_LIEUTENANT,0)
 					end
 				end
@@ -1062,12 +1009,9 @@ if(battle == 1)then
 						v:CastSpell(SPELL_RECRUIT)
 					else
 						v:SendAreaTriggerMessage("You have reached Rank 1: Corporal")
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
-						v:RemoveAura(SPELL_RECRUIT)
+						while v:HasAura(SPELL_RECRUIT)do
+							v:RemoveAura(SPELL_RECRUIT)
+						end
 						v:CastSpell(SPELL_CORPORAL)
 					end
 				elseif(v:HasAura(SPELL_CORPORAL))then
@@ -1075,12 +1019,9 @@ if(battle == 1)then
 						v:CastSpell(SPELL_CORPORAL)
 					else
 						v:SendAreaTriggerMessage("You have reached Rank 2: Lieutenant")
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
-						v:RemoveAura(SPELL_CORPORAL)
+						while v:HasAura(SPELL_CORPORAL)do
+							v:RemoveAura(SPELL_CORPORAL)
+						end
 						v:AddAura(SPELL_LIEUTENANT,0)
 					end
 				end
