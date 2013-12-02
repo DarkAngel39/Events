@@ -957,7 +957,7 @@ if(m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive() and battle == 1
 				m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,workshop_data[i][3])
 			end
 		end
-		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,80)
+		m:SetWorldStateForPlayer(WG_STATE_SOUTH_NEUTRAL,C_BAR_NEUTRAL)
 	else
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_SHOW,0)
 		m:SetWorldStateForPlayer(WG_STATE_SOUTH_PROGRESS,0)
@@ -967,43 +967,43 @@ end
 end
 for i = 1, #workshop_data do
 	if(pGO:GetEntry() == workshop_data[i][5] and pGO:GetWorldStateForZone(workshop_data[i][2])~=3 and pGO:GetWorldStateForZone(workshop_data[i][2])~=6 and pGO:GetWorldStateForZone(workshop_data[i][2])~=9)then
-		if(workshop_data[i][3] <= 100.9 and workshop_data[i][3] >= -0.9)then
+		if(workshop_data[i][3] + vars.plrvall/10 < 100 and workshop_data[i][3] + vars.plrvall/10 > 0)then
 			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/10)
-		elseif(workshop_data[i][3] > 100)then
+		elseif(workshop_data[i][3] + vars.plrvall/10 > 100)then
 			workshop_data[i][3] = 100
-		elseif(workshop_data[i][3] < 0)then
+		elseif(workshop_data[i][3] + vars.plrvall/10 < 0)then
 			workshop_data[i][3] = 0
 		end
 		if(workshop_data[i][5] == pGO:GetEntry())then
-			if(workshop_data[i][3] >= 90 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
+			if(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],7)
 				vehicle_vallue_a = vehicle_vallue_a + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==7)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==7)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],1)
 				vehicle_vallue_a = vehicle_vallue_a - 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==4)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==4)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],1)
 				vehicle_vallue_h = vehicle_vallue_h - 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] <= 10 and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
+			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],4)
 				vehicle_vallue_h = vehicle_vallue_h + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] >= 90 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+			elseif(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],8)
 				vehicle_vallue_a = vehicle_vallue_a + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==8)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==8)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_a = vehicle_vallue_a - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
-			elseif(workshop_data[i][3] < 90 and workshop_data[i][3] > 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==5)then
+			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==5)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_h = vehicle_vallue_h - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
-			elseif(workshop_data[i][3] <= 10 and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
+			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],5)
 				vehicle_vallue_h = vehicle_vallue_h + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
@@ -1268,7 +1268,7 @@ end
 function FTOnDamage(pGO, damage)
 for i = 1, #go_f_tower do
 	if(pGO:GetEntry() == go_f_tower[i][1])then
-		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
+		if(pGO:GetHP() <= pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
 			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
 		end
 	end
@@ -1303,7 +1303,7 @@ end
 function STOnDamage(pGO, damage)
 for i = 1, #go_s_tower do
 	if(pGO:GetEntry() == go_s_tower[i][1])then
-		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_s_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 7))then
+		if(pGO:GetHP() <= pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_s_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 7))then
 			pGO:SetWorldStateForZone(go_s_tower[i][2],pGO:GetWorldStateForZone(go_s_tower[i][2])+1)
 		end
 	end
@@ -1363,7 +1363,7 @@ end
 function ShopOnDamage(pGO, damage)
 for i = 1, #workshop_data do
 if(pGO:GetEntry() == workshop_data[i][1])then
-		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(workshop_data[i][2])== 1 or pGO:GetWorldStateForZone(workshop_data[i][2])== 4 or pGO:GetWorldStateForZone(workshop_data[i][2])== 7))then
+		if(pGO:GetHP() <= pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(workshop_data[i][2])== 1 or pGO:GetWorldStateForZone(workshop_data[i][2])== 4 or pGO:GetWorldStateForZone(workshop_data[i][2])== 7))then
 			if(pGO:GetWorldStateForZone(workshop_data[i][2]) == 4)then
 				vehicle_vallue_h = vehicle_vallue_h - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
