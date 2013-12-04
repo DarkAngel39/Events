@@ -321,37 +321,6 @@ local pvp_detection_data = {
 
 local self = getfenv(1)
 
-function Aura()
-for k,l in pairs(GetPlayersInWorld())do
-if(l:GetZoneId() ~= ZONE_WG and l:GetAreaId() ~= ZONE_WG)then
-	while l:HasAura(SPELL_RECRUIT)do
-		l:RemoveAura(SPELL_RECRUIT)
-	end
-	while l:HasAura(SPELL_CORPORAL)do
-		l:RemoveAura(SPELL_CORPORAL)
-	end
-	while l:HasAura(SPELL_LIEUTENANT)do
-		l:RemoveAura(SPELL_LIEUTENANT)
-	end
-	while l:HasAura(SPELL_TOWER_CONTROL)do
-		l:RemoveAura(SPELL_TOWER_CONTROL)
-	end
-	while l:HasAura(SPELL_GREAT_HONOR)do
-		l:RemoveAura(SPELL_GREAT_HONOR)
-	end
-	while l:HasAura(SPELL_GREATER_HONOR)do
-		l:RemoveAura(SPELL_GREATER_HONOR)
-	end
-	while l:HasAura(SPELL_GREATEST_HONOR)do
-		l:RemoveAura(SPELL_GREATEST_HONOR)
-	end
-	while l:HasAura(SPELL_VICTORY_AURA)do
-		l:RemoveAura(SPELL_VICTORY_AURA)
-	end
-end
-end
-end
-
 function WGUpdate()
 for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 if(v:GetZoneId() == ZONE_WG and controll == 1 and v:GetTeam() == 1 and battle == 1)then
@@ -426,7 +395,6 @@ if(v:GetAreaId() ~= 4539 and v:GetAreaId() ~= 4538 and v:GetAreaId() ~= 4611 and
 		v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
 	end
 end
-end
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	timer_battle = os.time() + BATTLE_TIMER
 	timer_nextbattle = 0
@@ -435,12 +403,10 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	states = 0
 	add_tokens = 0
 	starttimer = os.time()
-	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 	v:SendAreaTriggerMessage("Let the battle begin!")
 	local packetssound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
 	packetssound:WriteULong(3439)
 	v:SendPacketToPlayer(packetssound)
-	end
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
@@ -449,7 +415,6 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	states = 0
 	starttimer = 0
 	south_towers = 3
-	for k,v in pairs(GetPlayersInZone(ZONE_WG))do
 	local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
 	if(controll == 1)then
 		packetseound:WriteULong(8455)
@@ -459,7 +424,6 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 		packetseound:WriteULong(8454)
 		v:SendPacketToPlayer(packetseound)
 		v:SendAreaTriggerMessage("The Horde has successfully defended the Wintergrasp fortress!")
-	end
 	end
 elseif(timer_nextbattle == os.time() + jointimer_1)then
 		local p = LuaPacket:CreatePacket(SMSG_BATTLEFIELD_MGR_ENTRY_INVITE, 12)
@@ -473,8 +437,9 @@ elseif(timer_nextbattle == os.time() + jointimer_2)then
 		p:WriteUByte(1)
 		SendPacketToZone(p, ZONE_WG)
 end
-for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
-if(v:GetZoneId() == ZONE_WG or v:GetAreaId() == ZONE_WG)then
+
+ -- for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
+ -- if(v:GetZoneId() == ZONE_WG or v:GetAreaId() == ZONE_WG)then
 if(south_towers == 0)then
 	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
 	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
@@ -492,14 +457,17 @@ end
 			end
 		end
 	elseif(battle == 0)then
-		if(v:HasAura(SPELL_RECRUIT))then
+		while v:HasAura(SPELL_RECRUIT)do
 			v:RemoveAura(SPELL_RECRUIT)
 		end
-		if(v:HasAura(SPELL_CORPORAL))then
+		while v:HasAura(SPELL_CORPORAL)do
 			v:RemoveAura(SPELL_CORPORAL)
 		end
-		if(v:HasAura(SPELL_LIEUTENANT))then
+		while v:HasAura(SPELL_LIEUTENANT)do
 			v:RemoveAura(SPELL_LIEUTENANT)
+		end
+		while v:HasAura(SPELL_TOWER_CONTROL)do
+			v:RemoveAura(SPELL_TOWER_CONTROL)
 		end
 	end
 	if(controll == 1 and battle == 0 and add_tokens == 0)then
@@ -660,7 +628,6 @@ elseif(controll == 2)then
 		ATTACKER = "Alliance"
 		DEFENDER = "Horde"
 	end
-end
 end
 end
 end
@@ -1158,6 +1125,45 @@ function zonecheck(buff_areas, ZoneId)
 	return false
 end
 print(zonecheck(buff_areas, ZoneId))
+if(OldZoneId == ZONE_WG)then
+	while pPlayer:HasAura(SPELL_RECRUIT)do
+		pPlayer:RemoveAura(SPELL_RECRUIT)
+	end
+	while pPlayer:HasAura(SPELL_CORPORAL)do
+		pPlayer:RemoveAura(SPELL_CORPORAL)
+	end
+	while pPlayer:HasAura(SPELL_LIEUTENANT)do
+		pPlayer:RemoveAura(SPELL_LIEUTENANT)
+	end
+	while pPlayer:HasAura(SPELL_TOWER_CONTROL)do
+		pPlayer:RemoveAura(SPELL_TOWER_CONTROL)
+	end
+	while pPlayer:HasAura(SPELL_GREAT_HONOR)do
+		pPlayer:RemoveAura(SPELL_GREAT_HONOR)
+	end
+	while pPlayer:HasAura(SPELL_GREATER_HONOR)do
+		pPlayer:RemoveAura(SPELL_GREATER_HONOR)
+	end
+	while pPlayer:HasAura(SPELL_GREATEST_HONOR)do
+		pPlayer:RemoveAura(SPELL_GREATEST_HONOR)
+	end
+	while pPlayer:HasAura(SPELL_VICTORY_AURA)do
+		pPlayer:RemoveAura(SPELL_VICTORY_AURA)
+	end
+	while pPlayer:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)do
+		pPlayer:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+	end
+	while pPlayer:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)do
+		pPlayer:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+	end
+	
+	while pPlayer:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)do
+		pPlayer:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
+	end
+	while pPlayer:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)do
+		pPlayer:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
+	end
+end
 end
 
 function OnEnterBuff(event, pPlayer)
@@ -1356,7 +1362,6 @@ RegisterGameObjectEvent(GO_WINTERGRASP_TITAN_RELIC,4,TitanRelickOnUse)
 RegisterUnitEvent(NPC_DETECTION_UNIT,18,DetectionUnitOnSpawn)
 RegisterUnitEvent(NPC_DETECTION_UNIT,21,DetectionUnitAIUpdate)
 RegisterTimedEvent("WGUpdate", 1000, 0)
-RegisterTimedEvent("Aura", 1000, 0)
 RegisterServerHook(16, "DebugWG")
 RegisterServerHook(2,KillPlayer)
 RegisterServerHook(15,OnZoneEnter)

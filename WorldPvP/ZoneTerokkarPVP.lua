@@ -67,7 +67,7 @@ if(pGO == nil)then
 end
 local vars = self[tostring(pGO)]
 for k,m in pairs (pGO:GetInRangePlayers())do
-if( m and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive() and zone_captured ~= 1))then
+if(m and m:IsPvPFlagged() and m:IsStealthed() == false and m:IsAlive() and zone_captured ~= 1)then
 	if(pGO:GetDistanceYards(m) <= 60)then
 		if(m:GetTeam() == 0)then
 			vars.plrvall = vars.plrvall + 1
