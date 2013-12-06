@@ -55,7 +55,7 @@ else
 end
 
  -- UI STATES
-local WG_STATE_NEXT_BATTLE_TIME =	4354
+local WG_STATE_NEXT_BATTLE_TIME = 4354
 local WG_STATE_END_BATTLE_TIME = 3781
 local WG_HORDE_CONTROLLED = 3802
 local WG_ALLIANCE_CONTROLLED = 3803
@@ -89,7 +89,8 @@ local NPC_VEHICLE_SIEGE_ENGINE_A = 28312
  -- Objects
 local GO_WINTERGRASP_TITAN_RELIC = 192829
 local GO_WINTERGRASP_VAULT_GATE = 191810
-local GO_WINTERGRASP_KEEP_COLLISION_WALL = 194162
+local GO_WINTERGRASP_KEEP_COLLISION_WALL = 194323
+local GO_WINTERGRASP_KEEP_COLLISION = 194162
 local GO_WINTERGRASP_FW_TOWER = 190358
 local GO_WINTERGRASP_WE_TOWER = 190357
 local GO_WINTERGRASP_SS_TOWER = 190356
@@ -678,40 +679,33 @@ for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 end
 if(spawnobjects == 0 and battle == 1)then
 	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100,2300000)
-	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
+	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
+	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5396.21,2840.01,432.268,3.13286,100,2300000)
 	spawnobjects = 1
 end
 if(battle == 0 and spawnobjects == 1)then
 	spawnobjects = 0
 	local relick = pUnit:GetGameObjectNearestCoords(5439.66,2840.83,430.282,GO_WINTERGRASP_TITAN_RELIC)
-	local collision = pUnit:GetGameObjectNearestCoords(5397.11,2841.54,425.901,GO_WINTERGRASP_KEEP_COLLISION_WALL)
+	local collision = pUnit:GetGameObjectNearestCoords(5397.11,2841.54,425.901,GO_WINTERGRASP_KEEP_COLLISION)
+	local wall = pUnit:GetGameObjectNearestCoords(5396.21,2840.01,432.268,GO_WINTERGRASP_KEEP_COLLISION_WALL)
 	if(relick ~= nil)then
 		relick:Despawn(1,0)
 	end
 	if(collision ~= nil)then
 		collision:Despawn(1,0)
 	end
+	if(wall ~= nil)then
+		wall:Despawn(1,0)
+	end
 end
 
 for k,v in pairs(pUnit:GetInRangeObjects())do
 if(v:GetHP() ~= nil)then -- filter all non destructable objects.
+	if(v:GetPhase()==1)then
+		v:Despawn(1,0)
+	end
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
 		v:Rebuild()
-	end
-	if(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE and battle == 1 and controll == 2 and v:GetAreaId() == AREA_FORTRESS)then -- this changes the faction of the objects but for some reason they can not be damaged as they should by the vehicles.
-		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_HORDE)
-	elseif(battle == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
-		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_NEUTRAL)
-	elseif(v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE and battle == 1 and controll == 1 and v:GetAreaId() == AREA_FORTRESS)then
-		v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_ALLIANCE)
-	elseif((v:GetAreaId() == AREA_FLAMEWATCH_T or v:GetAreaId() == AREA_WINTERSEDGE_T or v:GetAreaId() == AREA_SHADOWSIGHT_T))then
-		if(battle == 1 and controll == 2 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_ALLIANCE)then
-			v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_ALLIANCE)
-		elseif(battle == 1 and controll == 1 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_HORDE)then
-			v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_HORDE)
-		elseif(battle == 0 and v:GetUInt32Value(GAMEOBJECT_FACTION) ~= FACTION_NEUTRAL)then
-			v:SetUInt32Value(GAMEOBJECT_FACTION,FACTION_NEUTRAL)
-		end
 	end
 end
 end
@@ -1204,8 +1198,12 @@ for i = 1, #go_wall do
 		end
 		if(pGO:GetEntry() == 191810)then
 			local wall = pGO:GetGameObjectNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),GO_WINTERGRASP_KEEP_COLLISION_WALL)
+			local wall1 = pGO:GetGameObjectNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),GO_WINTERGRASP_KEEP_COLLISION)
 			if(wall)then
 				wall:Despawn(1,0)
+			end
+			if(wall1)then
+				wall1:Despawn(1,0)
 			end
 		end
 	end
