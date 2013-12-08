@@ -56,7 +56,6 @@ end
 
  -- UI STATES
 local WG_STATE_NEXT_BATTLE_TIME = 4354
-local WG_STATE_END_BATTLE_TIME = 3781
 local WG_HORDE_CONTROLLED = 3802
 local WG_ALLIANCE_CONTROLLED = 3803
 local WG_STATE_BATTLE_UI = 3710
@@ -323,6 +322,12 @@ local pvp_detection_data = {
 local self = getfenv(1)
 
 function WGUpdate()
+if(spawnobjects == 0 and battle == 1)then
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100,2300000)
+	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
+	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5396.21,2840.01,432.268,3.13286,100,2300000)
+	spawnobjects = 1
+end
 for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 if(v:GetZoneId() == ZONE_WG and controll == 1 and v:GetTeam() == 1 and battle == 1)then
 	if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
@@ -676,12 +681,6 @@ for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 		end
 		m:RemoveAura(SPELL_VICTORY_AURA)
 	end
-end
-if(spawnobjects == 0 and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100,2300000)
-	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
-	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5396.21,2840.01,432.268,3.13286,100,2300000)
-	spawnobjects = 1
 end
 if(battle == 0 and spawnobjects == 1)then
 	spawnobjects = 0
@@ -1321,6 +1320,17 @@ if(pGO:GetEntry() == workshop_data[i][1])then
 		end
 	end
 end
+local unit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_DETECTION_UNIT)
+local entry = pGO:GetEntry()
+if(unit)then
+	for k,v in pairs(unit:GetInRangeObjects())do
+		if(v:GetEntry() == entry and v:GetHP() > pGO:GetHP())then
+			local guid = unit:GetGUID(v)
+			local damage = v:GetHP()
+			v:Damage(damage,guid)
+		end
+	end
+end
 end
 
 function ShopOnDestroy(pGO)
@@ -1336,6 +1346,17 @@ for i = 1, #workshop_data do
 			end
 			workshop_data[i][6] = 0
 			pGO:SetWorldStateForZone(workshop_data[i][2],pGO:GetWorldStateForZone(workshop_data[i][2])+1)
+		end
+	end
+end
+local unit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_DETECTION_UNIT)
+local entry = pGO:GetEntry()
+if(unit)then
+	for k,v in pairs(unit:GetInRangeObjects())do
+		if(v:GetEntry() == entry and v:GetHP() > 0)then
+			local guid = unit:GetGUID(v)
+			local damage = v:GetHP()
+			v:Damage(damage + 1,guid)
 		end
 	end
 end
