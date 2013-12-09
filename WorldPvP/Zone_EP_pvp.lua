@@ -65,16 +65,16 @@ end
 			if(v:GetAreaId() == capturepoint_data[i][9] and pGO:GetDistanceYards(v) <= 80)then
 				v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_DISPLAY,1)
 				v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_VALUE,capturepoint_data[i][2])
-				-- v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_VALUE_N,BAR_NEUTRAL)
+				v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_VALUE_N,BAR_NEUTRAL)
 			elseif(v:GetAreaId() == capturepoint_data[i][9] and pGO:GetDistanceYards(v) > 80)then
 				v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_DISPLAY,0)
 				v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_VALUE,0)
-				-- v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_VALUE_N,0)
+				v:SetWorldStateForPlayer(WORLDSTATE_CAPTUREBAR_VALUE_N,0)
 			end
 		end
 		end
 		if(capturepoint_data[i][2] + (vars.plrvall/2) < 100 and capturepoint_data[i][2] + (vars.plrvall/2) > 0)then
-			capturepoint_data[i][2] = capturepoint_data[i][2] + (vars.plrvall/2)
+			capturepoint_data[i][2] = capturepoint_data[i][2] + (vars.plrvall/20)
 		elseif(capturepoint_data[i][2] + (vars.plrvall/2) >= 100)then
 			capturepoint_data[i][2] = 100
 		elseif(capturepoint_data[i][2] + (vars.plrvall/2) <= 0)then
