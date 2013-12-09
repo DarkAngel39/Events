@@ -197,6 +197,8 @@ local CMSG_BATTLEFIELD_JOIN = 0x23E
 local SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
 local SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
 
+local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
+
  -- Fortress destructable objects
 local go_wall = {
 {190219, 3749},
@@ -242,9 +244,9 @@ local go_s_tower = {
 local workshop_data = {
 {192028, 3698, -1, -1, -1,2,4},
 {192029, 3699, -1, -1, -1,2,4},
-{192030, 3700, brokentemple_progres, 4539, 190487,2},
+{192030, 3700, brokentemple_progres, 4539, 192627,2},
 {192031, 3701, sunkenring_progress, 4538, 190475,2},
-{192032, 3702, westspark_progress, 4611, 194962,2},
+{192032, 3702, westspark_progress, 4611, 194963,2},
 {192033, 3703, eastspark_progress, 4612, 194959,2};
 };
  -- Zone ID's for wg buff
@@ -573,9 +575,9 @@ if(controll == 1)then
 		workshop_data = {
 		{192028, 3698, -1, -1, -1,2,4},
 		{192029, 3699, -1, -1, -1,2,4},
-		{192030, 3700, 0, 4539, 190487,2},
+		{192030, 3700, 0, 4539, 192627,2},
 		{192031, 3701, 0, 4538, 190475,2},
-		{192032, 3702, 0, 4611, 194962,2},
+		{192032, 3702, 0, 4611, 194963,2},
 		{192033, 3703, 0, 4612, 194959,2};
 		};
 		states = 1
@@ -625,9 +627,9 @@ elseif(controll == 2)then
 		workshop_data = {
 		{192028, 3698, -1, -1, -1,2,4},
 		{192029, 3699, -1, -1, -1,2,4},
-		{192030, 3700, 100, 4539, 190487,2},
+		{192030, 3700, 100, 4539, 192627,2},
 		{192031, 3701, 100, 4538, 190475,2},
-		{192032, 3702, 100, 4611, 194962,2},
+		{192032, 3702, 100, 4611, 194963,2},
 		{192033, 3703, 100, 4612, 194959,2};
 		};
 		states = 1
@@ -700,7 +702,7 @@ end
 
 for k,v in pairs(pUnit:GetInRangeObjects())do
 if(v:GetHP() ~= nil)then -- filter all non destructable objects.
-	if(v:GetPhase()==1)then
+	if(v:GetPhase()==1 and v:GetAreaId() ~= AREA_EASTSPARK and v:GetAreaId() ~= AREA_WESTSPARK and v:GetAreaId() ~= AREA_BROKENTEMPLE and v:GetAreaId() ~= AREA_SUNKENRING)then
 		v:Despawn(1,0)
 	end
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
@@ -845,8 +847,19 @@ data = 0,
 health = 0,
 state = 0,
 plrvall = 0
-}
-pGO:RegisterAIUpdateEvent(300)
+};
+for i = 1, #workshop_data do
+	if(workshop_data[i][5] == pGO:GetEntry())then
+		if(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE)then
+			pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+		elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE)then
+			pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+		elseif(workshop_data[i][3] >= 100 - C_BAR_CAPTURE)then
+			pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
+		end
+	end
+end 
+pGO:RegisterAIUpdateEvent(1000)
 end
 
 function AIUpdate_Cpoint(pGO)
@@ -880,7 +893,7 @@ end
 for i = 1, #workshop_data do
 	if(pGO:GetEntry() == workshop_data[i][5] and pGO:GetWorldStateForZone(workshop_data[i][2])~=3 and pGO:GetWorldStateForZone(workshop_data[i][2])~=6 and pGO:GetWorldStateForZone(workshop_data[i][2])~=9 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 		if(workshop_data[i][3] + vars.plrvall/10 < 100 and workshop_data[i][3] + vars.plrvall/10 > 0)then
-			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/10)
+			workshop_data[i][3] = workshop_data[i][3] + (vars.plrvall/5)
 		elseif(workshop_data[i][3] + vars.plrvall/10 > 100)then
 			workshop_data[i][3] = 100
 		elseif(workshop_data[i][3] + vars.plrvall/10 < 0)then
@@ -891,34 +904,42 @@ for i = 1, #workshop_data do
 				pGO:SetWorldStateForZone(workshop_data[i][2],7)
 				vehicle_vallue_a = vehicle_vallue_a + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
 			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==7 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],1)
 				vehicle_vallue_a = vehicle_vallue_a - 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==4 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],1)
 				vehicle_vallue_h = vehicle_vallue_h - 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 2 and pGO:GetWorldStateForZone(workshop_data[i][2])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],4)
 				vehicle_vallue_h = vehicle_vallue_h + 4
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
 			elseif(workshop_data[i][3] >= 100 - C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],8)
 				vehicle_vallue_a = vehicle_vallue_a + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
 			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==8 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_a = vehicle_vallue_a - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES,vehicle_vallue_a)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 			elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==5 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],2)
 				vehicle_vallue_h = vehicle_vallue_h - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 			elseif(workshop_data[i][3] <= C_BAR_CAPTURE and workshop_data[i][6] == 1 and pGO:GetWorldStateForZone(workshop_data[i][2])==2 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 90)then
 				pGO:SetWorldStateForZone(workshop_data[i][2],5)
 				vehicle_vallue_h = vehicle_vallue_h + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
 			end
 		end
 	end
@@ -1326,7 +1347,7 @@ if(unit)then
 	for k,v in pairs(unit:GetInRangeObjects())do
 		if(v:GetEntry() == entry and v:GetHP() > pGO:GetHP())then
 			local guid = unit:GetGUID(v)
-			local damage = v:GetHP()
+			local damage = v:GetHP() - pGO:GetHP()
 			v:Damage(damage,guid)
 		end
 	end
