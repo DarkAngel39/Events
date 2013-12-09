@@ -63,7 +63,15 @@ pGO:RegisterAIUpdateEvent(1000)
 self[tostring(pGO)] = {
 plrvall = 0
 }
-pGO:SetByte(GAMEOBJECT_BYTES_1,3,2)
+for i = 1, #capturepoint_data do
+	if(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] >= 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
+	elseif(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+	elseif(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] <= BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+	end
+end
 end
 
 function AIUpdate(pGO)
@@ -115,6 +123,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				alliance_tower = alliance_tower + 1
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_ALLIANCE_COUNT,alliance_tower)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
 				for k, plr in pairs (pGO:GetInRangePlayers())do
 					if(plr and plr:IsPvPFlagged() and plr:IsStealthed() == false and plr:IsAlive() and pGO:GetDistanceYards(plr) <= 60)then
 						for i = 1, #questsA do
@@ -140,6 +149,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				horde_tower = horde_tower + 1
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_HORDE_COUNT,horde_tower)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
 				for k, plr in pairs (pGO:GetInRangePlayers())do
 					if(plr and plr:IsPvPFlagged() and plr:IsStealthed() == false and plr:IsAlive() and pGO:GetDistanceYards(plr) <= 60)then
 						for i = 1, #questsH do
@@ -165,6 +175,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
 				alliance_tower = alliance_tower - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_ALLIANCE_COUNT,alliance_tower)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 				for k,flag in pairs (pGO:GetInRangeObjects())do
 				if(flag and flag:GetEntry() == capturepoint_data[i][12])then
 					flag:SetByte(GAMEOBJECT_BYTES_1,2,capturepoint_data[i][10])
@@ -179,6 +190,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
 				horde_tower = horde_tower - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_HORDE_COUNT,horde_tower)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 				for k,flag in pairs (pGO:GetInRangeObjects())do
 				if(flag and flag:GetEntry() == capturepoint_data[i][12])then
 					flag:SetByte(GAMEOBJECT_BYTES_1,2,capturepoint_data[i][10])

@@ -30,6 +30,8 @@ local WORLDSTATE_CAPTUREBAR_DISPLAY =	2623
 local WORLDSTATE_CAPTUREBAR_VALUE =		2625
 local WORLDSTATE_CAPTUREBAR_VALUE_N =	2624
 
+local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
+
 local QUEST_A = 11505
 local QUEST_H = 11506
 
@@ -59,6 +61,15 @@ pGO:RegisterAIUpdateEvent(1000)
 self[tostring(pGO)] = {
 plrvall = 0
 }
+for i = 1, #capturepoint_data do
+	if(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] >= 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
+	elseif(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+	elseif(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] <= BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+	end
+end
 end
 
 function AIUpdate(pGO)
@@ -106,6 +117,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				a_towers = a_towers + 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TOWER_COUNT,a_towers)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
 				for k,v in pairs (pGO:GetInRangePlayers())do
 					if(pGO:GetDistanceYards(v) <= 60 and v:GetQuestObjectiveCompletion(QUEST_A, 0) and v:GetTeam() == 0)then
 						v:AdvanceQuestObjective(QUEST_A, 0)
@@ -117,6 +129,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				h_towers = h_towers + 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TOWER_COUNT,h_towers)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
 				for k,v in pairs (pGO:GetInRangePlayers())do
 					if(pGO:GetDistanceYards(v) <= 60 and v:GetQuestObjectiveCompletion(QUEST_H, 0) and v:GetTeam() == 1)then
 						v:AdvanceQuestObjective(QUEST_H, 0)
@@ -128,12 +141,14 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
 				h_towers = h_towers - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TOWER_COUNT,h_towers)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][5])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 60)then
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
 				a_towers = a_towers - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TOWER_COUNT,a_towers)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
 			end
 		end
 	end
