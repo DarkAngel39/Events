@@ -84,6 +84,8 @@ local NPC_VEHICLE_CATAPULT = 27881
 local NPC_VEHICLE_DEMOLISHER = 28094
 local NPC_VEHICLE_SIEGE_ENGINE_H = 32627
 local NPC_VEHICLE_SIEGE_ENGINE_A = 28312
+local NPC_DWARVEN_SPIRIT_GUIDE = 31842
+local NPC_TAUNKA_SPIRIT_GUIDE = 31841
 
  -- Objects
 local GO_WINTERGRASP_TITAN_RELIC = 192829
@@ -135,6 +137,8 @@ local SPELL_BUILD_CATAPULT = 56663
 local SPELL_BUILD_DEMOLISHER = 56575
 local SPELL_BUILD_ENGINE_A = 56661
 local SPELL_BUILD_ENGINE_H = 61408
+local SPELL_A_FLAG = 14268
+local SPELL_H_FLAG = 14267
 
  -- Reward spells
 local SPELL_VICTORY_REWARD = 56902
@@ -150,6 +154,9 @@ local SPELL_VICTORY_AURA = 60044
 local SPELL_WINTERGRASP_WATER = 36444
 local SPELL_ESSENCE_OF_WINTERGRASP = 57940
 local SPELL_WINTERGRASP_RESTRICTED_FLIGHT_AREA = 58730
+
+-- Spirit Guide spells:
+local SPELL_SPIRIT_GUIDE_AURA = 22011
 
  -- Phasing spells
 local SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT = 56618 -- phase 16
@@ -1383,6 +1390,34 @@ if(unit)then
 end
 end
 
+function OnSpawnEngine(pUnit, event)
+if(pUnit:GetFaction() == FACTION_HORDE)then
+	pUnit:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) + 1)
+	pUnit:CastSpell(SPELL_HORDE_FLAG)
+elseif(pUnit:GetFaction() == FACTION_ALLIANCE)then
+	pUnit:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) + 1)
+	pUnit:CastSpell(SPELL_ALLIANCE_FLAG)
+end
+end
+
+function OnDiedEngine(pUnit)
+if(pUnit:GetFaction() == FACTION_HORDE)then
+	pUnit:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) - 1)
+	pUnit:Despawn(15000,0)
+elseif(pUnit:GetFaction() == FACTION_ALLIANCE)then
+	pUnit:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) - 1)
+	pUnit:Despawn(15000,0)
+end
+end
+
+RegisterUnitEvent(NPC_VEHICLE_CATAPULT,18,OnSpawnEngine)
+RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER,18,OnSpawnEngine)
+RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_H,18,OnSpawnEngine)
+RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_A,18,OnSpawnEngine)
+RegisterUnitEvent(NPC_VEHICLE_CATAPULT,4,OnDiedEngine)
+RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER,4,OnDiedEngine)
+RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_H,4,OnDiedEngine)
+RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_A,4,OnDiedEngine)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
