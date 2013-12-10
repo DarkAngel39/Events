@@ -3,7 +3,6 @@ local WORLDSTATE_CAPTUREBAR_VALUE =		2427
 local WORLDSTATE_CAPTUREBAR_VALUE_N =	2428
 local WORLDSTATE_TOWER_COUNT_A =		2327
 local WORLDSTATE_TOWER_COUNT_H =		2328
-local GO_T_FLAG = 182106
 local NPC_
 local ZONE_EP = 139
 
@@ -132,7 +131,7 @@ end
 					flag:SetByte(GAMEOBJECT_BYTES_1,2,1)
 				end
 				end
-			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][5])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
+			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][4])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
 				pGO:SetWorldStateForZone(capturepoint_data[i][7],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][6],1)
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
@@ -146,7 +145,7 @@ end
 					flag:SetByte(GAMEOBJECT_BYTES_1,2,21)
 				end
 				end
-			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][4])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
+			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][5])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
 				pGO:SetWorldStateForZone(capturepoint_data[i][7],1)
 				pGO:SetWorldStateForZone(capturepoint_data[i][6],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
@@ -184,10 +183,93 @@ end
 	end
 end
 vars.plrvall = 0
+for k,v in pairs(GetPlayersInZone(ZONE_EP))do
+	if(v and (a_tower_num > 0 or h_tower_num > 0))then
+		for i = 1, #buffs do
+			if(a_tower_num == buffs[i][3] and v:GetTeam() == 0)then
+				if(v:HasAura(buffs[i][1]) == false)then
+					v:AddAura(buffs[i][1],0)
+				end
+			elseif(a_tower_num ~= buffs[i][3] and v:GetTeam() == 0)then
+				if(v:HasAura(buffs[i][1]))then
+					v:RemoveAura(buffs[i][1])
+				end
+			elseif(h_tower_num == buffs[i][3] and v:GetTeam() == 1)then
+				if(v:HasAura(buffs[i][2]) == false)then
+					v:AddAura(buffs[i][2],0)
+				end
+			elseif(h_tower_num ~= buffs[i][3] and v:GetTeam() == 1)then
+				if(v:HasAura(buffs[i][2]))then
+					v:RemoveAura(buffs[i][2])
+				end
+			end
+		end
+	end
 end
+end
+
+function OnZone(event, pPlayer, ZoneId, OldZoneId)
+if(ZoneId == ZONE_EP and (a_tower_num > 0 or h_tower_num > 0))then
+	for i = 1, #buffs do
+		if(a_tower_num == buffs[i][3] and pPlayer:GetTeam() == 0)then
+			if(pPlayer:HasAura(buffs[i][1]) == false)then
+				pPlayer:AddAura(buffs[i][1],0)
+			end
+		elseif(a_tower_num ~= buffs[i][3] and pPlayer:GetTeam() == 0)then
+			if(pPlayer:HasAura(buffs[i][1]))then
+				pPlayer:RemoveAura(buffs[i][1])
+			end
+		elseif(h_tower_num == buffs[i][3] and pPlayer:GetTeam() == 1)then
+			if(pPlayer:HasAura(buffs[i][2]) == false)then
+				pPlayer:AddAura(buffs[i][2],0)
+			end
+		elseif(h_tower_num ~= buffs[i][3] and pPlayer:GetTeam() == 1)then
+			if(pPlayer:HasAura(buffs[i][2]))then
+				pPlayer:RemoveAura(buffs[i][2])
+			end
+		end
+	end
+elseif(OldZoneId == ZONE_EP)then
+	for i = 1, #buffs do
+		if(pPlayer:HasAura(buffs[i][1]))then
+			pPlayer:RemoveAura(buffs[i][1])
+		end
+		if(pPlayer:HasAura(buffs[i][2]))then
+			pPlayer:RemoveAura(buffs[i][2])
+		end
+	end
+end
+end
+
+function OnEnter(event, pPlayer)
+if(pPlayer:GetZoneId() == ZONE_EP and (a_tower_num > 0 or h_tower_num > 0))then
+	for i = 1, #buffs do
+		if(a_tower_num == buffs[i][3] and pPlayer:GetTeam() == 0)then
+			if(pPlayer:HasAura(buffs[i][1]) == false)then
+				pPlayer:AddAura(buffs[i][1],0)
+			end
+		elseif(a_tower_num ~= buffs[i][3] and pPlayer:GetTeam() == 0)then
+			if(pPlayer:HasAura(buffs[i][1]))then
+				pPlayer:RemoveAura(buffs[i][1])
+			end
+		elseif(h_tower_num == buffs[i][3] and pPlayer:GetTeam() == 1)then
+			if(pPlayer:HasAura(buffs[i][2]) == false)then
+				pPlayer:AddAura(buffs[i][2],0)
+			end
+		elseif(h_tower_num ~= buffs[i][3] and pPlayer:GetTeam() == 1)then
+			if(pPlayer:HasAura(buffs[i][2]))then
+				pPlayer:RemoveAura(buffs[i][2])
+			end
+		end
+	end
+end
+end
+
 
 for i = 1, #capturepoint_data do
 RegisterGameObjectEvent(capturepoint_data[i][1],5,AIUpdate)
 RegisterGameObjectEvent(capturepoint_data[i][1],2,OnLoad)
 RegisterGameObjectEvent(capturepoint_data[i][10],2,FlagOnLoad)
 end
+RegisterServerHook(15,OnZone)
+RegisterServerHook(4,OnEnter)
