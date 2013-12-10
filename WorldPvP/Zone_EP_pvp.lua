@@ -18,6 +18,8 @@ local bar_cg = 50
 local a_tower_num = 0
 local h_tower_num = 0
 
+local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
+
 local buffs = {
 {11413, 30880, 1},
 {11414, 30683, 2},
@@ -27,19 +29,40 @@ local buffs = {
 
  -- Entry, controller,  N,  A,  H,   AN,  HN
 local capturepoint_data = {
-{182097, bar_et, 2361, 2354, 2356, 2359, 2360, 17690, 2271}, -- Eastwall Tower
-{181899, bar_nt, 2352, 2372, 2373, 2362, 2363, 17696, 2275}, -- Northpass Tower
-{182098, bar_tp, 2353, 2370, 2371, 2366, 2353, 17698, 4067}, -- Plaugewood Tower
-{182096, bar_cg, 2355, 2378, 2379, 2374, 2375, 17689, 2263}; -- Crown Guard Tower
+{182097, bar_et, 2361, 2354, 2356, 2359, 2360, 17690, 2271, 182106}, -- Eastwall Tower
+{181899, bar_nt, 2352, 2372, 2373, 2362, 2363, 17696, 2275, 182106}, -- Northpass Tower
+{182098, bar_tp, 2353, 2370, 2371, 2366, 2353, 17698, 4067, 182106}, -- Plaugewood Tower
+{182096, bar_cg, 2355, 2378, 2379, 2374, 2375, 17689, 2263, 182106}; -- Crown Guard Tower
 };
 
 local self = getfenv(1)
+
+function FlagOnLoad(pGO)
+for i = 1, #capturepoint_data do
+	if(pGO:GetEntry() == capturepoint_data[i][10] and capturepoint_data[i][2] >= 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
+	elseif(pGO:GetEntry() == capturepoint_data[i][10] and capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+	elseif(pGO:GetEntry() == capturepoint_data[i][10] and capturepoint_data[i][2] <= BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+	end
+end
+end
 
 function OnLoad(pGO)
 pGO:RegisterAIUpdateEvent(1000)
 self[tostring(pGO)] = {
 plrvall = 0
 }
+for i = 1, #capturepoint_data do
+	if(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] >= 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
+	elseif(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+	elseif(pGO:GetEntry() == capturepoint_data[i][1] and capturepoint_data[i][2] <= BAR_STATUS_1)then
+		pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+	end
+end
 end
 
 function AIUpdate(pGO)
@@ -82,29 +105,80 @@ end
 		end
 		if(pGO:GetClosestPlayer())then
 			if(capturepoint_data[i][2] >= 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][4])~=1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],1)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				a_tower_num = a_tower_num + 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TOWER_COUNT_A,a_tower_num)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
+				for k,flag in pairs (pGO:GetInRangeObjects())do
+				if(flag and flag:GetEntry() == capturepoint_data[i][10])then
+					flag:SetByte(GAMEOBJECT_BYTES_1,2,2)
+				end
+				end
 			elseif(capturepoint_data[i][2] <= BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][5])~=1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],1)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				h_tower_num = h_tower_num + 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TOWER_COUNT_H,h_tower_num)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+				for k,flag in pairs (pGO:GetInRangeObjects())do
+				if(flag and flag:GetEntry() == capturepoint_data[i][10])then
+					flag:SetByte(GAMEOBJECT_BYTES_1,2,1)
+				end
+				end
 			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][5])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],1)
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
-				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
+				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				a_tower_num = a_tower_num - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TOWER_COUNT_A,a_tower_num)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+				for k,flag in pairs (pGO:GetInRangeObjects())do
+				if(flag and flag:GetEntry() == capturepoint_data[i][10])then
+					flag:SetByte(GAMEOBJECT_BYTES_1,2,21)
+				end
+				end
 			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][4])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 80)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],1)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
+				h_tower_num = h_tower_num - 1
+				pGO:SetWorldStateForZone(WORLDSTATE_TOWER_COUNT_H,h_tower_num)
+				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+				for k,flag in pairs (pGO:GetInRangeObjects())do
+				if(flag and flag:GetEntry() == capturepoint_data[i][10])then
+					flag:SetByte(GAMEOBJECT_BYTES_1,2,21)
+				end
+				end
+			end
+			if(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and vars.plrvall == 0 and pGO:GetWorldStateForZone(capturepoint_data[i][3])~=1)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
-				h_tower_num = h_tower_num - 1
-				pGO:SetWorldStateForZone(WORLDSTATE_TOWER_COUNT_H,h_tower_num)
+			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and vars.plrvall < 0 and pGO:GetWorldStateForZone(capturepoint_data[i][7])~=1)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],1)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
+			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and vars.plrvall > 0 and pGO:GetWorldStateForZone(capturepoint_data[i][6])~=1)then
+				pGO:SetWorldStateForZone(capturepoint_data[i][7],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][6],1)
+				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
+				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 			end
 		end
 	end
@@ -115,4 +189,5 @@ end
 for i = 1, #capturepoint_data do
 RegisterGameObjectEvent(capturepoint_data[i][1],5,AIUpdate)
 RegisterGameObjectEvent(capturepoint_data[i][1],2,OnLoad)
+RegisterGameObjectEvent(capturepoint_data[i][10],2,FlagOnLoad)
 end
