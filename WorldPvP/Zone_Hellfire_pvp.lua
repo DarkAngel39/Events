@@ -6,6 +6,7 @@ local alliance_tower =	0
 local horde_tower =		0
 local BAR_NEUTRAL =		20
 local BAR_STATUS_1 =	(100 - BAR_NEUTRAL)/2
+local rebuff = false
  -- UI Worldstates.
 local WORLDSTATE_HF_SHOW_ALLIANCE_COUNT =	2476
 local WORLDSTATE_HF_SHOW_HORDE_COUNT =		2478
@@ -15,29 +16,18 @@ local WORLDSTATE_HF_C_BAR_SHOW =			2473
 local WORLDSTATE_HF_C_BAR_PROGRESS =		2474
 local WORLDSTATE_HF_C_BAR_NEUTRAL =			2475
  -- Quests
-local questsH = {
-{13411},
-{13409},
-{10110};
-};
-
-local questsA = {
-{13410},
-{13408},
-{10106};
-};
+local questsH =	{13411,13409,10110};
+local questsA = {13410,13408,10106};
  -- map info
 local ZONE_HF = 3483
 local HPBuffZones = {3483,3563,3562,3713,3714,3836};
  -- Spells
-local AlliancePlayerKillReward = 32155
-local HordePlayerKillReward = 32158
+local KILL_A = 32155
+local KILL_H = 32158
 local A_BUFF = 32071
 local H_BUFF = 32049
-
 local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
-
- -- entry id, controller,  neutral worldstate, horde worldstate, alliance worldstate, kill credit id
+ -- entry id, controller,  neutral worldstate, horde worldstate, alliance worldstate, kill credit id, name, anim a, anim n, anim h, gobber id, kill credit id
 local capturepoint_data = {
 {182175, brokenhill_val, 2485, 2484, 2483, 19032, 3671, "Broken Hill", 65, 66, 64, 183514, 2},
 {182173, stadium_val, 2472, 2470, 2471, 19029, 3669, "The Stadium", 67, 69, 68, 183515, 1},
@@ -110,7 +100,7 @@ end
 		end
 		end
 		if(capturepoint_data[i][2] + (vars.plrvall/2) < 100 and capturepoint_data[i][2] + (vars.plrvall/2) > 0)then
-			capturepoint_data[i][2] = capturepoint_data[i][2] + (vars.plrvall/2)
+			capturepoint_data[i][2] = capturepoint_data[i][2] + (vars.plrvall/25)
 		elseif(capturepoint_data[i][2] + (vars.plrvall/2) >= 100)then
 			capturepoint_data[i][2] = 100
 		elseif(capturepoint_data[i][2] + (vars.plrvall/2) <= 0)then
@@ -122,14 +112,17 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				alliance_tower = alliance_tower + 1
+				if(alliance_tower == 3)then
+					rebuff = true
+				end
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_ALLIANCE_COUNT,alliance_tower)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,2)
 				for k, plr in pairs (pGO:GetInRangePlayers())do
 					if(plr and plr:IsPvPFlagged() and plr:IsStealthed() == false and plr:IsAlive() and pGO:GetDistanceYards(plr) <= 60)then
-						for i = 1, #questsA do
-							if(plr:HasQuest(questsA[i][1]))then
-								if(plr:GetTeam() == 0 and plr:GetQuestObjectiveCompletion(questsA[i][1],capturepoint_data[i][13]) == 0 and plr:GetAreaId() == capturepoint_data[i][7])then
-									plr:AdvanceQuestObjective(questsA[i][1],capturepoint_data[i][13])
+						for m = 1, #questsA do
+							if(plr:HasQuest(questsA[m]))then
+								if(plr:GetTeam() == 0 and plr:GetQuestObjectiveCompletion(questsA[m],capturepoint_data[i][13]) == 0 and plr:GetAreaId() == capturepoint_data[i][7])then
+									plr:AdvanceQuestObjective(questsA[m],capturepoint_data[i][13])
 								end
 							end
 						end
@@ -148,14 +141,17 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],1)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],0)
 				horde_tower = horde_tower + 1
+				if(horde_tower == 3)then
+					rebuff = true
+				end
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_HORDE_COUNT,horde_tower)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
 				for k, plr in pairs (pGO:GetInRangePlayers())do
 					if(plr and plr:IsPvPFlagged() and plr:IsStealthed() == false and plr:IsAlive() and pGO:GetDistanceYards(plr) <= 60)then
-						for i = 1, #questsH do
-							if(plr:HasQuest(questsH[i][1]))then
-								if(plr:GetTeam() == 1 and plr:GetQuestObjectiveCompletion(questsH[i][1],capturepoint_data[i][13]) == 0 and plr:GetAreaId() == capturepoint_data[i][7])then
-									plr:AdvanceQuestObjective(questsH[i][1],capturepoint_data[i][13])
+						for m = 1, #questsH do
+							if(plr:HasQuest(questsH[m]))then
+								if(plr:GetTeam() == 1 and plr:GetQuestObjectiveCompletion(questsH[m],capturepoint_data[i][13]) == 0 and plr:GetAreaId() == capturepoint_data[i][7])then
+									plr:AdvanceQuestObjective(questsH[m],capturepoint_data[i][13])
 								end
 							end
 						end
@@ -173,6 +169,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
+				rebuff = true
 				alliance_tower = alliance_tower - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_ALLIANCE_COUNT,alliance_tower)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
@@ -188,6 +185,7 @@ end
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][3],1)
+				rebuff = true
 				horde_tower = horde_tower - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_HF_SHOW_HORDE_COUNT,horde_tower)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
@@ -204,27 +202,89 @@ end
 	end
 end
 vars.plrvall = 0
-
-if(alliance_tower == 3)then
-	function buff(HPBuffZones)
-	for k,v in pairs (GetPlayersInZone(HPBuffZones))do
-		for key, value in pairs(HPBuffZones) do
-			if(v:HasAura(A_BUFF) == false and v:GetTeam() == 0 and value == v:GetZoneId())then
-				v:AddAura(A_BUFF,0)
+if(rebuff == true)then
+	if(alliance_tower == 3)then
+		for i = 1, #HPBuffZones do
+			for k,v in pairs(GetPlayersInZone(HPBuffZones[i]))do
+				if(v:GetTeam() == 0 and not v:HasAura(A_BUFF))then
+					v:AddAura(A_BUFF,0)
+				end
+			end
+		end
+	elseif(horde_tower == 3 and rebuff == true)then
+		for i = 1, #HPBuffZones do
+			for k,v in pairs(GetPlayersInZone(HPBuffZones[i]))do
+				if(v:GetTeam() == 1 and not v:HasAura(H_BUFF))then
+					v:AddAura(H_BUFF,0)
+				end
+			end
+		end
+	elseif(alliance_tower ~= 3 and horde_tower ~= 3 and rebuff == true)then
+		for i = 1, #HPBuffZones do
+			for k,v in pairs(GetPlayersInZone(HPBuffZones[i]))do
+				if(v:GetTeam() == 1 and v:HasAura(H_BUFF))then
+					v:RemoveAura(H_BUFF)
+				end
+				if(v:GetTeam() == 0 and v:HasAura(A_BUFF))then
+					v:RemoveAura(A_BUFF)
+				end
 			end
 		end
 	end
-	end
-elseif(horde_tower == 3)then
-	function buff(HPBuffZones)
-	for k,v in pairs (GetPlayersInZone(HPBuffZones))do
-		for key, value in pairs(HPBuffZones) do
-			if(v:HasAura(H_BUFF) == false and v:GetTeam() == 1 and value == v:GetZoneId())then
-				v:AddAura(H_BUFF,0)
-			end
-		end
-	end
+rebuff = false
 end
+end
+
+function OnZone(event, pPlayer, ZoneId, OldZoneId)
+buffed = false
+for i = 1, #HPBuffZones do
+if(ZoneId == HPBuffZones[i])then
+	buffed = true
+end
+end
+if(buffed == true and not pPlayer:HasAura(A_BUFF) and pPlayer:GetTeam()==0 and alliance_tower == 3)then
+	pPlayer:AddAura(A_BUFF,0)
+elseif(buffed == false and pPlayer:HasAura(A_BUFF))then
+	pPlayer:RemoveAura(A_BUFF)
+elseif(buffed == true and not pPlayer:HasAura(H_BUFF) and pPlayer:GetTeam()==1 and horde_tower == 3)then
+	pPlayer:AddAura(H_BUFF,0)
+elseif(buffed == false and pPlayer:HasAura(H_BUFF))then
+	pPlayer:RemoveAura(H_BUFF)
+end
+buffed = false
+end
+
+function OnEnter(event, pPlayer)
+ZoneId = pPlayer:GetZoneId()
+buffed = false
+for i = 1, #HPBuffZones do
+if(ZoneId == HPBuffZones[i])then
+	buffed = true
+end
+end
+if(buffed == true and not pPlayer:HasAura(A_BUFF) and pPlayer:GetTeam()==0 and alliance_tower == 3)then
+	pPlayer:AddAura(A_BUFF,0)
+elseif(buffed == false and pPlayer:HasAura(A_BUFF))then
+	pPlayer:RemoveAura(A_BUFF)
+elseif(buffed == true and not pPlayer:HasAura(H_BUFF) and pPlayer:GetTeam()==1 and horde_tower == 3)then
+	pPlayer:AddAura(H_BUFF,0)
+elseif(buffed == false and pPlayer:HasAura(H_BUFF))then
+	pPlayer:RemoveAura(H_BUFF)
+end
+buffed = false
+end
+
+function PvpKill(event, pPlayer, pKilled)
+if(pPlayer:GetZoneId() == ZONE_HF)then
+	for i = 1, #capturepoint_data do
+		if(pPlayer:GetAreaId() == capturepoint_data[i][7])then
+			if(pPlayer:GetTeam() == 0)then
+				pPlayer:CastSpell(KILL_A)
+			else
+				pPlayer:CastSpell(KILL_H)
+			end
+		end
+	end
 end
 end
 
@@ -233,3 +293,6 @@ RegisterGameObjectEvent(capturepoint_data[i][1],5,AIUpdate)
 RegisterGameObjectEvent(capturepoint_data[i][1],2,OnLoad)
 RegisterGameObjectEvent(capturepoint_data[i][12],2,OnLoadBanner)
 end
+RegisterServerHook(23,PvpKill)
+RegisterServerHook(15,OnZone)
+RegisterServerHook(4,OnEnter)
