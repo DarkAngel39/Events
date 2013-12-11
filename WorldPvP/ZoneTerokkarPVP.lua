@@ -1,12 +1,8 @@
-local ALLY_QUEST = 11505
-local HORDE_QUEST = 11506
-
 local progress1 = 50
 local progress2 = 50
 local progress3 = 50
 local progress4 = 50
 local progress5 = 50
-
 local a_towers = 0
 local h_towers = 0
 
@@ -22,6 +18,8 @@ local WORLDSTATE_TK_ZONE_CAPTURABLE_UI = 2620
 local WORLDSTATE_TK_ALLIANCE_TOWER_COUNT = 2621
 local WORLDSTATE_TK_HORDE_TOWER_COUNT = 2622
 local WORLDSTATE_TK_NEUTRAL_TIMER = 2508
+local WORLDSTATE_TK_ALLIANCE_TIMER = 2767
+local WORLDSTATE_TK_HORDE_TIMER = 2768
 local WORLDSTATE_TK_HOUR_TIMER_SET = 2509
 local WORLDSTATE_TK_MINUTE_X1_TIMER_SET = 2510
 local WORLDSTATE_TK_MINUTE_X10_TIMER_SET = 2512
@@ -52,7 +50,6 @@ local capturepoint_data = {
 {183413,progress4,2696,2695,2694},
 {183414,progress5,2693,2692,2691};
 };
-
 
 local self = getfenv(1)
 
@@ -163,7 +160,7 @@ if(h_towers == 5 and zone_captured == 0)then
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X1_TIMER_SET,minute)
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_NEUTRAL_TIMER,1) -- This will be changed
+	pGO:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TIMER,1) -- This will be changed
 elseif(a_towers == 5 and zone_captured == 0)then
 	zone_captured = 1
 	minute = 0
@@ -173,7 +170,7 @@ elseif(a_towers == 5 and zone_captured == 0)then
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X1_TIMER_SET,minute)
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_NEUTRAL_TIMER,1) -- This will be changed
+	pGO:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TIMER,1) -- This will be changed
 end
 end
 

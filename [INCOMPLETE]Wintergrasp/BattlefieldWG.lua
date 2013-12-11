@@ -255,35 +255,7 @@ local workshop_data = {
 {192033, 3703, eastspark_progress, 4612, 194959,2};
 };
  -- Zone ID's for wg buff
-local buff_areas = {
-4494,
-4277,
-4100,
-4723,
-4196,
-4416,
-4820,
-4813,
-4809,
-4265,
-4228,
-4415,
-4272,
-4264,
-206,
-1196,
-3537,
-2817,
-4395,
-65,
-394,
-495,
-4742,
-210,
-3711,
-67,
-66;
-};
+local buff_areas = {4494,4277,4100,4723,4196,4416,4820,4813,4809,4265,4228,4415,4272,4264,206,1196,3537,2817,4395,65,394,495,4742,210,3711,67,66};
 
 local pvp_detection_data = {
 {3723, 5051.19, 2849.41},
@@ -334,6 +306,13 @@ if(spawnobjects == 0 and battle == 1)then
 	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
 	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5396.21,2840.01,432.268,3.13286,100,2300000)
 	spawnobjects = 1
+	for i = 1, #buff_areas do
+		for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
+			if(h:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+				h:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
+			end
+		end
+	end
 end
 for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 if(v:GetZoneId() == ZONE_WG and controll == 1 and v:GetTeam() == 1 and battle == 1)then
@@ -493,6 +472,13 @@ end
 			elseif(v:GetTeam() == 1)then
 				v:CastSpell(SPELL_DEFEAT_REWARD)
 			end
+			for i = 1, #buff_areas do
+				for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
+					if(h:GetTeam() == 0 and not h:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+						h:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
+					end
+				end
+			end
 			add_tokens = 1
 	end
 	if(controll == 2 and battle == 0 and add_tokens == 0)then
@@ -504,6 +490,13 @@ end
 				end
 			elseif(v:GetTeam() == 0)then
 				v:CastSpell(SPELL_DEFEAT_REWARD)
+			end
+			for i = 1, #buff_areas do
+				for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
+					if(h:GetTeam() == 1 and not h:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+						h:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
+					end
+				end
 			end
 			add_tokens = 1
 	end
@@ -1128,22 +1121,22 @@ if(ZoneId == ZONE_WG)then
 	elseif(battle == 1)then
 	end
 end
-function zonecheck(buff_areas, ZoneId)
-	for key, value in pairs(buff_areas) do
-		if(value == ZoneId)then
-				if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-					if(controll == pPlayer:GetTeam()+1)then
-						pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
-					end
-				end
-		 return true end
+buff = false
+for i = 1, #buff_areas do
+	if(ZoneId == buff_areas[i])then
+		buff = true
 	end
+end
+if(buff == true and pPlayer:GetTeam() == controll - 1 and battle == 0)then
+	if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
+	end
+else
 	if(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
 		pPlayer:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
 	end
-	return false
 end
-print(zonecheck(buff_areas, ZoneId))
+buff = false
 if(OldZoneId == ZONE_WG)then
 	while pPlayer:HasAura(SPELL_RECRUIT)do
 		pPlayer:RemoveAura(SPELL_RECRUIT)
@@ -1187,22 +1180,22 @@ end
 
 function OnEnterBuff(event, pPlayer)
 local ZoneId = pPlayer:GetZoneId()
-function zonecheck(buff_areas, ZoneId)
-	for key, value in pairs(buff_areas) do
-		if(value == ZoneId)then
-				if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-					if(controll == pPlayer:GetTeam()+1)then
-						pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
-					end
-				end
-		 return true end
+buff = false
+for i = 1, #buff_areas do
+	if(ZoneId == buff_areas[i])then
+		buff = true
 	end
+end
+if(buff == true and pPlayer:GetTeam() == controll - 1 and battle == 0)then
+	if not(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+		pPlayer:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
+	end
+else
 	if(pPlayer:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
 		pPlayer:RemoveAura(SPELL_ESSENCE_OF_WINTERGRASP)
 	end
-	return false
 end
-print(zonecheck(buff_areas, ZoneId))
+buff = false
 end
 
 function WallOnDamage(pGO, damage)
