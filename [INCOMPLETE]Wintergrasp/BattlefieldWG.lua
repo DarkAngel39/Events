@@ -7,7 +7,6 @@ local jointimer_1 = 120 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
 local jointimer_2 = 30 -- SMSG_BATTLEFIELD_MGR_QUEUE_INVITE
 local battle = 0
 local states = 0
-local stateuiset = 0
 local add_tokens = 1
 local starttimer = 0
 local spawnobjects = 0
@@ -298,6 +297,36 @@ local pvp_detection_data = {
 {3799, 4506.89, 4030.26};
 };
 
+local shop_banner_id = {
+ -- point id, horde id, alliance id
+{194959,192272,192273,3703}, -- es
+{194959,192453,192418,3703}, -- es
+{194959,192452,192417,3703}, -- es
+{194959,192451,192416,3703}, -- es
+{194963,192408,192409,3702}, -- wp REDO ALLIANCE
+{194963,192441,192407,3702}, -- wp
+{194963,192275,192274,3702}, -- wp
+{194963,192440,192406,3702}, -- wp
+{194963,192432,192433,3702}, -- wp
+{192627,192280,192281,3700}, -- bt
+{192627,192435,192401,3700}, -- bt
+{192627,192283,192282,3700}, -- bt
+{192627,192434,192400,3700}, -- bt
+{190475,192290,192291,3701}, -- sr
+{190475,192460,192427,3701}, -- sr
+{190475,192461,192428,3701}, -- sr
+{190475,192289,192288,3701}, -- sr
+{190475,192459,192426,3701}, -- sr
+{190475,192458,192425,3701}; -- sr
+};
+
+local shop_npc_data = {
+{NPC_GOBLIN_ENGINEER,16},
+{NPC_GNOME_ENGINEER,32},
+{30739,16},
+{30740,32};
+};
+
 local self = getfenv(1)
 
 function WGUpdate()
@@ -338,58 +367,25 @@ if(battle == 1)then
 	end
 elseif(battle == 0)then
 	if(v:HasAura(SPELL_TOWER_CONTROL))then
-		v:RemoveAura(SPELL_TOWER_CONTROL)
+		while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
+			v:RemoveAura(SPELL_TOWER_CONTROL)
+		end
 	end
 end
-	for i = 1, #workshop_data do
-	if(v:GetAreaId() == workshop_data[i][4])then
-		if(v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
-			v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-		end
-		if(v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
-			v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-		end
-		if(workshop_data[i][3] >= 100 - C_BAR_CAPTURE)then
-			if not(v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-				v:CastSpell(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-			end
-		elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE)then
-			if (v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-				v:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-			end
-			if (v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-				v:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-			end
-		elseif(workshop_data[i][3] <= C_BAR_CAPTURE)then
-			if not(v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-				v:CastSpell(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-			end
-		end	
-	end
-	end
-if(v:GetAreaId() ~= 4539 and v:GetAreaId() ~= 4538 and v:GetAreaId() ~= 4611 and v:GetAreaId() ~= 4612)then
-	if (v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
-		v:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-	end
-	if (v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
-		v:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-	end
-	if(controll == 2 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT) == false)then
-		v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-	elseif(controll == 1 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
-		v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
-	end
-	if(controll == 1 and v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT) == false)then
-		v:CastSpell(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-	elseif(controll == 2 and v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
-		v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
-	end
+if(controll == 2 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT) == false)then
+	v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+elseif(controll == 1 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT))then
+	v:RemoveAura(SPELL_HORDE_CONTROL_PHASE_SHIFT)
+end
+if(controll == 1 and v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT) == false)then
+	v:CastSpell(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
+elseif(controll == 2 and v:HasAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT))then
+	v:RemoveAura(SPELL_ALLIANCE_CONTROL_PHASE_SHIFT)
 end
 if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	timer_battle = os.time() + BATTLE_TIMER
 	timer_nextbattle = 0
 	battle = 1
-	stateuiset = 0
 	states = 0
 	add_tokens = 0
 	starttimer = os.time()
@@ -401,7 +397,6 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
 	timer_nextbattle = os.time() + TIME_TO_BATTLE
 	battle = 0
-	stateuiset = 0
 	states = 0
 	starttimer = 0
 	south_towers = 3
@@ -494,7 +489,6 @@ end
 			end
 			add_tokens = 1
 	end
-if(stateuiset == 0)then
 	if(battle == 1)then
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
@@ -505,7 +499,6 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
 		v:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, vehicle_vallue_a)
 		v:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, vehicle_vallue_h)
-		stateuiset = 1
 	elseif(battle == 0 and controll == 1)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
@@ -513,7 +506,6 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
-		stateuiset = 1
 	elseif(battle == 0 and controll == 2)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
@@ -521,9 +513,8 @@ if(stateuiset == 0)then
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
-		stateuiset = 1
 	end
-end
+ -- end
 if(controll == 1)then
 	if(states == 0)then
 		v:SetWorldStateForZone(3698, 7)
@@ -661,7 +652,6 @@ end
 end
 if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
 	if(npcstarted == false)then
-		stateuiset = 0
 		states = 0
 		npcstarted = true
 	end
@@ -691,7 +681,6 @@ if(battle == 0 and spawnobjects == 1)then
 		wall:Despawn(1,0)
 	end
 end
-
 for k,v in pairs(pUnit:GetInRangeObjects())do
 if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(v:GetPhase()==1 and v:GetAreaId() ~= AREA_EASTSPARK and v:GetAreaId() ~= AREA_WESTSPARK and v:GetAreaId() ~= AREA_BROKENTEMPLE and v:GetAreaId() ~= AREA_SUNKENRING)then
@@ -700,6 +689,29 @@ if(v:GetHP() ~= nil)then -- filter all non destructable objects.
 	if(battle == 0 and v:GetHP() < v:GetMaxHP())then -- rebuild all if there is no battle and anything is damaged.
 		v:Rebuild()
 	end
+end
+for j = 1, #shop_banner_id do
+if(v:GetEntry() == shop_banner_id[j][2] or v:GetEntry() == shop_banner_id[j][3])then
+	if(pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 7 or  pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 8 or pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 9)then
+		if(v:GetEntry() == shop_banner_id[j][3] and v:GetPhase() ~= 1)then
+			v:SetPhase(1)
+		elseif(v:GetEntry() == shop_banner_id[j][2] and v:GetPhase() ~= 16)then
+			v:SetPhase(16)
+		end
+	elseif(pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 4 or  pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 5 or pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 6)then
+		if(v:GetEntry() == shop_banner_id[j][3] and v:GetPhase() ~= 32)then
+			v:SetPhase(32)
+		elseif(v:GetEntry() == shop_banner_id[j][2] and v:GetPhase() ~= 1)then
+			v:SetPhase(1)
+		end
+	elseif(pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 1 or  pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 2 or pUnit:GetWorldStateForZone(shop_banner_id[j][4]) == 3)then
+		if(v:GetEntry() == shop_banner_id[j][3] and v:GetPhase() ~= 32)then
+			v:SetPhase(32)
+		elseif(v:GetEntry() == shop_banner_id[j][2] and v:GetPhase() ~= 16)then
+			v:SetPhase(16)
+		end
+	end
+end
 end
 end
 end
@@ -714,7 +726,6 @@ local timebattle = os.time() - starttimer
 		controll = 2
 		states = 0
 		pGO:Despawn(1,0)
-		stateuiset = 0
 		starttimer = 0
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
@@ -745,7 +756,6 @@ local timebattle = os.time() - starttimer
 		controll = 1
 		states = 0
 		pGO:Despawn(1,0)
-		stateuiset = 0
 		starttimer = 0
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
@@ -835,8 +845,6 @@ end
 
 function OnSP_Cpoint(pGO)
 self[tostring(pGO)] = {
-data = 0,
-health = 0,
 state = 0,
 plrvall = 0
 };
@@ -932,6 +940,31 @@ for i = 1, #workshop_data do
 				vehicle_vallue_h = vehicle_vallue_h + 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,1)
+			end
+		end
+		for k,npc in pairs(pGO:GetInRangeUnits())do
+			for j = 1, #shop_npc_data do
+				if(npc:IsCreature() and shop_npc_data[j][1] == npc:GetEntry())then
+					if(workshop_data[i][3] >= 100 - C_BAR_CAPTURE)then
+						if(shop_npc_data[j][2] == 32 and npc:GetPhase() ~= 1)then
+							npc:SetPhase(1)
+						elseif(shop_npc_data[j][2] == 16 and npc:GetPhase() ~= 16)then
+							npc:SetPhase(16)
+						end
+					elseif(workshop_data[i][3] <= C_BAR_CAPTURE)then
+						if(shop_npc_data[j][2] == 32 and npc:GetPhase() ~= 32)then
+							npc:SetPhase(32)
+						elseif(shop_npc_data[j][2] == 16 and npc:GetPhase() ~= 1)then
+							npc:SetPhase(1)
+						end
+					else
+						if(shop_npc_data[j][2] == 32 and npc:GetPhase() ~= 32)then
+							npc:SetPhase(32)
+						elseif(shop_npc_data[j][2] == 16 and npc:GetPhase() ~= 16)then
+							npc:SetPhase(16)
+						end
+					end
+				end
 			end
 		end
 	end
