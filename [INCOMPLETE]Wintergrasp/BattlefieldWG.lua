@@ -241,18 +241,18 @@ local go_f_tower = {
 };
  -- South towers
 local go_s_tower = {
-{190356, 3704},
-{190357, 3705},
-{190358, 3706};
+{190356, 3704, "Shadowsight Tower"},
+{190357, 3705, "Winter's Edge Tower"},
+{190358, 3706, "Flamewatch Tower"};
 };
  -- Workshop data
 local workshop_data = {
-{192028, 3698, -1, -1, -1,2,4},
-{192029, 3699, -1, -1, -1,2,4},
-{192030, 3700, brokentemple_progres, 4539, 192627,2},
-{192031, 3701, sunkenring_progress, 4538, 190475,2},
-{192032, 3702, westspark_progress, 4611, 194963,2},
-{192033, 3703, eastspark_progress, 4612, 194959,2};
+{192028, 3698, -1, -1, -1,2,4, "West Fortress vehicle workshop"},
+{192029, 3699, -1, -1, -1,2,4, "East Fortress vehicle workshop"},
+{192030, 3700, brokentemple_progres, 4539, 192627,2, "Broken Temple vehicle workshop"},
+{192031, 3701, sunkenring_progress, 4538, 190475,2, "Sunken Ring vehicle workshop"},
+{192032, 3702, westspark_progress, 4611, 194963,2, "Westspark vehicle workshop"},
+{192033, 3703, eastspark_progress, 4612, 194959,2, "Eastspark vehicle workshop"};
 };
  -- Zone ID's for wg buff
 local buff_areas = {4494,4277,4100,4723,4196,4416,4820,4813,4809,4265,4228,4415,4272,4264,206,1196,3537,2817,4395,65,394,495,4742,210,3711,67,66};
@@ -315,26 +315,28 @@ if(spawnobjects == 0 and battle == 1)then
 	end
 end
 for k,v in pairs (GetPlayersInZone(ZONE_WG))do
-if(v:GetZoneId() == ZONE_WG and controll == 1 and v:GetTeam() == 1 and battle == 1)then
-	if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
-		v:CastSpell(SPELL_TOWER_CONTROL)
-		while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers do
+if(battle == 1)then
+	if((v:GetTeam() == 0 and controll == 2) or (v:GetTeam() == 1 and controll == 1))then
+		if not(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0)then
 			v:CastSpell(SPELL_TOWER_CONTROL)
+			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers do
+				v:CastSpell(SPELL_TOWER_CONTROL)
+			end
+		elseif(v:HasAura(SPELL_TOWER_CONTROL))then
+			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
+				v:RemoveAura(SPELL_TOWER_CONTROL)
+			end
 		end
-	elseif(v:HasAura(SPELL_TOWER_CONTROL) and v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers)then
-		while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
-			v:RemoveAura(SPELL_TOWER_CONTROL)
+	else
+		if(south_towers < 3 and not v:HasAura(SPELL_TOWER_CONTROL))then
+			v:CastSpell(SPELL_TOWER_CONTROL)
+		elseif(south_towers < 3 and v:HasAura(SPELL_TOWER_CONTROL))then
+			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < (3 - south_towers) do
+				v:CastSpell(SPELL_TOWER_CONTROL)
+			end
 		end
 	end
-elseif(v:GetZoneId() == ZONE_WG and controll == 2 and v:GetTeam() == 0 and battle == 1)then
-	if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
-		v:CastSpell(SPELL_TOWER_CONTROL)
-	elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
-		v:CastSpell(SPELL_TOWER_CONTROL)
-	elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers < v:GetAuraStackCount(SPELL_TOWER_CONTROL))then
-		v:RemoveAura(SPELL_TOWER_CONTROL)
-	end
-elseif(v:GetZoneId() == ZONE_WG and battle == 0)then
+elseif(battle == 0)then
 	if(v:HasAura(SPELL_TOWER_CONTROL))then
 		v:RemoveAura(SPELL_TOWER_CONTROL)
 	end
@@ -354,11 +356,9 @@ end
 		elseif(workshop_data[i][3] < 100 - C_BAR_CAPTURE and workshop_data[i][3] > C_BAR_CAPTURE)then
 			if (v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
 				v:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-				-- v:SetPhase(1)
 			end
 			if (v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
 				v:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-				-- v:SetPhase(1)
 			end
 		elseif(workshop_data[i][3] <= C_BAR_CAPTURE)then
 			if not(v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
@@ -370,11 +370,9 @@ end
 if(v:GetAreaId() ~= 4539 and v:GetAreaId() ~= 4538 and v:GetAreaId() ~= 4611 and v:GetAreaId() ~= 4612)then
 	if (v:HasAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT))then
 		v:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
-		v:SetPhase(1)
 	end
 	if (v:HasAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT))then
 		v:RemoveAura(SPELL_ALLIANCE_CONTROLS_FACTORY_PHASE_SHIFT)
-		v:SetPhase(1)
 	end
 	if(controll == 2 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT) == false)then
 		v:CastSpell(SPELL_HORDE_CONTROL_PHASE_SHIFT)
@@ -429,13 +427,9 @@ elseif(timer_nextbattle == os.time() + jointimer_2)then
 		p:WriteUByte(1)
 		SendPacketToZone(p, ZONE_WG)
 end
-
- -- for k,v in pairs(GetPlayersInMap(MAP_NORTHREND))do
- -- if(v:GetZoneId() == ZONE_WG or v:GetAreaId() == ZONE_WG)then
 if(south_towers == 0)then
 	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
 	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
-	south_towers = -1
 end
 	if(v:IsPvPFlagged() ~= true)then
 		v:FlagPvP()
@@ -1279,6 +1273,10 @@ for i = 1, #go_s_tower do
 		if(pGO:GetWorldStateForZone(go_s_tower[i][2])== 2 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 5 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 8)then
 			pGO:SetWorldStateForZone(go_s_tower[i][2],pGO:GetWorldStateForZone(go_s_tower[i][2])+1)
 		end
+		for k,g in pairs(GetPlayersInZone(ZONE_WG))do
+			g:SendBroadcastMessage("The "..go_s_tower[i][3].." was destroyed by the "..DEFENDER.."!")
+			g:SendAreaTriggerMessage("The "..go_s_tower[i][3].." was destroyed by the "..DEFENDER.."!")
+		end
 	end
 end
 for k,g in pairs(pGO:GetInRangePlayers())do
@@ -1301,25 +1299,7 @@ for k,g in pairs(pGO:GetInRangePlayers())do
 			end
 		end
 	end
-if(pGO:GetEntry() == GO_WINTERGRASP_SS_TOWER)then
 	south_towers = south_towers - 1
-	for k,g in pairs(GetPlayersInZone(ZONE_WG))do
-		g:SendBroadcastMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
-		g:SendAreaTriggerMessage("The Shadowsight Tower was destroyed by the "..DEFENDER.."!")
-	end
-elseif(pGO:GetEntry() == GO_WINTERGRASP_WE_TOWER)then
-	south_towers = south_towers - 1
-	for k,g in pairs(GetPlayersInZone(ZONE_WG))do
-		g:SendBroadcastMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
-		g:SendAreaTriggerMessage("The Winter's Edge Tower was destroyed by the "..DEFENDER.."!")
-	end
-elseif(pGO:GetEntry() == GO_WINTERGRASP_FW_TOWER)then
-	south_towers = south_towers - 1
-	for k,g in pairs(GetPlayersInZone(ZONE_WG))do
-		g:SendBroadcastMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
-		g:SendAreaTriggerMessage("The Flamewatch Tower was destroyed by the "..DEFENDER.."!")
-	end
-end
 end
 end
 

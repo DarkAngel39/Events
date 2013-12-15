@@ -28,6 +28,9 @@ local N_BANNER = 182529
 
 local ZONE_ZM = 3521
 
+local GAMEOBJECT_BYTES_1 = 0x0006+0x000B
+local GAMEOBJECT_DYNAMIC = 0x0006+0x0008
+
 local self = getfenv(1)
 
  --e,     p   A,    H,   N,    UIA,  UIH, UIN,   SD,   SN,   SV,    name
@@ -159,6 +162,9 @@ vars.plrvall = 0
 end
 
 function BannerOnLoad(pGO)
+pGO:SetByte(GAMEOBJECT_BYTES_1, 0, 1)
+pGO:SetByte(GAMEOBJECT_BYTES_1, 3, 100)
+pGO:SetUInt32Value(GAMEOBJECT_DYNAMIC, 1)
 if(pGO:GetEntry()==A_BANNER and pGO:GetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_ALLIANCE)~=1)then
 	pGO:Despawn(1,0)
 elseif(pGO:GetEntry()==H_BANNER and pGO:GetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_HORDE)~=1)then
@@ -172,6 +178,7 @@ local ZM_STANDARD_A =	32430
 local ZM_STANDARD_H =	32431
 
 function OnUse(pGO, event, pPlayer)
+pPlayer:SendAreaTriggerMessage("1111")
 rebuff = false
 if(pGO:GetEntry() == N_BANNER and pPlayer:HasAura(ZM_STANDARD_H) and pGO:GetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_NEUTRAL)==1 and h_t == 2)then
 	pGO:SetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_ALLIANCE,0)
@@ -181,6 +188,7 @@ if(pGO:GetEntry() == N_BANNER and pPlayer:HasAura(ZM_STANDARD_H) and pGO:GetWorl
 	controll_team = 1
 	rebuff = true
 	pGO:Despawn(1,0)
+	pPlayer:SendAreaTriggerMessage("2222")
 elseif(pGO:GetEntry() == N_BANNER and pPlayer:HasAura(ZM_STANDARD_A) and pGO:GetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_NEUTRAL)==1 and a_t == 2)then
 	pGO:SetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_ALLIANCE,1)
 	pGO:SetWorldStateForZone(WORLDSTATE_ZM_TWINSPIRE_GY_HORDE,0)
@@ -254,6 +262,12 @@ end
 buffed_zm = false
 end
 
+function CastSpell(event, pPlayer, SpellId, pSpellObject)
+if(SpellId == 32433 or SpellId == 32438)then
+	pPlayer:SendAreaTriggerMessage("2222")
+end
+end
+
 for i = 1, #capturepoint_data do
 RegisterGameObjectEvent(capturepoint_data[i][1],5,AIUpdate)
 RegisterGameObjectEvent(capturepoint_data[i][1],2,OnLoad)
@@ -266,3 +280,4 @@ RegisterGameObjectEvent(H_BANNER,4,OnUse)
 RegisterGameObjectEvent(N_BANNER,4,OnUse)
 RegisterServerHook(15,OnZone)
 RegisterServerHook(4,OnEnter)
+RegisterServerHook(10,CastSpell)
