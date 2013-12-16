@@ -2,7 +2,7 @@ local TIME_TO_BATTLE = 9000 -- How much time there will be between the battles.
 local BATTLE_TIMER = 1800 -- How long time will the battle last for. (if attacker towers are not destroyed)
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
-local controll = math.random(1,2)
+local controll = 2 -- math.random(1,2)
 local jointimer_1 = 120 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
 local jointimer_2 = 30 -- SMSG_BATTLEFIELD_MGR_QUEUE_INVITE
 local battle = 0
@@ -14,6 +14,7 @@ local npcstarted = false
 local south_towers = 3
 local ATTACKER = " "
 local DEFENDER = " "
+local BF_FLAGS = 0
 
  -- Old capture bar controller. Will be removed or reused
 local C_BAR_NEUTRAL = 80 -- the neutral vallue of the capture bar. MUST BE UNDER 100.
@@ -345,19 +346,20 @@ if(spawnobjects == 0 and battle == 1)then
 end
 for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 if(battle == 1)then
-	if((v:GetTeam() == 0 and controll == 2) or (v:GetTeam() == 1 and controll == 1))then
-		if not(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0)then
+	if(v:GetTeam() ~= (controll - 1))then
+		if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
 			v:CastSpell(SPELL_TOWER_CONTROL)
+		elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0)then
 			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers do
 				v:CastSpell(SPELL_TOWER_CONTROL)
 			end
-		elseif(v:HasAura(SPELL_TOWER_CONTROL))then
+		elseif(v:HasAura(SPELL_TOWER_CONTROL) and v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers)then
 			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
 				v:RemoveAura(SPELL_TOWER_CONTROL)
 			end
 		end
-	else
-		if(south_towers < 3 and not v:HasAura(SPELL_TOWER_CONTROL))then
+	elseif(v:GetTeam() == (controll - 1))then
+		if(south_towers < 3 and v:HasAura(SPELL_TOWER_CONTROL) == false)then
 			v:CastSpell(SPELL_TOWER_CONTROL)
 		elseif(south_towers < 3 and v:HasAura(SPELL_TOWER_CONTROL))then
 			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < (3 - south_towers) do
@@ -366,10 +368,8 @@ if(battle == 1)then
 		end
 	end
 elseif(battle == 0)then
-	if(v:HasAura(SPELL_TOWER_CONTROL))then
-		while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
-			v:RemoveAura(SPELL_TOWER_CONTROL)
-		end
+	while v:HasAura(SPELL_TOWER_CONTROL) do
+		v:RemoveAura(SPELL_TOWER_CONTROL)
 	end
 end
 if(controll == 2 and v:HasAura(SPELL_HORDE_CONTROL_PHASE_SHIFT) == false)then
@@ -422,9 +422,10 @@ elseif(timer_nextbattle == os.time() + jointimer_2)then
 		p:WriteUByte(1)
 		SendPacketToZone(p, ZONE_WG)
 end
-if(south_towers == 0)then
+if(south_towers == 0 and BF_FLAGS == 0)then
 	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
 	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
+	BF_FLAGS = 1
 end
 	if(v:IsPvPFlagged() ~= true)then
 		v:FlagPvP()
@@ -489,7 +490,8 @@ end
 			end
 			add_tokens = 1
 	end
-	if(battle == 1)then
+	if(battle == 1 and states == 0)then
+		BF_FLAGS = 0
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 1)
@@ -499,22 +501,27 @@ end
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
 		v:SetWorldStateForZone(WG_STATE_MAX_A_VEHICLES, vehicle_vallue_a)
 		v:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES, vehicle_vallue_h)
-	elseif(battle == 0 and controll == 1)then
+		v:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, 0)
+		v:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, 0)
+	elseif(battle == 0 and controll == 1 and states == 0)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
-	elseif(battle == 0 and controll == 2)then
+		v:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, 0)
+		v:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, 0)
+	elseif(battle == 0 and controll == 2 and states == 0)then
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, 0)
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
 		v:SetWorldStateForZone(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
+		v:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, 0)
+		v:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, 0)
 	end
- -- end
 if(controll == 1)then
 	if(states == 0)then
 		v:SetWorldStateForZone(3698, 7)
@@ -679,6 +686,34 @@ if(battle == 0 and spawnobjects == 1)then
 	end
 	if(wall ~= nil)then
 		wall:Despawn(1,0)
+	end
+end
+for k,vh in pairs(pUnit:GetInRangeUnits())do
+	if(vh:IsCreature() and (vh:GetEntry() == NPC_VEHICLE_CATAPULT or vh:GetEntry() == NPC_VEHICLE_DEMOLISHER or vh:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_H or vh:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_A))then
+		if(battle == 1)then
+			if(vh:IsInWater() and vh:HasAura(SPELL_WINTERGRASP_WATER) == false)then
+				vh:CastSpell(SPELL_WINTERGRASP_WATER)
+			elseif(vh:HasAura(SPELL_WINTERGRASP_WATER) and vh:IsInWater() == false)then
+				vh:RemoveAura(SPELL_WINTERGRASP_WATER)
+			end
+			if(vh:GetHealthPct() == 0)then
+				if(vh:GetFaction() == FACTION_HORDE)then
+					-- vh:SetFaction(FACTION_NEUTRAL)
+					vh:Despawn(1,0)
+					if(vh:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) > 0)then
+						vh:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, vh:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) - 1)
+					end
+				elseif(vh:GetFaction() == FACTION_ALLIANCE)then
+					-- vh:RemoveAura(FACTION_NEUTRAL)
+					vh:Despawn(1,0)
+					if(vh:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) > 0)then
+						vh:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, vh:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) - 1)
+					end
+				end
+			end
+		else
+			vh:Despawn(1,0)
+		end
 	end
 end
 for k,v in pairs(pUnit:GetInRangeObjects())do
@@ -1258,7 +1293,7 @@ end
 function FTOnDamage(pGO, damage)
 for i = 1, #go_f_tower do
 	if(pGO:GetEntry() == go_f_tower[i][1])then
-		if(pGO:GetHP() <= pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
+		if(((pGO:GetHP()/pGO:GetMaxHP())*100) <= 80 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
 			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
 		end
 	end
@@ -1293,7 +1328,7 @@ end
 function STOnDamage(pGO, damage)
 for i = 1, #go_s_tower do
 	if(pGO:GetEntry() == go_s_tower[i][1])then
-		if(pGO:GetHP() <= pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_s_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 7))then
+		if(((pGO:GetHP()/pGO:GetMaxHP())*100) <= 80 and (pGO:GetWorldStateForZone(go_s_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_s_tower[i][2])== 7))then
 			pGO:SetWorldStateForZone(go_s_tower[i][2],pGO:GetWorldStateForZone(go_s_tower[i][2])+1)
 		end
 	end
@@ -1404,24 +1439,10 @@ elseif(pUnit:GetFaction() == FACTION_ALLIANCE)then
 end
 end
 
-function OnDiedEngine(pUnit)
-if(pUnit:GetFaction() == FACTION_HORDE)then
-	pUnit:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, pUnit:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) - 1)
-	pUnit:Despawn(15000,0)
-elseif(pUnit:GetFaction() == FACTION_ALLIANCE)then
-	pUnit:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, pUnit:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) - 1)
-	pUnit:Despawn(15000,0)
-end
-end
-
 RegisterUnitEvent(NPC_VEHICLE_CATAPULT,18,OnSpawnEngine)
 RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER,18,OnSpawnEngine)
 RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_H,18,OnSpawnEngine)
 RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_A,18,OnSpawnEngine)
-RegisterUnitEvent(NPC_VEHICLE_CATAPULT,4,OnDiedEngine)
-RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER,4,OnDiedEngine)
-RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_H,4,OnDiedEngine)
-RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_A,4,OnDiedEngine)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,2,HOnSelect)
 RegisterUnitGossipEvent(NPC_GOBLIN_ENGINEER,1,HGengineerOnGossip)
 RegisterUnitGossipEvent(NPC_GNOME_ENGINEER,2,AOnSelect)
