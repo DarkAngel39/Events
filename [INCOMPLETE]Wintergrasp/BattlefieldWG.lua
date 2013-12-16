@@ -1293,7 +1293,7 @@ end
 function FTOnDamage(pGO, damage)
 for i = 1, #go_f_tower do
 	if(pGO:GetEntry() == go_f_tower[i][1])then
-		if(((pGO:GetHP()/pGO:GetMaxHP())*100) <= 80 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
+		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
 			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
 		end
 	end
@@ -1374,7 +1374,7 @@ end
 function ShopOnDamage(pGO, damage)
 for i = 1, #workshop_data do
 if(pGO:GetEntry() == workshop_data[i][1])then
-		if(pGO:GetHP() <= pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(workshop_data[i][2])== 1 or pGO:GetWorldStateForZone(workshop_data[i][2])== 4 or pGO:GetWorldStateForZone(workshop_data[i][2])== 7))then
+		if(((pGO:GetHP()/pGO:GetMaxHP())*100) <= 80 and (pGO:GetWorldStateForZone(workshop_data[i][2])== 1 or pGO:GetWorldStateForZone(workshop_data[i][2])== 4 or pGO:GetWorldStateForZone(workshop_data[i][2])== 7))then
 			if(pGO:GetWorldStateForZone(workshop_data[i][2]) == 4)then
 				vehicle_vallue_h = vehicle_vallue_h - 2
 				pGO:SetWorldStateForZone(WG_STATE_MAX_H_VEHICLES,vehicle_vallue_h)
