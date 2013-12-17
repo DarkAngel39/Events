@@ -328,6 +328,24 @@ local shop_npc_data = {
 {30740,32};
 };
 
+local player_tele = {
+{5314.58, 3055.85, 5306.16, 3020.84, 411.446, 5.37561}, -- nw tower
+{5269.21, 3013.84, 5306.16, 3020.84, 411.446, 5.37561}, -- nw tower
+{5391.28, 2828.09, 5401.92, 2829.91, 418.758, 6.17846}, -- enter
+{5401.63, 2853.67, 5392.81, 2854.02, 418.759, 3.07178}, -- exit
+{5196.67, 2737.34, 5192.29, 2775.30, 410.286, 0.62832}, -- se tower
+{5153.93, 2781.67, 5192.29, 2775.30, 410.286, 0.62832}, -- se tower
+{5153.41, 2901.35, 5190.47, 2906.85, 410.233, 5.37561}, -- sw tower
+{5197.05, 2944.81, 5190.47, 2906.85, 410.233, 5.37561}, -- sw tower
+{5268.70, 2666.42, 5307.62, 2659.02, 410.027, 0.75049}, -- ne tower
+{5311.44, 2618.93, 5307.62, 2659.02, 410.027, 0.75049}; -- ne tower
+};
+
+ local vehicle_tele = {
+{5314.51, 2703.69, 5249.89, 2703.11, 409.275, 3.07178}, -- e
+{5316.25, 2977.04, 5246.92, 2978.32, 409.274, 3.08923}; -- w
+};
+
 local self = getfenv(1)
 
 function WGUpdate()
@@ -836,11 +854,11 @@ end
 function PortalOnUse(pGO, event, pPlayer)
 if(pGO:GetMapId() == MAP_NORTHREND)then
 	if(pPlayer:HasAura(SPELL_TELEPORT_DEFENDER) == false)then
-		local teleportunit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
-		if(teleportunit ~= nil)then
-			local xu,yu,zu,ou = teleportunit:GetSpawnLocation()
-			pPlayer:Teleport(MAP_NORTHREND,xu,yu,zu,ou)
-			pPlayer:CastSpell(SPELL_TELEPORT_DEFENDER)
+		for i = 1,#player_tele do
+			if(pGO:GetX() > player_tele[i][1] - 1 and pGO:GetX() < player_tele[i][1] + 1 and pGO:GetY() > player_tele[i][2] - 1 and pGO:GetY() < player_tele[i][2] + 1)then
+				pPlayer:CastSpell(SPELL_TELEPORT_DEFENDER)
+				pPlayer:Teleport(MAP_NORTHREND, player_tele[i][3], player_tele[i][4], player_tele[i][5], player_tele[i][6])
+			end
 		end
 	else
 		pPlayer:SendAreaTriggerMessage("You can't do that yet!")
@@ -864,11 +882,11 @@ if(v:IsCreature())then
 		if((v:GetFaction() == FACTION_ALLIANCE and controll == 1) or (v:GetFaction() == FACTION_HORDE and controll == 2))then
 			if(v:HasAura(SPELL_TELEPORT_VEHICLE) == false)then
 				if(v:GetEntry() == NPC_VEHICLE_CATAPULT or v:GetEntry() == NPC_VEHICLE_DEMOLISHER or v:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_H or v:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_A)then
-					local teleportunit = pGO:GetCreatureNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),NPC_NOT_IMMUNE_PC_NPC)
-					if(teleportunit ~= nil)then
-						local xu,yu,zu = teleportunit:GetSpawnLocation()
-						v:TeleportCreature(xu,yu,zu)
-						v:CastSpell(SPELL_TELEPORT_VEHICLE)
+					for i = 1,#vehicle_tele do
+						if(pGO:GetX() > vehicle_tele[i][1] - 1 and pGO:GetX() < vehicle_tele[i][1] + 1 and pGO:GetY() > vehicle_tele[i][2] - 1 and pGO:GetY() < vehicle_tele[i][2] + 1)then
+							v:CastSpell(SPELL_TELEPORT_VEHICLE)
+							v:TeleportCreature(vehicle_tele[i][3], vehicle_tele[i][4], vehicle_tele[i][5], vehicle_tele[i][6])
+						end
 					end
 				end
 			end
@@ -1439,6 +1457,8 @@ elseif(pUnit:GetFaction() == FACTION_ALLIANCE)then
 	pUnit:CastSpell(SPELL_ALLIANCE_FLAG)
 end
 end
+
+
 
 RegisterUnitEvent(NPC_VEHICLE_CATAPULT,18,OnSpawnEngine)
 RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER,18,OnSpawnEngine)
