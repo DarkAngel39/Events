@@ -200,7 +200,8 @@ local CMSG_BATTLEFIELD_LIST = 0x23C
 local SMSG_BATTLEFIELD_LIST = 0x23D
 local CMSG_BATTLEFIELD_JOIN = 0x23E
 local SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
-local SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
+ -- local SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
+ local SMSG_SPIRIT_HEALER_CONFIRM = 0x222
 
 local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
 
@@ -509,6 +510,9 @@ end
 			add_tokens = 1
 	end
 	if(battle == 1 and states == 0)then
+		for k,l in pairs(GetPlayersInWorld())do
+			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
+		end
 		BF_FLAGS = 0
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
@@ -522,6 +526,9 @@ end
 		v:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, 0)
 		v:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, 0)
 	elseif(battle == 0 and controll == 1 and states == 0)then
+		for k,l in pairs(GetPlayersInWorld())do
+			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
+		end
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
@@ -531,6 +538,9 @@ end
 		v:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, 0)
 		v:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, 0)
 	elseif(battle == 0 and controll == 2 and states == 0)then
+		for k,l in pairs(GetPlayersInWorld())do
+			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
+		end
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 0)
@@ -1257,6 +1267,13 @@ if(OldZoneId == ZONE_WG)then
 		pPlayer:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
 	end
 end
+if(battle == 0 and controll == 1)then
+	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
+elseif(battle == 0 and controll == 2)then
+	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
+elseif(battle == 1)then
+	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
+end
 end
 
 function OnEnterBuff(event, pPlayer)
@@ -1277,6 +1294,13 @@ else
 	end
 end
 buff = false
+if(battle == 0 and controll == 1)then
+	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
+elseif(battle == 0 and controll == 2)then
+	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
+elseif(battle == 1)then
+	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
+end
 end
 
 function WallOnDamage(pGO, damage)
@@ -1458,8 +1482,23 @@ elseif(pUnit:GetFaction() == FACTION_ALLIANCE)then
 end
 end
 
+function SpiritHealerLoad(pUnit)
+pUnit:RegisterAIUpdateEvent(25000)
+pUnit:FullCastSpell(SPELL_SPIRITUAL_IMMUNITY)
+end
 
+function SpiritHealer_AI(pUnit)
+for k,v in pairs(pUnit:GetInRangePlayers())do
+	if(v:IsDead() and (v:GetTeam() == 1 and pUnit:GetEntry() == NPC_TAUNKA_SPIRIT_GUIDE or v:GetTeam() == 0 and pUnit:GetEntry() == NPC_DWARVEN_SPIRIT_GUIDE) and v:HasAura(SPELL_SPIRITUAL_IMMUNITY))then
+		v:ResurrectPlayer()
+	end
+end
+end
 
+RegisterUnitEvent(NPC_DWARVEN_SPIRIT_GUIDE,18,SpiritHealerLoad)
+RegisterUnitEvent(NPC_TAUNKA_SPIRIT_GUIDE,18,SpiritHealerLoad)
+RegisterUnitEvent(NPC_DWARVEN_SPIRIT_GUIDE,21,SpiritHealer_AI)
+RegisterUnitEvent(NPC_TAUNKA_SPIRIT_GUIDE,21,SpiritHealer_AI)
 RegisterUnitEvent(NPC_VEHICLE_CATAPULT,18,OnSpawnEngine)
 RegisterUnitEvent(NPC_VEHICLE_DEMOLISHER,18,OnSpawnEngine)
 RegisterUnitEvent(NPC_VEHICLE_SIEGE_ENGINE_H,18,OnSpawnEngine)
