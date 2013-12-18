@@ -1267,13 +1267,6 @@ if(OldZoneId == ZONE_WG)then
 		pPlayer:RemoveAura(SPELL_HORDE_CONTROLS_FACTORY_PHASE_SHIFT)
 	end
 end
-if(battle == 0 and controll == 1)then
-	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
-elseif(battle == 0 and controll == 2)then
-	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
-elseif(battle == 1)then
-	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
-end
 end
 
 function OnEnterBuff(event, pPlayer)
