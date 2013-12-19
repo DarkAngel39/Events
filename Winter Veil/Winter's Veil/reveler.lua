@@ -9,25 +9,25 @@ if(EmoteId == 17)then
 	local reveler = pPlayer:GetSelection()
 	if(reveler ~= nil and reveler:IsCreature())then
 		if(reveler:GetEntry() == NPC_REVELER and pPlayer:HasAura(SPELL_MISTLETOE) == false)then
-			pPlayer:FullCastSpell(SPELL_MISTLETOE)
+			reveler:FullCastSpellOnTarget(SPELL_MISTLETOE,pPlayer)
 		end
 	end
 end
 end
 
 function HandleMistletoe(spellIndex, pSpell)
-local caster = pSpell:GetCaster()
+local caster = pSpell:GetTarget()
 	if(caster and caster:IsPlayer())then
-		local cast = math.random(1,4) -- not sure about the actual drop chance.
-		if(cast == 1)then
-			caster:CastSpell(SPELL_C_SNOWFLAKE)
-		elseif(cast == 2)then
-			caster:CastSpell(SPELL_C_MISTLETOE)
-		elseif(cast == 3)then
-			caster:CastSpell(SPELL_C_FRESHHOLY)
-		end
 		local aura = caster:GetAuraObjectById(SPELL_MISTLETOE)
 		if(aura)then
+			local cast = math.random(1,4) -- not sure about the actual drop chance.
+			if(cast == 1)then
+				caster:CastSpell(SPELL_C_SNOWFLAKE)
+			elseif(cast == 2)then
+				caster:CastSpell(SPELL_C_MISTLETOE)
+			elseif(cast == 3)then
+				caster:CastSpell(SPELL_C_FRESHHOLY)
+			end
 			aura:SetNegative(1)
 		end
 	end
