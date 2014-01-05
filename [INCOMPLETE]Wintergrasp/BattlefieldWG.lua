@@ -368,10 +368,8 @@ if(battle == 1)then
 	if(v:GetTeam() ~= (controll - 1))then
 		if(v:HasAura(SPELL_TOWER_CONTROL) == false and south_towers > 0)then
 			v:CastSpell(SPELL_TOWER_CONTROL)
-		elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0)then
-			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers do
+		elseif(v:HasAura(SPELL_TOWER_CONTROL) and south_towers > 0 and v:GetAuraStackCount(SPELL_TOWER_CONTROL) < south_towers)then
 				v:CastSpell(SPELL_TOWER_CONTROL)
-			end
 		elseif(v:HasAura(SPELL_TOWER_CONTROL) and v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers)then
 			while v:GetAuraStackCount(SPELL_TOWER_CONTROL) > south_towers do
 				v:RemoveAura(SPELL_TOWER_CONTROL)
