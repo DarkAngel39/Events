@@ -211,13 +211,7 @@ local fortress_go = {
 {190373, 3713},
 {190377, 3714};
 };
- --[[ Fortress towers
-local go_f_tower = {
-{190221, 3711},
-{190378, 3712},
-{190373, 3713},
-{190377, 3714};
-}; ]]--
+
  -- South towers
 local go_s_tower = {
 {190356, 3704, "Shadowsight Tower"},
@@ -462,6 +456,8 @@ end
 	if(battle == 1 and states == 0)then
 		for k,l in pairs(GetPlayersInWorld())do
 			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
+			l:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIME, 0)
+			l:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIMER, 0)
 		end
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
@@ -477,6 +473,8 @@ end
 	elseif(battle == 0 and controll == 1 and states == 0)then
 		for k,l in pairs(GetPlayersInWorld())do
 			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
+			l:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIME, 0)
+			l:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIMER, 0)
 		end
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 1)
@@ -489,6 +487,8 @@ end
 	elseif(battle == 0 and controll == 2 and states == 0)then
 		for k,l in pairs(GetPlayersInWorld())do
 			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
+			l:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+			l:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		end
 		v:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 1)
@@ -1238,10 +1238,16 @@ end
 buff = false
 if(battle == 0 and controll == 1)then
 	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 2)
+	pPlayer:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+	pPlayer:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIMER, 1)
 elseif(battle == 0 and controll == 2)then
 	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 1)
+	pPlayer:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+	pPlayer:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIMER, 1)
 elseif(battle == 1)then
 	pPlayer:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
+	pPlayer:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIME, 0)
+	pPlayer:SetWorldStateForPlayer(WG_STATE_NEXT_BATTLE_TIMER, 0)
 end
 end
 
