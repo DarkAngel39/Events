@@ -3,8 +3,8 @@ local BATTLE_TIMER = 1800 -- How long time will the battle last for. (if attacke
 local timer_nextbattle = os.time() + TIME_TO_BATTLE
 local timer_battle = 0
 local controll = math.random(1,2)
-local jointimer_1 = 120 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
-local jointimer_2 = 30 -- SMSG_BATTLEFIELD_MGR_QUEUE_INVITE
+local jointimer_1 = 30 -- Send SMSG_BATTLEFIELD_MGR_ENTRY_INVITE
+local jointimer_2 = 900 -- SMSG_BATTLEFIELD_MGR_QUEUE_INVITE
 local battle = 0
 local states = 0
 local add_tokens = 1
@@ -14,9 +14,10 @@ local npcstarted = false
 local south_towers = 3
 local ATTACKER = " "
 local DEFENDER = " "
-local BF_FLAGS = 0
 
- -- Old capture bar controller. Will be removed or reused
+local HORDE_QUIUEUE = {}
+local ALLIANCE_QUIUEUE = {}
+
 local C_BAR_NEUTRAL = 80 -- the neutral vallue of the capture bar. MUST BE UNDER 100.
 local C_BAR_CAPTURE = (100 - C_BAR_NEUTRAL)/2
 
@@ -38,22 +39,6 @@ local brokentemple_progres = 0
 local vehicle_vallue_a = 0
 local vehicle_vallue_h = 0
 
-if(controll == 2)then
-	eastspark_progress = 100
-	westspark_progress = 100
-	sunkenring_progress = 100
-	brokentemple_progres = 100
-	vehicle_vallue_h = 8
-	vehicle_vallue_a = 16
-else
-	eastspark_progress = 0
-	westspark_progress = 0
-	sunkenring_progress = 0
-	brokentemple_progres = 0
-	vehicle_vallue_h = 16
-	vehicle_vallue_a = 8
-end
-
  -- UI STATES
 local WG_STATE_NEXT_BATTLE_TIME = 4354
 local WG_HORDE_CONTROLLED = 3802
@@ -66,8 +51,6 @@ local WG_STATE_MAX_H_VEHICLES = 3491
 local WG_STATE_CURRENT_A_VEHICLES = 3680
 local WG_STATE_MAX_A_VEHICLES = 3681
 local WG_STATE_BATTLEFIELD_STATUS_MAP = 3804
- -- Map states:
-local WG_STATE_KEEP_GATE_ANDGY = 3773
 
  -- Dynamic capturebar states
 local WG_STATE_SOUTH_SHOW = 3501
@@ -92,9 +75,6 @@ local GO_WINTERGRASP_TITAN_RELIC = 192829
 local GO_WINTERGRASP_VAULT_GATE = 191810
 local GO_WINTERGRASP_KEEP_COLLISION_WALL = 194323
 local GO_WINTERGRASP_KEEP_COLLISION = 194162
-local GO_WINTERGRASP_FW_TOWER = 190358
-local GO_WINTERGRASP_WE_TOWER = 190357
-local GO_WINTERGRASP_SS_TOWER = 190356
 local GO_WINTERGRASP_DEFENDER_H = 190763
 local GO_WINTERGRASP_DEFENDER_A = 191575
 local GO_WINTERGRASP_DEFENDER_N = 192819
@@ -113,9 +93,6 @@ local AREA_SUNKENRING = 4538
 local AREA_FLAMEWATCH_T = 4581
 local AREA_WINTERSEDGE_T = 4582
 local AREA_SHADOWSIGHT_T = 4583
-local AREA_C_BRIDGE = 4576
-local AREA_E_BRIDGE = 4557
-local AREA_W_BRIDGE = 4578
 
  -- Spells
 local SPELL_RECRUIT = 37795
@@ -176,7 +153,6 @@ local QUEST_WG_DEFEND_SIEDGE_A = 13222
 local QUEST_WG_DEFEND_SIEDGE_H = 13223
 
 -- Opcodes
-local SMSG_PLAY_SOUND = 0x2D2
 local SMSG_BATTLEFIELD_MGR_ENTRY_INVITE = 0x4DE
 local CMSG_BATTLEFIELD_MGR_ENTRY_INVITE_RESPONSE = 0x4DF
 local SMSG_BATTLEFIELD_MGR_ENTERED = 0x4E0
@@ -190,8 +166,6 @@ local CMSG_BATTLEFIELD_MGR_EXIT_REQUEST = 0x4E7
 local SMSG_BATTLEFIELD_MGR_STATE_CHANGE = 0x4E8
 local CMSG_BATTLEFIELD_MANAGER_ADVANCE_STATE = 0x4E9
 local CMSG_BATTLEFIELD_MANAGER_SET_NEXT_TRANSITION_TIME = 0x4EA
-local CMSG_START_BATTLEFIELD_CHEAT = 0x4CB
-local CMSG_END_BATTLEFIELD_CHEAT = 0x4CC
 local CMSG_LEAVE_BATTLEFIELD = 0x2E1
 local CMSG_BATTLEFIELD_PORT = 0x2D5
 local CMSG_BATTLEFIELD_STATUS = 0x2D3
@@ -201,12 +175,12 @@ local SMSG_BATTLEFIELD_LIST = 0x23D
 local CMSG_BATTLEFIELD_JOIN = 0x23E
 local SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
 local SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
- local SMSG_SPIRIT_HEALER_CONFIRM = 0x222
+local SMSG_SPIRIT_HEALER_CONFIRM = 0x222
 
 local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
 
  -- Fortress destructable objects
-local go_wall = {
+local fortress_go = {
 {190219, 3749},
 {190220, 3750},
 {191802, 3751},
@@ -231,15 +205,19 @@ local go_wall = {
 {191798, 3771},
 {191796, 3772},
 {191810, 3773},
-{190375, 3763};
-};
- -- Fortress towers
-local go_f_tower = {
+{190375, 3763},
 {190221, 3711},
 {190378, 3712},
 {190373, 3713},
 {190377, 3714};
 };
+ --[[ Fortress towers
+local go_f_tower = {
+{190221, 3711},
+{190378, 3712},
+{190373, 3713},
+{190377, 3714};
+}; ]]--
  -- South towers
 local go_s_tower = {
 {190356, 3704, "Shadowsight Tower"},
@@ -407,8 +385,7 @@ if(timer_nextbattle <= os.time() and timer_battle == 0)then
 	add_tokens = 0
 	starttimer = os.time()
 	v:SendAreaTriggerMessage("Let the battle begin!")
-	local packetssound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
-	packetssound:WriteULong(3439)
+	v:PlaySoundToPlayer(3439)
 	v:SendPacketToPlayer(packetssound)
 elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	timer_battle = 0
@@ -417,13 +394,12 @@ elseif(timer_nextbattle == 0 and timer_battle <= os.time())then
 	states = 0
 	starttimer = 0
 	south_towers = 3
-	local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
 	if(controll == 1)then
-		packetseound:WriteULong(8455)
+		v:PlaySoundToPlayer(8455)
 		v:SendPacketToPlayer(packetseound)
 		v:SendAreaTriggerMessage("The Alliance has successfully defended the Wintergrasp fortress!")
 	elseif(controll == 2)then
-		packetseound:WriteULong(8454)
+		v:PlaySoundToPlayer(8454)
 		v:SendPacketToPlayer(packetseound)
 		v:SendAreaTriggerMessage("The Horde has successfully defended the Wintergrasp fortress!")
 	end
@@ -438,11 +414,6 @@ elseif(timer_nextbattle == os.time() + jointimer_2)then
 		p:WriteULong(1)
 		p:WriteUByte(1)
 		SendPacketToZone(p, ZONE_WG)
-end
-if(south_towers == 0 and BF_FLAGS == 0)then
-	timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
-	v:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
-	BF_FLAGS = 1
 end
 	if(v:IsPvPFlagged() ~= true)then
 		v:FlagPvP()
@@ -469,49 +440,29 @@ end
 			v:RemoveAura(SPELL_TOWER_CONTROL)
 		end
 	end
-	if(controll == 1 and battle == 0 and add_tokens == 0)then
-			if(v:GetTeam() == 0)then
-				v:CastSpell(SPELL_VICTORY_REWARD)
-				v:CastSpell(SPELL_VICTORY_AURA)
-				if(v:HasQuest(QUEST_WG_VICTORY_A) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_A, 0) == 0)then
-					v:AdvanceQuestObjective(QUEST_WG_VICTORY_A, 0)
-				end
-			elseif(v:GetTeam() == 1)then
-				v:CastSpell(SPELL_DEFEAT_REWARD)
+	if(battle == 0 and add_tokens == 0)then
+		if(v:GetTeam() == controll - 1)then
+			v:CastSpell(SPELL_VICTORY_REWARD)
+			v:CastSpell(SPELL_VICTORY_AURA)
+			if(v:HasQuest(QUEST_WG_VICTORY_A) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_A, 0) == 0)then
+				v:AdvanceQuestObjective(QUEST_WG_VICTORY_A, 0)
 			end
-			for i = 1, #buff_areas do
-				for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
-					if(h:GetTeam() == 0 and not h:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-						h:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
-					end
-				end
-			end
-			add_tokens = 1
-	end
-	if(controll == 2 and battle == 0 and add_tokens == 0)then
-			if(v:GetTeam() == 1)then
-				v:CastSpell(SPELL_VICTORY_REWARD)
-				v:CastSpell(SPELL_VICTORY_AURA)
-				if(v:HasQuest(QUEST_WG_VICTORY_H) and v:GetQuestObjectiveCompletion(QUEST_WG_VICTORY_H, 0) == 0)then
-					v:AdvanceQuestObjective(QUEST_WG_VICTORY_H, 0)
-				end
-			elseif(v:GetTeam() == 0)then
-				v:CastSpell(SPELL_DEFEAT_REWARD)
-			end
-			for i = 1, #buff_areas do
-				for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
-					if(h:GetTeam() == 1 and not h:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
-						h:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
-					end
+		elseif(v:GetTeam() ~= controll - 1)then
+			v:CastSpell(SPELL_DEFEAT_REWARD)
+		end
+		for i = 1, #buff_areas do
+			for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
+				if(h:GetTeam() == controll - 1 and not h:HasAura(SPELL_ESSENCE_OF_WINTERGRASP))then
+					h:AddAura(SPELL_ESSENCE_OF_WINTERGRASP,0)
 				end
 			end
-			add_tokens = 1
+		end
+		add_tokens = 1
 	end
 	if(battle == 1 and states == 0)then
 		for k,l in pairs(GetPlayersInWorld())do
 			l:SetWorldStateForPlayer(WG_STATE_BATTLEFIELD_STATUS_MAP, 3)
 		end
-		BF_FLAGS = 0
 		v:SetWorldStateForZone(WG_HORDE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_ALLIANCE_CONTROLLED, 0)
 		v:SetWorldStateForZone(WG_STATE_BATTLE_UI, 1)
@@ -583,22 +534,24 @@ if(controll == 1)then
 		v:SetWorldStateForZone(3771, 7)
 		v:SetWorldStateForZone(3772, 7)
 		v:SetWorldStateForZone(3763, 7)
-		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 7)
+		v:SetWorldStateForZone(3773, 7)
 		v:SetWorldStateForZone(3702, 4)
 		v:SetWorldStateForZone(3703, 4)
 		v:SetWorldStateForZone(3700, 4)
 		v:SetWorldStateForZone(3701, 4)
 		workshop_data = {
-		{192028, 3698, -1, -1, -1,2,4},
-		{192029, 3699, -1, -1, -1,2,4},
-		{192030, 3700, 0, 4539, 192627,2},
-		{192031, 3701, 0, 4538, 190475,2},
-		{192032, 3702, 0, 4611, 194963,2},
-		{192033, 3703, 0, 4612, 194959,2};
+		{192028, 3698, -1, -1, -1,2,4, "West Fortress vehicle workshop"},
+		{192029, 3699, -1, -1, -1,2,4, "East Fortress vehicle workshop"},
+		{192030, 3700, 0, 4539, 192627,2, "Broken Temple vehicle workshop"},
+		{192031, 3701, 0, 4538, 190475,2, "Sunken Ring vehicle workshop"},
+		{192032, 3702, 0, 4611, 194963,2, "Westspark vehicle workshop"},
+		{192033, 3703, 0, 4612, 194959,2, "Eastspark vehicle workshop"};
 		};
 		states = 1
 		ATTACKER = "Horde"
 		DEFENDER = "Alliance"
+		vehicle_vallue_h = 16
+		vehicle_vallue_a = 8
 	end
 elseif(controll == 2)then
 	if(states == 0)then
@@ -635,22 +588,24 @@ elseif(controll == 2)then
 		v:SetWorldStateForZone(3771, 4)
 		v:SetWorldStateForZone(3772, 4)
 		v:SetWorldStateForZone(3763, 4)
-		v:SetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY, 4)
+		v:SetWorldStateForZone(3773, 4)
 		v:SetWorldStateForZone(3702, 7)
 		v:SetWorldStateForZone(3703, 7)
 		v:SetWorldStateForZone(3700, 7)
 		v:SetWorldStateForZone(3701, 7)
 		workshop_data = {
-		{192028, 3698, -1, -1, -1,2,4},
-		{192029, 3699, -1, -1, -1,2,4},
-		{192030, 3700, 100, 4539, 192627,2},
-		{192031, 3701, 100, 4538, 190475,2},
-		{192032, 3702, 100, 4611, 194963,2},
-		{192033, 3703, 100, 4612, 194959,2};
+		{192028, 3698, -1, -1, -1,2,4, "West Fortress vehicle workshop"},
+		{192029, 3699, -1, -1, -1,2,4, "East Fortress vehicle workshop"},
+		{192030, 3700, 100, 4539, 192627,2, "Broken Temple vehicle workshop"},
+		{192031, 3701, 100, 4538, 190475,2, "Sunken Ring vehicle workshop"},
+		{192032, 3702, 100, 4611, 194963,2, "Westspark vehicle workshop"},
+		{192033, 3703, 100, 4612, 194959,2, "Eastspark vehicle workshop"};
 		};
 		states = 1
 		ATTACKER = "Alliance"
 		DEFENDER = "Horde"
+		vehicle_vallue_h = 8
+		vehicle_vallue_a = 16
 	end
 end
 end
@@ -683,7 +638,7 @@ for i = 1, #pvp_detection_data do
 	end
 end
 end
-if(pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 0 or pUnit:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 1)then
+if(pUnit:GetWorldStateForZone(3773) == 0 or pUnit:GetWorldStateForZone(3773) == 1)then
 	if(npcstarted == false)then
 		states = 0
 		npcstarted = true
@@ -724,13 +679,11 @@ for k,vh in pairs(pUnit:GetInRangeUnits())do
 			end
 			if(vh:GetHealthPct() == 0)then
 				if(vh:GetFaction() == FACTION_HORDE)then
-					-- vh:SetFaction(FACTION_NEUTRAL)
 					vh:Despawn(1,0)
 					if(vh:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) > 0)then
 						vh:SetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES, vh:GetWorldStateForZone(WG_STATE_CURRENT_H_VEHICLES) - 1)
 					end
 				elseif(vh:GetFaction() == FACTION_ALLIANCE)then
-					-- vh:RemoveAura(FACTION_NEUTRAL)
 					vh:Despawn(1,0)
 					if(vh:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) > 0)then
 						vh:SetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES, vh:GetWorldStateForZone(WG_STATE_CURRENT_A_VEHICLES) - 1)
@@ -780,7 +733,7 @@ end
 function TitanRelickOnUse(pGO, event, pPlayer)
 if(battle == 1)then
 local timebattle = os.time() - starttimer
-	if(controll == 1 and pPlayer:GetTeam() == 1 and pGO:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 9)then
+	if(controll == 1 and pPlayer:GetTeam() == 1 and pGO:GetWorldStateForZone(3773) == 9)then
 		timer_battle = 0
 		timer_nextbattle = os.time() + TIME_TO_BATTLE
 		battle = 0
@@ -791,8 +744,7 @@ local timebattle = os.time() - starttimer
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 		v:SendAreaTriggerMessage("The Wintergrasp fortress has been captured by the Horde!")
-		local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
-		packetseound:WriteULong(8454)
+		v:PlaySoundToPlayer(8454)
 		v:SendPacketToPlayer(packetseound)
 			if(v:GetTeam() == 1)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
@@ -810,7 +762,7 @@ local timebattle = os.time() - starttimer
 			end
 		end
 		end
-	if(controll == 2 and pPlayer:GetTeam() == 0 and pGO:GetWorldStateForZone(WG_STATE_KEEP_GATE_ANDGY) == 6)then
+	if(controll == 2 and pPlayer:GetTeam() == 0 and pGO:GetWorldStateForZone(3773) == 6)then
 		timer_battle = 0
 		timer_nextbattle = os.time() + TIME_TO_BATTLE
 		battle = 0
@@ -821,8 +773,7 @@ local timebattle = os.time() - starttimer
 		south_towers = 3
 		for k,v in pairs (GetPlayersInZone(ZONE_WG))do
 		v:SendAreaTriggerMessage("The Wintergrasp fortress has been captured by the Alliance!")
-		local packetseound = LuaPacket:CreatePacket(SMSG_PLAY_SOUND, 4)
-		packetseound:WriteULong(8455)
+		v:PlaySoundToPlayer(8455)
 		v:SendPacketToPlayer(packetseound)
 			if(v:GetTeam() == 0)then
 				v:CastSpell(SPELL_VICTORY_REWARD)
@@ -1295,20 +1246,20 @@ end
 end
 
 function WallOnDamage(pGO, damage)
-for i = 1, #go_wall do
-	if(pGO:GetEntry() == go_wall[i][1])then
-		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_wall[i][2])== 1 or pGO:GetWorldStateForZone(go_wall[i][2])== 4 or pGO:GetWorldStateForZone(go_wall[i][2])== 7))then
-			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
+for i = 1, #fortress_go do
+	if(pGO:GetEntry() == fortress_go[i][1])then
+		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(fortress_go[i][2])== 1 or pGO:GetWorldStateForZone(fortress_go[i][2])== 4 or pGO:GetWorldStateForZone(fortress_go[i][2])== 7))then
+			pGO:SetWorldStateForZone(fortress_go[i][2],pGO:GetWorldStateForZone(fortress_go[i][2])+1)
 		end
 	end
 end
 end
 
 function WallOnDestroy(pGO)
-for i = 1, #go_wall do
-	if(pGO:GetEntry() == go_wall[i][1])then
-		if(pGO:GetWorldStateForZone(go_wall[i][2])== 2 or pGO:GetWorldStateForZone(go_wall[i][2])== 5 or pGO:GetWorldStateForZone(go_wall[i][2])== 8)then
-			pGO:SetWorldStateForZone(go_wall[i][2],pGO:GetWorldStateForZone(go_wall[i][2])+1)
+for i = 1, #fortress_go do
+	if(pGO:GetEntry() == fortress_go[i][1])then
+		if(pGO:GetWorldStateForZone(fortress_go[i][2])== 2 or pGO:GetWorldStateForZone(fortress_go[i][2])== 5 or pGO:GetWorldStateForZone(fortress_go[i][2])== 8)then
+			pGO:SetWorldStateForZone(fortress_go[i][2],pGO:GetWorldStateForZone(fortress_go[i][2])+1)
 		end
 		if(pGO:GetEntry() == 191810)then
 			local wall = pGO:GetGameObjectNearestCoords(pGO:GetX(),pGO:GetY(),pGO:GetZ(),GO_WINTERGRASP_KEEP_COLLISION_WALL)
@@ -1318,41 +1269,6 @@ for i = 1, #go_wall do
 			end
 			if(wall1)then
 				wall1:Despawn(1,0)
-			end
-		end
-	end
-end
-end
-
-function FTOnDamage(pGO, damage)
-for i = 1, #go_f_tower do
-	if(pGO:GetEntry() == go_f_tower[i][1])then
-		if(pGO:GetHP() < pGO:GetMaxHP()/2 and (pGO:GetWorldStateForZone(go_f_tower[i][2])== 1 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 4 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 7))then
-			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
-		end
-	end
-end
-end
-
-function FTOnDestroy(pGO)
-for i = 1, #go_f_tower do
-	if(pGO:GetEntry() == go_f_tower[i][1])then
-		if(pGO:GetWorldStateForZone(go_f_tower[i][2])== 2 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 5 or pGO:GetWorldStateForZone(go_f_tower[i][2])== 8)then
-			pGO:SetWorldStateForZone(go_f_tower[i][2],pGO:GetWorldStateForZone(go_f_tower[i][2])+1)
-		end
-	end
-	for k,g in pairs(pGO:GetInRangePlayers())do
-	if(DEFENDER == "Horde")then
-			if(g:GetTeam() == 0)then
-				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
-					g:AddAchievement(ACHIEVEMENT_LEANING_T)
-				end
-			end
-	elseif(DEFENDER == "Alliance")then
-			if(g:GetTeam() == 1)then
-				if not(g:HasAchievement(ACHIEVEMENT_LEANING_T))then
-					g:AddAchievement(ACHIEVEMENT_LEANING_T)
-				end
 			end
 		end
 	end
@@ -1402,6 +1318,10 @@ for k,g in pairs(pGO:GetInRangePlayers())do
 		end
 	end
 	south_towers = south_towers - 1
+	if(south_towers == 0)then
+		timer_battle = timer_battle - 600 -- if all southen towers are destroyed, the attackers loose 10 min.
+		pGO:SetWorldStateForZone(WG_STATE_BATTLE_TIME, timer_battle)
+	end
 end
 end
 
@@ -1519,14 +1439,11 @@ RegisterServerHook(15,OnZoneEnter)
 RegisterServerHook(4,OnEnterBuff)
 RegisterUnitEvent(30739,4,KillCreature)
 RegisterUnitEvent(30740,4,KillCreature)
-for i = 1, #go_wall do
-RegisterGameObjectEvent(go_wall[i][1],7,WallOnDamage)
-RegisterGameObjectEvent(go_wall[i][1],8,WallOnDestroy)
+for i = 1, #fortress_go do
+RegisterGameObjectEvent(fortress_go[i][1],7,WallOnDamage)
+RegisterGameObjectEvent(fortress_go[i][1],8,WallOnDestroy)
 end
-for i = 1, #go_f_tower do
-RegisterGameObjectEvent(go_f_tower[i][1],7,FTOnDamage)
-RegisterGameObjectEvent(go_f_tower[i][1],8,FTOnDestroy)
-end
+
 for i = 1, #go_s_tower do
 RegisterGameObjectEvent(go_s_tower[i][1],7,STOnDamage)
 RegisterGameObjectEvent(go_s_tower[i][1],8,STOnDestroy)
