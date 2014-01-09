@@ -318,6 +318,22 @@ local player_tele = {
 {5314.51, 2703.69, 5249.89, 2703.11, 409.275, 3.07178}, -- e
 {5316.25, 2977.04, 5246.92, 2978.32, 409.274, 3.08923}; -- w
 };
+ --entry,t,ASB, HSB,  ANB,  HNB,  AB,   HB
+local mage_data = {
+{32169,1,14791,14790,14782,14775,14781,14777},
+{35596,1,14791,14790,14782,14775,14781,14777},
+{35598,1,14791,14790,14782,14775,14781,14777},
+{35599,1,14791,14790,14782,14775,14781,14777},
+{35600,1,14791,14790,14782,14775,14781,14777},
+{35601,1,14791,14790,14782,14775,14781,14777},
+
+{32170,2,14791,14790,14782,14775,14781,14777},
+{35597,2,14791,14790,14782,14775,14781,14777},
+{35602,2,14791,14790,14782,14775,14781,14777},
+{35603,2,14791,14790,14782,14775,14781,14777},
+{35611,2,14791,14790,14782,14775,14781,14777},
+{35612,2,14791,14790,14782,14775,14781,14777};
+};
 
 local self = getfenv(1)
 
@@ -1412,6 +1428,68 @@ for k,v in pairs(pUnit:GetInRangePlayers())do
 end
 end
 
+function MageOnGossip(pUnit, event, pPlayer)
+for i = 1, #mage_data do
+	if(pUnit:GetEntry() == mage_data[i][1])then
+		if(battle == 0 and controll == 1 and timer_nextbattle <= os.time() + jointimer_2)then
+			pUnit:GossipCreateMenu(mage_data[i][3], pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "Queue for Wintergrasp.", 1, 0)
+			pUnit:GossipSendMenu(pPlayer)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
+		elseif(battle == 0 and controll == 2 and timer_nextbattle <= os.time() + jointimer_2)then
+			pUnit:GossipCreateMenu(mage_data[i][4], pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "Queue for Wintergrasp.", 1, 0)
+			pUnit:GossipSendMenu(pPlayer)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
+		elseif(battle == 0 and controll == 1 and timer_nextbattle > os.time() + jointimer_2)then
+			pUnit:GossipCreateMenu(mage_data[i][5], pPlayer, 0)
+			pUnit:GossipSendMenu(pPlayer)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
+		elseif(battle == 0 and controll == 2 and timer_nextbattle > os.time() + jointimer_2)then
+			pUnit:GossipCreateMenu(mage_data[i][6], pPlayer, 0)
+			pUnit:GossipSendMenu(pPlayer)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIME, timer_nextbattle)
+			pUnit:SetWorldStateForZone(WG_STATE_NEXT_BATTLE_TIMER, 1)
+		elseif(battle == 1 and controll == 1)then
+			pUnit:GossipCreateMenu(mage_data[i][7], pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "Queue for Wintergrasp.", 1, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		elseif(battle == 1 and controll == 2)then
+			pUnit:GossipCreateMenu(mage_data[i][8], pPlayer, 0)
+			pUnit:GossipMenuAddItem(0, "Queue for Wintergrasp.", 1, 0)
+			pUnit:GossipSendMenu(pPlayer)
+		end
+	end
+end
+end
+
+function MageMenu(pUnit, event, pPlayer, id, intid, code)
+if(intid == 1)then
+	local ALY_Q = nil
+	local HRD_Q = nil
+	for i = 1, #ALLIANCE_QUIUEUE do
+		if(ALLIANCE_QUIUEUE[i] == pPlayer:GetGUID())then
+			ALY_Q = "Q"
+		end
+	end
+	for i = 1, #HORDE_QUIUEUE do
+		if(HORDE_QUIUEUE[i] == pPlayer:GetGUID())then
+			HRD_Q = "Q"
+		end
+	end
+	if(pPlayer:GetTeam()==0 and ALY_Q == nil)then
+		ALLIANCE_QUIUEUE[#ALLIANCE_QUIUEUE+1] = pPlayer:GetGUID()
+		pPlayer:GossipComplete()
+	elseif(pPlayer:GetTeam()==1 and HRD_Q == nil)then
+		HORDE_QUIUEUE[#HORDE_QUIUEUE+1] = pPlayer:GetGUID()
+		pPlayer:GossipComplete()
+	end
+end
+end
+
 RegisterUnitEvent(NPC_DWARVEN_SPIRIT_GUIDE,18,SpiritHealerLoad)
 RegisterUnitEvent(NPC_TAUNKA_SPIRIT_GUIDE,18,SpiritHealerLoad)
 RegisterUnitEvent(NPC_DWARVEN_SPIRIT_GUIDE,21,SpiritHealer_AI)
@@ -1449,7 +1527,6 @@ for i = 1, #fortress_go do
 RegisterGameObjectEvent(fortress_go[i][1],7,WallOnDamage)
 RegisterGameObjectEvent(fortress_go[i][1],8,WallOnDestroy)
 end
-
 for i = 1, #go_s_tower do
 RegisterGameObjectEvent(go_s_tower[i][1],7,STOnDamage)
 RegisterGameObjectEvent(go_s_tower[i][1],8,STOnDestroy)
@@ -1457,5 +1534,9 @@ end
 for i = 1, #workshop_data do
 RegisterGameObjectEvent(workshop_data[i][1],7,ShopOnDamage)
 RegisterGameObjectEvent(workshop_data[i][1],8,ShopOnDestroy)
+end
+for i = 1, #mage_data do
+RegisterUnitGossipEvent(mage_data[i][1],1,MageOnGossip)
+RegisterUnitGossipEvent(mage_data[i][1],2,MageMenu)
 end
 	print("-- Wintergrasp loaded --")
