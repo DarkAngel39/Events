@@ -128,7 +128,7 @@ local SPELL_TELEPORT_DALARAN = 53360
 local SPELL_VICTORY_AURA = 60044
 local SPELL_WINTERGRASP_WATER = 36444
 local SPELL_ESSENCE_OF_WINTERGRASP = 57940
-local SPELL_WINTERGRASP_RESTRICTED_FLIGHT_AREA = 58730
+local SPELL_RESTRICTED_FLIGHT_AREA = 58730
 
 -- Spirit Guide spells:
 local SPELL_SPIRIT_GUIDE_AURA = 22011
@@ -340,7 +340,7 @@ local self = getfenv(1)
 
 function WGUpdate()
 if(spawnobjects == 0 and battle == 1)then
-	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5439.66,2840.83,430.282,6.20393,100,2300000)
+	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5440.0, 2840.8, 430.43,6.20393,100,2300000)
 	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
 	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5396.21,2840.01,432.268,3.13286,100,2300000)
 	spawnobjects = 1
@@ -673,7 +673,7 @@ for k,m in pairs(GetPlayersInZone(ZONE_WG))do
 end
 if(battle == 0 and spawnobjects == 1)then
 	spawnobjects = 0
-	local relick = pUnit:GetGameObjectNearestCoords(5439.66,2840.83,430.282,GO_WINTERGRASP_TITAN_RELIC)
+	local relick = pUnit:GetGameObjectNearestCoords(5440.0, 2840.8, 430.43,GO_WINTERGRASP_TITAN_RELIC)
 	local collision = pUnit:GetGameObjectNearestCoords(5397.11,2841.54,425.901,GO_WINTERGRASP_KEEP_COLLISION)
 	local wall = pUnit:GetGameObjectNearestCoords(5396.21,2840.01,432.268,GO_WINTERGRASP_KEEP_COLLISION_WALL)
 	if(relick ~= nil)then
