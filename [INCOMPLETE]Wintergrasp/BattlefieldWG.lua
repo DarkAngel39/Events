@@ -176,6 +176,7 @@ local CMSG_BATTLEFIELD_JOIN = 0x23E
 local SMSG_BATTLEFIELD_PORT_DENIED = 0x14B
 local SMSG_AREA_SPIRIT_HEALER_TIME = 0x2E4
 local SMSG_SPIRIT_HEALER_CONFIRM = 0x222
+local CMSG_RESURRECT_RESPONSE = 0x15C
 
 local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
 
@@ -1485,6 +1486,8 @@ if(intid == 1)then
 		pPlayer:GossipComplete()
 	elseif(pPlayer:GetTeam()==1 and HRD_Q == nil)then
 		HORDE_QUIUEUE[#HORDE_QUIUEUE+1] = pPlayer:GetGUID()
+		pPlayer:GossipComplete()
+	else
 		pPlayer:GossipComplete()
 	end
 end
