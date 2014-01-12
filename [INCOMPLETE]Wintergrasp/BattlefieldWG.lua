@@ -69,6 +69,7 @@ local NPC_VEHICLE_SIEGE_ENGINE_H = 32627
 local NPC_VEHICLE_SIEGE_ENGINE_A = 28312
 local NPC_DWARVEN_SPIRIT_GUIDE = 31842
 local NPC_TAUNKA_SPIRIT_GUIDE = 31841
+local NPC_CANNON = 28366
 
  -- Objects
 local GO_WINTERGRASP_TITAN_RELIC = 192829
@@ -336,13 +337,78 @@ local mage_data = {
 {35612,2,14791,14790,14782,14775,14781,14777};
 };
 
+local cannon_data = {
+ -- Defence
+{4559.70, 3599.58, 426.539, 4.807540, 1732, 1735, 0},
+{4554.55, 3648.69, 426.539, 1.667510, 1732, 1735, 1},
+{4532.81, 3621.22, 426.539, 3.268150, 1732, 1735, 2},
+{4577.21, 3648.69, 402.887, 0.957503, 1732, 1735, 3},
+{4532.54, 3644.16, 402.887, 2.559720, 1732, 1735, 4},
+{4375.64, 2799.35, 412.631, 3.927490, 1732, 1735, 5},
+{4375.31, 2844.94, 412.631, 2.384180, 1732, 1735, 6},
+{4373.52, 2822.01, 436.283, 3.135810, 1732, 1735, 7},
+{4448.55, 1921.80, 465.647, 4.308290, 1732, 1735, 8},
+{4436.47, 1954.73, 465.647, 2.747700, 1732, 1735, 9},
+{4428.76, 1933.12, 441.995, 3.422360, 1732, 1735, 10},
+{4470.13, 1914.20, 441.996, 5.082690, 1732, 1735, 11},
+{4488.96, 1955.37, 441.995, 0.468471, 1732, 1735, 12},
+{4537.38, 3599.53, 402.887, 3.998460, 1732, 1735, 13},
+{4581.50, 3604.09, 402.887, 5.651720, 1732, 1735, 14},
+{4469.45, 1966.62, 465.647, 1.153570, 1732, 1735, 15},
+{4581.90, 3626.44, 426.539, 0.117806, 1732, 1735, 16},
+{4421.64, 2799.94, 412.631, 5.459300, 1732, 1735, 17},
+{4420.26, 2845.34, 412.631, 0.742197, 1732, 1735, 18},
+{4423.43, 2822.76, 436.283, 6.223490, 1732, 1735, 19},
+{4397.83, 2847.63, 436.283, 1.579430, 1732, 1735, 20},
+{4398.81, 2797.27, 436.283, 4.703750, 1732, 1735, 21},
+{4448.14, 1975.00, 441.996, 1.967240, 1732, 1735, 22},
+{4448.71, 1955.15, 441.995, 0.380733, 1732, 1735, 23},
+{4469.45, 1966.62, 465.647, 1.153570, 1732, 1735, 24},
+{4482.00, 1933.66, 465.647, 5.873030, 1732, 1735, 25},
+ -- Attack
+{5164.00, 2723.62, 439.844, 4.73907, 1735, 1732, 26},
+{5255.01, 2631.98, 439.755, 3.15257, 1735, 1732, 27},
+{5278.21, 2607.23, 439.755, 4.71944, 1735, 1732, 28},
+{5390.95, 2615.50, 421.126, 4.64090, 1735, 1732, 29},
+{5350.87, 2616.03, 421.243, 4.72729, 1735, 1732, 30},
+{5265.02, 2704.63, 421.700, 3.12507, 1735, 1732, 31},
+{5236.20, 2732.68, 421.649, 4.72336, 1735, 1732, 32},
+{5363.78, 2756.77, 421.629, 4.78226, 1735, 1732, 33},
+{5322.16, 2756.69, 421.646, 4.69978, 1735, 1732, 34},
+{5264.68, 2819.78, 421.656, 3.15645, 1735, 1732, 35},
+{5264.04, 2861.34, 421.587, 3.21142, 1735, 1732, 36},
+{5363.82, 2923.87, 421.709, 1.60527, 1735, 1732, 37},
+{5323.05, 2923.70, 421.645, 1.58170, 1735, 1732, 38},
+{5234.86, 2948.80, 420.880, 1.61311, 1735, 1732, 39},
+{5266.75, 2976.50, 421.067, 3.20354, 1735, 1732, 40},
+{5391.19, 3060.80, 419.616, 1.69557, 1735, 1732, 41},
+{5280.90, 3071.32, 438.499, 1.62879, 1735, 1732, 42},
+{5255.88, 3047.63, 438.499, 3.13677, 1735, 1732, 43},
+{5139.69, 2747.40, 439.844, 3.17221, 1735, 1732, 44},
+{5148.80, 2820.24, 421.621, 3.16043, 1735, 1732, 45},
+{5147.98, 2861.93, 421.630, 3.18792, 1735, 1732, 46},
+{5138.59, 2935.16, 439.845, 3.11723, 1735, 1732, 47},
+{5163.06, 2959.52, 439.846, 1.47258, 1735, 1732, 48},
+{5352.12, 3061.05, 421.101, 1.63603, 1735, 1732, 49};
+};
+
 local self = getfenv(1)
 
 function WGUpdate()
 if(spawnobjects == 0 and battle == 1)then
+	guidd = 0
 	PerformIngameSpawn(2,GO_WINTERGRASP_TITAN_RELIC,MAP_NORTHREND,5440.0, 2840.8, 430.43,6.20393,100,2300000)
 	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION,MAP_NORTHREND,5397.11,2841.54,425.901,3.14159,100,2300000)
 	PerformIngameSpawn(2,GO_WINTERGRASP_KEEP_COLLISION_WALL,MAP_NORTHREND,5396.21,2840.01,432.268,3.13286,100,2300000)
+	for i = 1, #cannon_data do
+		if(controll == 1 and guidd == cannon_data[i][7])then
+			PerformIngameSpawn(1,NPC_CANNON,MAP_NORTHREND,cannon_data[i][1],cannon_data[i][2],cannon_data[i][3],cannon_data[i][4],cannon_data[i][6],2300000)
+			guidd = guidd + 1
+		elseif(controll == 2 and guidd == cannon_data[i][7])then
+			PerformIngameSpawn(1,NPC_CANNON,MAP_NORTHREND,cannon_data[i][1],cannon_data[i][2],cannon_data[i][3],cannon_data[i][4],cannon_data[i][5],2300000)
+			guidd = guidd + 1
+		end
+	end
 	spawnobjects = 1
 	for i = 1, #buff_areas do
 		for k,h in pairs(GetPlayersInZone(buff_areas[i]))do
@@ -687,8 +753,11 @@ if(battle == 0 and spawnobjects == 1)then
 	end
 end
 for k,vh in pairs(pUnit:GetInRangeUnits())do
-	if(vh:IsCreature() and (vh:GetEntry() == NPC_VEHICLE_CATAPULT or vh:GetEntry() == NPC_VEHICLE_DEMOLISHER or vh:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_H or vh:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_A))then
+	if(vh:IsCreature() and (vh:GetEntry() == NPC_VEHICLE_CATAPULT or vh:GetEntry() == NPC_VEHICLE_DEMOLISHER or vh:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_H or vh:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_A or vh:GetEntry() == NPC_CANNON))then
 		if(battle == 1)then
+			if(pUnit:GetSpawnId() ~= 0)then
+				pUnit:Despawn(1,0)
+			end
 			if(vh:IsInWater() and vh:HasAura(SPELL_WINTERGRASP_WATER) == false)then
 				vh:CastSpell(SPELL_WINTERGRASP_WATER)
 			elseif(vh:HasAura(SPELL_WINTERGRASP_WATER) and vh:IsInWater() == false)then
