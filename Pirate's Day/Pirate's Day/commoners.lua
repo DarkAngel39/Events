@@ -1,3 +1,4 @@
+local entry = {18927,19148,19169,19171,19172,19173,19175,19176,19177,19178,20102}
 local SPELL_GOSSIP_PIRATES_DAY = 50531
 local GOSSIP_TEXT_COMMONER = 13044
 local GOSSIP_OPTON_COMMONER = "I'd like to dress as a prate."
@@ -18,37 +19,8 @@ if(intid == 1)then
 end
 end
 
-RegisterUnitEvent(18927,18,OnSpawn)
-RegisterUnitEvent(19148,18,OnSpawn)
-RegisterUnitEvent(19169,18,OnSpawn)
-RegisterUnitEvent(19171,18,OnSpawn)
-RegisterUnitEvent(19172,18,OnSpawn)
-RegisterUnitEvent(19173,18,OnSpawn)
-RegisterUnitEvent(19175,18,OnSpawn)
-RegisterUnitEvent(19176,18,OnSpawn)
-RegisterUnitEvent(19177,18,OnSpawn)
-RegisterUnitEvent(19178,18,OnSpawn)
-RegisterUnitEvent(20102,18,OnSpawn)
-RegisterUnitGossipEvent(18927,1,OnGossip)
-RegisterUnitGossipEvent(19148,1,OnGossip)
-RegisterUnitGossipEvent(19169,1,OnGossip)
-RegisterUnitGossipEvent(19171,1,OnGossip)
-RegisterUnitGossipEvent(19172,1,OnGossip)
-RegisterUnitGossipEvent(19173,1,OnGossip)
-RegisterUnitGossipEvent(19175,1,OnGossip)
-RegisterUnitGossipEvent(19176,1,OnGossip)
-RegisterUnitGossipEvent(19177,1,OnGossip)
-RegisterUnitGossipEvent(19178,1,OnGossip)
-RegisterUnitGossipEvent(20102,1,OnGossip)
-RegisterUnitGossipEvent(18927,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19148,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19169,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19171,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19172,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19173,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19175,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19176,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19177,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(19178,18,2,OnGossip_Submenus)
-RegisterUnitGossipEvent(20102,18,2,OnGossip_Submenus)
-
+for i = 1,#entry do
+RegisterUnitEvent(entry[i],18,OnSpawn)
+RegisterUnitGossipEvent(entry[i],1,OnGossip)
+RegisterUnitGossipEvent(entry[i],18,2,OnGossip_Submenus)
+end

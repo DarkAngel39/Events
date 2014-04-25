@@ -1,93 +1,27 @@
+local spellid = {
+{18927,33402,33403},
+{19148,33433,33436},
+{19169,33412,33415},
+{19171,33427,33430},
+{19172,33445,33448},
+{19173,33439,33442},
+{19175,33451,33455},
+{19176,33458,33465},
+{19177,33468,33471},
+{19178,33474,33477},
+{20102,34845,34849}
+}
+
 function OnSpawn(pUnit, event)
 local entry = pUnit:GetEntry()
-if(entry == 18927)then -- Human Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33402)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33403)
-	end
-elseif(entry == 19148)then -- Dwarf Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33433)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33436)
-	end
-elseif(entry == 19169)then -- Blood Elf Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33412)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33415)
-	end
-elseif(entry == 19171)then -- Draenei Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33427)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33430)
-	end
-elseif(entry == 19172)then -- Gnome Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33445)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33448)
-	end
-elseif(entry == 19173)then -- Night Elf Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33439)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33442)
-	end
-elseif(entry == 19175)then -- Orc Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33451)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33455)
-	end
-elseif(entry == 19176)then -- Tauren Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33458)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33465)
-	end
-elseif(entry == 19177)then -- Troll Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33468)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33471)
-	end
-elseif(entry == 19178)then -- Forsaken Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(33474)
-	elseif(aura == 1)then
-		pUnit:CastSpell(33477)
-	end
-elseif(entry == 20102)then -- Goblin Commoner
-	local aura = math.random(0,1)
-	if(aura == 0)then
-		pUnit:CastSpell(34845)
-	elseif(aura == 1)then
-		pUnit:CastSpell(34849)
+for i = 1,#spellid do
+	if(entry == spellid[i][1])then
+		local aura = math.random(0,1)
+		pUnit:CastSpell(spellid[i][2+aura])
 	end
 end
 end
 
-RegisterUnitEvent(18927,18,OnSpawn)
-RegisterUnitEvent(19148,18,OnSpawn)
-RegisterUnitEvent(19169,18,OnSpawn)
-RegisterUnitEvent(19171,18,OnSpawn)
-RegisterUnitEvent(19172,18,OnSpawn)
-RegisterUnitEvent(19173,18,OnSpawn)
-RegisterUnitEvent(19175,18,OnSpawn)
-RegisterUnitEvent(19176,18,OnSpawn)
-RegisterUnitEvent(19177,18,OnSpawn)
-RegisterUnitEvent(19178,18,OnSpawn)
-RegisterUnitEvent(20102,18,OnSpawn)
+for i = 1,#spellid do
+RegisterUnitEvent(spellid[i][1],18,OnSpawn)
+end
