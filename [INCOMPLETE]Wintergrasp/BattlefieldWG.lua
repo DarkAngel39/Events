@@ -901,6 +901,7 @@ if(pGO:GetMapId() == MAP_NORTHREND)then
 	if(pPlayer:HasAura(SPELL_TELEPORT_DEFENDER) == false)then
 		for i = 1,#player_tele do
 			if(pGO:GetX() > player_tele[i][1] - 1 and pGO:GetX() < player_tele[i][1] + 1 and pGO:GetY() > player_tele[i][2] - 1 and pGO:GetY() < player_tele[i][2] + 1)then
+				SetDBCSpellVar(SPELL_TELEPORT_DEFENDER, "c_is_flags", 0x01000)
 				pPlayer:CastSpell(SPELL_TELEPORT_DEFENDER)
 				pPlayer:Teleport(MAP_NORTHREND, player_tele[i][3], player_tele[i][4], player_tele[i][5], player_tele[i][6])
 			end
@@ -929,6 +930,7 @@ if(v:IsCreature())then
 				if(v:GetEntry() == NPC_VEHICLE_CATAPULT or v:GetEntry() == NPC_VEHICLE_DEMOLISHER or v:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_H or v:GetEntry() == NPC_VEHICLE_SIEGE_ENGINE_A)then
 					for i = 1,#vehicle_tele do
 						if(pGO:GetX() > vehicle_tele[i][1] - 1 and pGO:GetX() < vehicle_tele[i][1] + 1 and pGO:GetY() > vehicle_tele[i][2] - 1 and pGO:GetY() < vehicle_tele[i][2] + 1)then
+							SetDBCSpellVar(SPELL_TELEPORT_DEFENDER, "c_is_flags", 0x01000)
 							v:CastSpell(SPELL_TELEPORT_VEHICLE)
 							v:TeleportCreature(vehicle_tele[i][3], vehicle_tele[i][4], vehicle_tele[i][5], vehicle_tele[i][6])
 						end
@@ -943,7 +945,6 @@ end
 
 function OnSP_Cpoint(pGO)
 self[tostring(pGO)] = {
-state = 0,
 plrvall = 0
 };
 for i = 1, #workshop_data do
