@@ -1,18 +1,11 @@
-local progress1 = 50
-local progress2 = 50
-local progress3 = 50
-local progress4 = 50
-local progress5 = 50
 local a_towers = 0
 local h_towers = 0
-
 local zone_captured = 0
-local minute = 0
 local tenminute = 0
 local hour = 6
 
-local BAR_NEUTRAL =		80
-local BAR_STATUS_1 =	(100 - BAR_NEUTRAL)/2
+local BAR_NEUTRAL = 80
+local BAR_STATUS_1 = (100 - BAR_NEUTRAL)/2
 
 local WORLDSTATE_TK_ZONE_CAPTURABLE_UI = 2620
 local WORLDSTATE_TK_ALLIANCE_TOWER_COUNT = 2621
@@ -21,12 +14,14 @@ local WORLDSTATE_TK_NEUTRAL_TIMER = 2508
 local WORLDSTATE_TK_ALLIANCE_TIMER = 2767
 local WORLDSTATE_TK_HORDE_TIMER = 2768
 local WORLDSTATE_TK_HOUR_TIMER_SET = 2509
-local WORLDSTATE_TK_MINUTE_X1_TIMER_SET = 2510
+  -- local WORLDSTATE_TK_MINUTE_X1_TIMER_SET = 2510 -- Obsolite?
 local WORLDSTATE_TK_MINUTE_X10_TIMER_SET = 2512
 
 local WORLDSTATE_CAPTUREBAR_DISPLAY =	2623
 local WORLDSTATE_CAPTUREBAR_VALUE =		2625
 local WORLDSTATE_CAPTUREBAR_VALUE_N =	2624
+
+local SPELL_TF_BUFF = 33377
 
 local GAMEOBJECT_BYTES_1 = 0x0006 + 0x000B
 
@@ -44,11 +39,11 @@ local buff_zones = {
 
  -- N,H,A
 local capturepoint_data = {
-{183104,progress1,2681,2682,2683},
-{183411,progress2,2686,2685,2684},
-{183412,progress3,2690,2689,2688},
-{183413,progress4,2696,2695,2694},
-{183414,progress5,2693,2692,2691};
+{183104,50,2681,2682,2683,0},
+{183411,50,2686,2685,2684,0},
+{183412,50,2690,2689,2688,0},
+{183413,50,2696,2695,2694,0},
+{183414,50,2693,2692,2691,0};
 };
 
 local self = getfenv(1)
@@ -120,6 +115,7 @@ end
 						v:AdvanceQuestObjective(QUEST_A, 0)
 					end
 				end
+				capturepoint_data[i][6] = 1
 			elseif(capturepoint_data[i][2] <= BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][4])~=1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 60)then
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],1)
@@ -132,6 +128,7 @@ end
 						v:AdvanceQuestObjective(QUEST_H, 0)
 					end
 				end
+				capturepoint_data[i][6] = 1
 			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][4])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 60)then
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
@@ -139,6 +136,7 @@ end
 				h_towers = h_towers - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TOWER_COUNT,h_towers)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+				capturepoint_data[i][6] = 0
 			elseif(capturepoint_data[i][2] > BAR_STATUS_1 and capturepoint_data[i][2] < 100 - BAR_STATUS_1 and pGO:GetWorldStateForZone(capturepoint_data[i][5])==1 and pGO:GetDistanceYards(pGO:GetClosestPlayer()) < 60)then
 				pGO:SetWorldStateForZone(capturepoint_data[i][5],0)
 				pGO:SetWorldStateForZone(capturepoint_data[i][4],0)
@@ -146,31 +144,131 @@ end
 				a_towers = a_towers - 1
 				pGO:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TOWER_COUNT,a_towers)
 				pGO:SetByte(GAMEOBJECT_BYTES_1,2,21)
+				capturepoint_data[i][6] = 0
 			end
 		end
 	end
 end
 vars.plrvall = 0
-if(h_towers == 5 and zone_captured == 0)then
+if(zone_captured == 3)then
+	local reset = true
+	for i = 1, #capturepoint_data do
+		if(capturepoint_data[i][6] == 1)then
+			reset = false
+		end
+	end
+	if(reset == true)then
+		zone_captured = 0
+	end
+end
+if((h_towers == 5 or a_towers == 5) and zone_captured == 0)then
 	zone_captured = 1
-	minute = 0
 	tenminute = 0
 	hour = 6
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_ZONE_CAPTURABLE_UI,0)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X1_TIMER_SET,minute)
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
 	pGO:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TIMER,1) -- This will be changed
-elseif(a_towers == 5 and zone_captured == 0)then
-	zone_captured = 1
-	minute = 0
-	tenminute = 0
-	hour = 6
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_ZONE_CAPTURABLE_UI,0)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X1_TIMER_SET,minute)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
-	pGO:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TIMER,1) -- This will be changed
+	if(h_towers == 5)then
+		pGO:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TIMER,1)
+	elseif(a_towers == 5)then
+		pGO:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TIMER,1)
+	end
+	for f = 1,#buff_zones do
+		for k,g in pairs(GetPlayersInZone(buff_zones[f]))do
+			if((g:GetTeam() == 0 and a_towers == 5) or (g:GetTeam() == 1 and h_towers == 5))then
+				if not(g:HasAura(SPELL_TF_BUFF))then
+					g:CastSpell(SPELL_TF_BUFF)
+				end
+			end
+		end
+	end
+	RegisterTimedEvent("TKUpdate", 60000, 0)
+end
+end
+
+function TKUpdate()
+if(hour > 0 and tenminute > 0)then
+	tenminute = tenminute - 1
+elseif(hour > 0 and tenminute == 0)then
+	hour = hour - 1
+	tenminute = 59
+elseif(hour == 0 and tenminute == 0)then
+	zone_captured = 2
+end
+	for k,l in pairs(GetPlayersInZone(ZONE_TK))do
+		if(zone_captured == 2)then
+			zone_captured = 3
+			l:SetWorldStateForZone(WORLDSTATE_TK_ZONE_CAPTURABLE_UI,1)
+			l:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,0)
+			l:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,0)
+			l:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TIMER,0)
+			l:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TIMER,0)
+			l:SetWorldStateForZone(WORLDSTATE_TK_HORDE_TOWER_COUNT,h_towers)
+			l:SetWorldStateForZone(WORLDSTATE_TK_ALLIANCE_TOWER_COUNT,a_towers)
+			zone_captured = 0
+			tenminute = 0
+			hour = 6
+			for f = 1,#buff_zones do
+				for k,g in pairs(GetPlayersInZone(buff_zones[f]))do
+					if(g:HasAura(SPELL_TF_BUFF))then
+						g:RemoveAura(SPELL_TF_BUFF)
+					end
+				end
+			end
+			RemoveTimedEvent("TKUpdate")
+		else
+			l:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
+			l:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
+		end
+	end
+end
+
+function OnZone(event, pPlayer, ZoneId, OldZoneId)
+if(zone_captured == 1)then
+	if(ZoneId == ZONE_TK)then
+		pPlayer:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
+		pPlayer:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
+	end
+	local buffme = false
+	for i = 1,#buff_zones do
+		if(ZoneId == buff_zones[i])then
+			buffme = true
+		end
+	end
+	if(buffme == true and ((pPlayer:GetTeam() == 0 and a_towers == 5) or (pPlayer:GetTeam() == 1 and h_towers == 5)))then
+		if not(pPlayer:HasAura(SPELL_TF_BUFF))then
+			pPlayer:CastSpell(SPELL_TF_BUFF)
+		end
+	else
+		if(pPlayer:HasAura(SPELL_TF_BUFF))then
+			pPlayer:RemoveAura(SPELL_TF_BUFF)
+		end
+	end
+end
+end
+
+function OnLogin(event, pPlayer)
+local ZoneId = pPlayer:GetZoneId()
+if(zone_captured == 1)then
+	if(ZoneId == ZONE_TK)then
+		pPlayer:SetWorldStateForZone(WORLDSTATE_TK_MINUTE_X10_TIMER_SET,tenminute)
+		pPlayer:SetWorldStateForZone(WORLDSTATE_TK_HOUR_TIMER_SET,hour)
+	end
+	local buffme = false
+	for i = 1,#buff_zones do
+		if(ZoneId == buff_zones[i])then
+			buffme = true
+		end
+	end
+	if(buffme == true and ((pPlayer:GetTeam() == 0 and a_towers == 5) or (pPlayer:GetTeam() == 1 and h_towers == 5)))then
+		if not(pPlayer:HasAura(SPELL_TF_BUFF))then
+			pPlayer:CastSpell(SPELL_TF_BUFF)
+		end
+	else
+		if(pPlayer:HasAura(SPELL_TF_BUFF))then
+			pPlayer:RemoveAura(SPELL_TF_BUFF)
+		end
+	end
 end
 end
 
@@ -178,3 +276,6 @@ for i = 1, #capturepoint_data do
 RegisterGameObjectEvent(capturepoint_data[i][1],5,AIUpdate)
 RegisterGameObjectEvent(capturepoint_data[i][1],2,OnLoad)
 end
+
+RegisterServerHook(15,OnZone)
+RegisterServerHook(3,OnLogin)
