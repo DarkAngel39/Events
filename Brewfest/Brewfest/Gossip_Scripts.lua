@@ -43,7 +43,6 @@ for i = 1,#option_data do
 end
 end
 
-
 RegisterUnitGossipEvent(24510,1,OnGossip)
 RegisterUnitGossipEvent(24510,2,OnSelect)
 RegisterUnitGossipEvent(24468,1,OnGossip)
