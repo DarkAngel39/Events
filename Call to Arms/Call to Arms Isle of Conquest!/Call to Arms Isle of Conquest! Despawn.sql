@@ -1,5 +1,8 @@
-DELETE FROM `creature_spawns` WHERE `id` BETWEEN 435163 AND 435282;
-DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN 513074 AND 513133;
+SET @CGUID:= 435162;
+SET @GGUID:= 513073;
+
+DELETE FROM `creature_spawns` WHERE `id` BETWEEN @CGUID+1 AND @CGUID+120;
+DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN @GGUID+1 AND @GGUID+60;
 
 CREATE TABLE IF NOT EXISTS `active_event_id` (
   `active_event` int(10) unsigned NOT NULL,
