@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `active_event_id` (
 DELETE FROM `active_event_id` WHERE `active_event`=13;
 INSERT INTO `active_event_id` (`active_event`, `name`) VALUES (13,"Midsummer Fire Festival");
 
-SET @CGUID:= 430000;
-SET @GGUID:= 590000;
+SET @CGUID := 430000;
+SET @GGUID := 590000;
 
 DELETE FROM `gameobject_spawns` WHERE `id` BETWEEN @GGUID+1 AND @GGUID+592;
 INSERT INTO `gameobject_spawns` (`id`, `Entry`, `map`, `position_x`, `position_y`, `position_z`, `Facing`, `orientation1`, `orientation2`, `orientation3`, `orientation4`, `State`, `Flags`, `Faction`, `Scale`, `stateNpcLink`, `phase`, `overrides`) VALUES
