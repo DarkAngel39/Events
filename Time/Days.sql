@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS `active_event_id` (
+  `active_event` int(10) unsigned NOT NULL,
+  `name` text COLLATE latin1_bin NOT NULL,
+  PRIMARY KEY (`active_event`)
+);
+
+DELETE FROM `active_event_id` WHERE `active_event` IN (62,63);
+INSERT INTO `active_event_id` (`active_event`, `name`) VALUES (62,"Day Time");
+
 UPDATE `creature_spawns` SET `entry`=1891,`displayid`=2565,`slot1item`=1896,`slot2item`=1961,`slot3item`=5258 WHERE `entry`=1892;
 UPDATE `creature_spawns` SET `entry`=1894,`displayid`=3551,`slot1item`=1899,`slot2item`=1957,`slot3item`=0 WHERE `entry`=1893;
 UPDATE `creature_spawns` SET `entry`=1895,`displayid`=2535,`slot1item`=5303, `slot2item`=0, `slot3item`=0 WHERE `entry`=1896;
